@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Nouveau partenaire</title>
+</head>
+<body>
+	<div layout:fragment="content">
+     
+      	<br/>
+		<h5>Nouvelle localité</h5>
+		<hr/>
+		<div class = "container">
+		
+		<div class="col-md-6" >
+<script type="text/javascript" > 
+
+$(document).ready(function(){
+	setTimeout(function(){
+		$('#messageSucces').fadeOut('fast');},5000);
+})
+</script> 
+
+		<!-- <p id="messageSucces" th:if="${messageSucces}" th:text="${messageSucces}" class= "alert alert-success"></p> -->
+		<form th:action="@{/sauvegarderLocalisation}" method="post"> 
+			<span>Nom de la localité</span><span style="color:red">&nbsp;*</span>
+			<input type="text" class = "form-control" name="nomLocalisation" id="nomLocalisation" placeholder="Localité"/>	
+			<br/>
+			<button type="submit" class="btn btn-success">Enregistrer</button>
+			
+		</form>
+		</div>
+      </div>
+  </div>
+
+</body>
+</html>

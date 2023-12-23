@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Choisir un partenaire</title>
+</head>
+<body>
+<div layout:fragment="content">
+<div class = "container">
+<br/>
+      <div class="row">
+      <div class="col-md-11">
+       <h5>Partenaires</h5>
+        </div>
+         <div class="col-md-1">
+  		<a class="btn btn-outline-danger" th:href="@{/nouveauPartenaire}" style="color:black">Ajouter</a>
+  		 </div>
+  		 &ensp;
+  		 
+  		 <hr/>
+  </div>
+  
+  				
+					
+					<div class="table-responsive" >
+						<table  class="table table-bordered" id="dataTable" style="width:90%; font-size:13px; font-family:Arial">
+							
+						<tbody>
+							<tr th:each="p:${listPartenaire}">
+							<td  ><span th:text="${p.nomPartenaire}"></span><br/><span th:text="${p.adresse}"></span>
+							</td>
+							<td valign="middle" style="text-align:center">
+							<a th:href="@{/modifierPartenaire(idPartenaire=${p.idPartenaire})}" title="Editer"><i class="far fa-edit" style="color:green; font-size:20px; "></i></a>&ensp;&ensp;
+							<a type="button" title="Supprimer" th:onclick="showModal([[${p.idPartenaire}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; "></i></a>
+							</td>
+							</tr>				
+						</tbody>
+						</table>
+						 </div>
+						 
+   </div>
+   <form th:action="@{supprimerPartenaire}" method="post">
+   <!-- Fenetre modal validation -->
+<div class="modal fade" id="supPartenaire" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title">Partenaire</h5>
+        
+      </div> -->
+      <div class="modal-body" id="modal-body">
+      <h5>Supprimer ?</h5>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/partenaire}">Non</button>
+        <button type="submit" id="button" class="btn btn-danger" >Oui</button>
+         </div>
+      </div>
+     
+      
+      <!-- <div class="modal-footer">
+       
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/partenaire}">Non</button>
+        <button type="submit" id="button" class="btn btn-danger" >Oui</button>
+         
+      </div> -->
+    </div>
+  </div>
+  <script>
+function showModal(idPartenaire){
+	var modal = new bootstrap.Modal(document.getElementById('supPartenaire'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idPartenaire' value='"+idPartenaire+"' />"
+	document.getElementById('modal-body').innerHTML+=data;
+	modal.show();
+}
+</script>
+</div>
+
+</form>
+</div>
+
+</body>
+</html>

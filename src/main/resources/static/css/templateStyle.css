@@ -1,0 +1,27 @@
+.offcanvas {
+  font-family: cursive, sans-serif; 
+}
+
+.offcanvas-header {
+  background-color: #350B54;
+  color: #ffff;
+}
+
+.offcanvas-body {
+  background-color: #350B54;
+  color: #ffff;
+}
+
+.offcanvas a {
+  color: #ffff;
+}
+.offcanvas li .dropdown-item {
+  color: black;
+}
+
+.offcanvas a:hover {
+  background-color: #4C0B5F;
+}
+
+
+

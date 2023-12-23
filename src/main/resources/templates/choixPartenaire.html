@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Choisir un partenaire</title>
+
+ <link rel="stylesheet" type="text/css"
+	href="../static/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}"/>
+</head>
+<body>
+<div layout:fragment="content">
+<div class = "container">
+<br/>
+      
+       <h5>Partenaires</h5>
+       
+  		 
+  		 <hr/>
+  
+  <br/>
+						<h6 th:text="'Projet :'+' '+${nomProjet}" style="margin:auto"></h6>
+					
+					<br></br>
+					<form th:action="@{/sauvegarderChoixPartenaire}" method="post" >
+					<input type="hidden" name="nomProjet" th:value="${nomProjet}"/>
+						
+					<div class="table-responsive" th:if="${listPartenaire}">
+						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:12px; font-family:Times">
+						<thead>	
+							<tr >
+							<td ></td>
+							<th:block  th:each="l:${listLocalisation}">
+							<td >
+							<input style="text-align:center; background:lightcyan" type="text" id="libelleLocalisation" name="libelleLocalisation" th:text="${l.libelleLocalisation}"  th:value="${l.libelleLocalisation}"/>
+							</td>
+							</th:block>
+							
+							</tr>
+						</thead>
+							
+						<tbody id="bodyForm">
+							<tr th:each="p:${listPartenaire}" valign="middle" >
+							<td>
+							<input style="background:lightcyan" type="text" id="nomPartenaire" name="nomPartenaire" th:text="${p.nomPartenaire}" th:value="${p.nomPartenaire}" />
+							</td>
+							
+							<th:block th:each="l:${listLocalisation}">
+							<td style="text-align:center; padding:20px"><input type="radio" id="radioButtonSelected" name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px;" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" />								
+							</td>
+							</th:block>
+							</tr>				
+						</tbody>
+						</table>
+						 </div>
+						 <br></br>
+						 <button type="submit" class="btn btn-success" style="margin-left:600px">Enregistrer</button>
+						 
+						   <br></br>
+
+  <!-- Fenetre modal choix du type -->
+<div class="modal fade" id="choixPartenaire" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Choisir un type</h5>
+        
+      </div>
+      <div class="modal-body" id="modal-body">
+    	 <input type = "radio"  name="radioButtonModal" id="radioButtonRouge"  style="accent-color:red; height:20px; width:20px;"/>&nbsp;&nbsp;<span style="color:red">Rouge</span> : Egalité de genre<br/>
+		 <input type = "radio"  name="radioButtonModal" id="radioButtonOrange" style="accent-color:orange ; height:20px; width:20px;"/>&nbsp;&nbsp;<span style="color:orange">Orange</span> : Education / Formation professionnelle<br/>
+		 <input type = "radio"  name="radioButtonModal" id="radioButtonJaune" style="accent-color:yellow; height:20px; width:20px;"/>&nbsp;&nbsp;<span style="color:yellow">Jaune</span> : Gouvernance<br/>
+		 <input type = "radio"  name="radioButtonModal" id="radioButtonAucun" style="height:20px; width:20px;"/>&nbsp;&nbsp;<span>Aucun</span><br/>
+      </div>
+     
+      
+      <div class="modal-footer">
+       
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:href="@{/choixPartenaire}">Fermer</button>
+        <a type="button" id="button" class="btn btn-primary" th:onclick="getTypeDeProjet()">Valider</a>
+         
+      </div>
+    </div>
+  </div>
+</div>
+
+<script th:inline="javascript">
+
+function getIdRadioButtonSelected(idButtonRadioSelected, nomPart, libLocalisation){
+	var modal = new bootstrap.Modal(document.getElementById('choixPartenaire'), {
+		  keyboard: false
+		})
+	var data = "<input type='hidden' id='idButtonRadioSel' />"
+	var dataPartenaire = "<input type='hidden' id='nomPart' value='"+nomPart+"' />"
+	var dataLocalisation = "<input type='hidden' id='libLocalisation' value='"+libLocalisation+"' />"
+	document.getElementById('modal-body').innerHTML+=data;
+	document.getElementById('modal-body').innerHTML+=dataPartenaire;
+	document.getElementById('modal-body').innerHTML+=dataLocalisation;
+	modal.show();
+	document.getElementById('idButtonRadioSel').value=idButtonRadioSelected;
+}
+</script>
+<script th:inline="javascript">
+
+function getTypeDeProjet(){
+	var idR=document.getElementById('idButtonRadioSel').value;
+	var radioButtonRouge=document.getElementById('radioButtonRouge');
+	var radioButtonOrange=document.getElementById('radioButtonOrange');
+	var radioButtonJaune=document.getElementById('radioButtonJaune');
+	var radioButtonAucun=document.getElementById('radioButtonAucun');
+	var nomPart = document.getElementById('nomPart').value;
+	var libLoc = document.getElementById('libLocalisation').value;
+	var dataNomPartenaire = "<input type='hidden' name='nomDuPartenaire' id='nomDuPartenaire' value='"+nomPart+"' />"
+	
+	var dataLibelleLocalisation = "<input type='hidden' name='libelleDeLaLocalisation' id='libelleDeLaLocalisation' value='"+libLoc+"' />"
+	
+	document.getElementById('bodyForm').innerHTML+=dataNomPartenaire;
+	document.getElementById('bodyForm').innerHTML+=dataLibelleLocalisation;
+	
+	if(document.getElementById('radioButtonRouge').checked){
+		document.getElementById(idR).checked = true;
+		document.getElementById(idR).style.accentColor = "red";
+		document.getElementById(idR).value = "rouge";
+		document.getElementById('radioButtonSelected').value = "rouge";
+	}
+	else if(document.getElementById('radioButtonOrange').checked){
+		document.getElementById(idR).checked = true;
+		document.getElementById(idR).style.accentColor = "orange";
+		document.getElementById(idR).value = "orange";
+		document.getElementById('radioButtonSelected').value = "orange";
+	}
+		
+	else if(document.getElementById('radioButtonJaune').checked){
+	
+		document.getElementById(idR).checked = true;
+		document.getElementById(idR).style.accentColor = "yellow";
+		document.getElementById(idR).value = "jaune";
+		document.getElementById('radioButtonSelected').value = "jaune";
+	}
+	else if(document.getElementById('radioButtonAucun').checked){
+		document.getElementById(idR).checked = false;
+	}
+	else
+	document.getElementById(idR).checked = false;
+}
+</script>
+</form>
+						
+						 Légende<br/>
+						 <input type = radio style="accent-color:red; height:20px; width:20px; border: 2px solid slategray;background: navy;" checked/>&nbsp;&nbsp;Rouge : Egalité de genre<br/>
+						 <input type = radio style="accent-color:orange ; height:20px; width:20px; border: 5px solid slategray;" checked/>&nbsp;&nbsp;Orange : Education / Formation professionnelle<br/>
+						 <input type = radio style="accent-color:yellow; height:20px; width:20px;" checked/>&nbsp;&nbsp;Jaune : Gouvernance<br/>
+						 
+   </div>
+</div>
+
+
+</body>
+</html>

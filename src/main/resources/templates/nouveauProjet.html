@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Nouveau projet</title>
+<style>
+label{
+	font-weight:400;
+}
+</style>
+
+</head>
+<body>
+	<div layout:fragment="content">
+      
+   
+		<h5>Nouveau projet</h5>
+		<hr/>
+		<div class = "container">
+		
+		<div class="col-md-6" style="margin: auto; line-height:20px;">
+		<!-- <p id="messageSucces" th:if="${messageSucces}" th:text="${messageSucces}" class= "alert alert-success"></p>
+		<p id="messageErreur" th:if="${messageErreur}" th:text="${messageErreur}" class= "alert alert-danger"></p> -->
+		<form th:action="@{/sauvegarderProjet}" method="post"> 
+			<label>Nom du projet</label><span style="color:red">&nbsp;*</span>
+			
+			<input type="text" class = "form-control" name="nomProjet" id="nomProjet" />
+			
+			<label>Responsable</label>
+			<input type="text" class = "form-control" name="responsable" id="responsable" />
+			
+			<label>Bailleur</label>
+			<select id="nomPartenaire" name="nomPartenaire" class="form-control">
+			<option value="" hidden></option>
+			<option th:each="b:${listPartenaire}" th:text="${b.nomPartenaire}" th:value="${b.nomPartenaire}"></option>
+			</select>
+			
+			<label>Localités</label>
+			<select id="libelleLocalisation" name="libelleLocalisation" class="form-control">
+			<option value="" hidden></option>
+			<option th:each="b:${listLocalisation}" th:text="${b.libelleLocalisation}" th:value="${b.libelleLocalisation}"></option>
+			</select>
+			
+			<label>Description</label>
+			<textarea class = "form-control" name="description" id="description" rows="3" style="resize:none"></textarea>
+			
+			<label>Type</label>
+			<select id="type" name="type" class="form-control">
+			<option value="" hidden></option>
+			<option value="Egalite de genre" >Egalité de genre</option>
+			<option value="Education / Formation professionnelle" >Education / Formation professionnelle</option>
+			<option value="Gouvernance" >Gouvernance</option>
+			</select>
+			<label>Début du projet</label>
+			<input type="date" class = "form-control" name="dateDebut" id="dateDebut" />
+			
+			<label>Fin du projet</label>
+			<input type="date" class = "form-control" name="dateFin" id="dateFin" />
+			<br/>
+			<input type="checkbox" name="activate" id="activate" th:checked=true checked/><span>&nbsp;&nbsp;Activer</span>
+			<br></br>
+			
+			<button type="submit" class="btn btn-success" style="margin-left:280px" >Enregistrer</button>
+			
+			<br></br>
+		</form>
+		</div>
+      </div>
+  </div>
+</body>
+</html>
