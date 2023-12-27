@@ -14,22 +14,16 @@
 		<br/>
 		<h5>Nouveau partenaire</h5>
 		<hr/>
-		<div class="col-md-6" >
-		<script type="text/javascript" > 
-
-$(document).ready(function(){
-	setTimeout(function(){
-		$('#messageSucces').fadeOut('fast');},5000);
-})
-</script> 
+		<div class="col-md-6" > 
 
 		<!-- <p id="messageSucces" th:if="${messageSucces}" th:text="${messageSucces}" class= "alert alert-success"></p> -->
 		<form th:action="@{/sauvegarderPartenaire}" method="post"> 
-			<span>Nom du partenaire</span><span style="color:red">&nbsp;*</span>
-			<input type="text" class = "form-control" name="nomPartenaire" id="nomPartenaire" placeholder="Nom du partenaire"/>	
+			<input type="hidden" class = "form-control" name="idPartenaire" th:value="${idPartenaire}"/>
+			<span>Nom du partenaire</span><span style="color:red">&nbsp;</span>
+			<input type="text" class = "form-control" name="nomPartenaire" th:value="${nomPartenaire}" id="nomPartenaire" placeholder="Nom du partenaire"/>	
 			<br/>
 			<span>Adresse</span>
-			<input type="text" class = "form-control" name="adresse" id="adresse" placeholder="Adresse"/>
+			<input type="text" class = "form-control" name="adresse" th:value="${adresse}" id="adresse" placeholder="Adresse"/>
 			<br/>
 			<button type="submit" class="btn btn-success">Enregistrer</button>
 			

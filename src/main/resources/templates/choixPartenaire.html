@@ -5,7 +5,15 @@
 <head>
 <meta charset="UTF-8">
 <title>Choisir un partenaire</title>
+<style>
 
+input[type='radio']:hover {
+  transform:scale(1.5);
+}
+
+
+
+</style>
  <link rel="stylesheet" type="text/css"
 	href="../static/css/bootstrap.min.css"
 	th:href="@{/css/bootstrap.min.css}"/>
@@ -33,8 +41,8 @@
 							<tr >
 							<td ></td>
 							<th:block  th:each="l:${listLocalisation}">
-							<td >
-							<input style="text-align:center; background:lightcyan" type="text" id="libelleLocalisation" name="libelleLocalisation" th:text="${l.libelleLocalisation}"  th:value="${l.libelleLocalisation}"/>
+							<td th:text="${l.libelleLocalisation}" style="text-align:center; background:lightcyan">
+							<input type="hidden" id="libelleLocalisation" name="libelleLocalisation"  th:value="${l.libelleLocalisation}"/>
 							</td>
 							</th:block>
 							
@@ -42,16 +50,28 @@
 						</thead>
 							
 						<tbody id="bodyForm">
+						
 							<tr th:each="p:${listPartenaire}" valign="middle" >
-							<td>
-							<input style="background:lightcyan" type="text" id="nomPartenaire" name="nomPartenaire" th:text="${p.nomPartenaire}" th:value="${p.nomPartenaire}" />
+							<td th:text="${p.nomPartenaire}" style="background:lightcyan">
+							<input  type="hidden" id="nomPartenaire" name="nomPartenaire"  th:value="${p.nomPartenaire}" />
 							</td>
 							
 							<th:block th:each="l:${listLocalisation}">
-							<td style="text-align:center; padding:20px"><input type="radio" id="radioButtonSelected" name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px;" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" />								
+							
+							<td style="text-align:center; padding:20px">
+							
+							<input type="radio" id="radioButtonSelected" name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px;box-shadow:0 0 5px 0px lightblue inset;" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" />
+							<!-- <input th:if="${pr.type} eq 'Egalité de genre'" type="radio" id="radioButtonSelected" name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px; accent-color:red" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" checked />								
+							<input th:if="${pr.type} eq 'Education / Formation professionnelle'" type="radio" id="radioButtonSelected" name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px; accent-color:orange" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" checked />
+							<input th:if="${pr.type} eq 'Gouvernance'" type="radio" id="radioButtonSelected" name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px; accent-color:yellow" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" checked/>
+							 -->
+							
 							</td>
+							
 							</th:block>
-							</tr>				
+							
+							</tr>	
+										
 						</tbody>
 						</table>
 						 </div>
@@ -69,9 +89,9 @@
         
       </div>
       <div class="modal-body" id="modal-body">
-    	 <input type = "radio"  name="radioButtonModal" id="radioButtonRouge"  style="accent-color:red; height:20px; width:20px;"/>&nbsp;&nbsp;<span style="color:red">Rouge</span> : Egalité de genre<br/>
-		 <input type = "radio"  name="radioButtonModal" id="radioButtonOrange" style="accent-color:orange ; height:20px; width:20px;"/>&nbsp;&nbsp;<span style="color:orange">Orange</span> : Education / Formation professionnelle<br/>
-		 <input type = "radio"  name="radioButtonModal" id="radioButtonJaune" style="accent-color:yellow; height:20px; width:20px;"/>&nbsp;&nbsp;<span style="color:yellow">Jaune</span> : Gouvernance<br/>
+    	 <input type = "radio"  name="radioButtonModal" id="radioButtonRouge"  style="accent-color:red; height:20px; width:20px; border: 1px solid #999;border-radius: 50%; outline: none; transition: box-shadow 0.3s ease;"/>&nbsp;&nbsp;<span style="color:red">Rouge</span> : Egalité de genre<br/>
+		 <input type = "radio"  name="radioButtonModal" id="radioButtonOrange" style="accent-color:orange ; height:20px; width:20px;  outline: 4; border: 1px solid #999;border-radius: 50%; outline: none; transition: box-shadow 0.3s ease;"/>&nbsp;&nbsp;<span style="color:orange">Orange</span> : Education / Formation professionnelle<br/>
+		 <input type = "radio"  name="radioButtonModal" id="radioButtonJaune" style="accent-color:yellow; height:20px; width:20px; border: 1px solid #999;border-radius: 50%; outline: none; transition: box-shadow 0.3s ease;"/>&nbsp;&nbsp;<span style="color:yellow;">Jaune</span> : Gouvernance<br/>
 		 <input type = "radio"  name="radioButtonModal" id="radioButtonAucun" style="height:20px; width:20px;"/>&nbsp;&nbsp;<span>Aucun</span><br/>
       </div>
      
@@ -105,6 +125,7 @@ function getIdRadioButtonSelected(idButtonRadioSelected, nomPart, libLocalisatio
 <script th:inline="javascript">
 
 function getTypeDeProjet(){
+	
 	var idR=document.getElementById('idButtonRadioSel').value;
 	var radioButtonRouge=document.getElementById('radioButtonRouge');
 	var radioButtonOrange=document.getElementById('radioButtonOrange');
@@ -124,12 +145,14 @@ function getTypeDeProjet(){
 		document.getElementById(idR).style.accentColor = "red";
 		document.getElementById(idR).value = "rouge";
 		document.getElementById('radioButtonSelected').value = "rouge";
+		
 	}
 	else if(document.getElementById('radioButtonOrange').checked){
 		document.getElementById(idR).checked = true;
 		document.getElementById(idR).style.accentColor = "orange";
 		document.getElementById(idR).value = "orange";
 		document.getElementById('radioButtonSelected').value = "orange";
+		modal.hide();
 	}
 		
 	else if(document.getElementById('radioButtonJaune').checked){
@@ -138,19 +161,22 @@ function getTypeDeProjet(){
 		document.getElementById(idR).style.accentColor = "yellow";
 		document.getElementById(idR).value = "jaune";
 		document.getElementById('radioButtonSelected').value = "jaune";
+		modal.hide();
 	}
 	else if(document.getElementById('radioButtonAucun').checked){
 		document.getElementById(idR).checked = false;
+		modal.hide();
 	}
 	else
-	document.getElementById(idR).checked = false;
+		document.getElementById(idR).checked = false;
+	modal.hide();
 }
 </script>
 </form>
 						
 						 Légende<br/>
-						 <input type = radio style="accent-color:red; height:20px; width:20px; border: 2px solid slategray;background: navy;" checked/>&nbsp;&nbsp;Rouge : Egalité de genre<br/>
-						 <input type = radio style="accent-color:orange ; height:20px; width:20px; border: 5px solid slategray;" checked/>&nbsp;&nbsp;Orange : Education / Formation professionnelle<br/>
+						 <input type = radio style="accent-color:red; height:20px; width:20px;border: 0.15em solid currentColor;" checked/>&nbsp;&nbsp;Rouge : Egalité de genre<br/>
+						 <input type = radio style="accent-color:orange ; height:20px; width:20px; " checked/>&nbsp;&nbsp;Orange : Education / Formation professionnelle<br/>
 						 <input type = radio style="accent-color:yellow; height:20px; width:20px;" checked/>&nbsp;&nbsp;Jaune : Gouvernance<br/>
 						 
    </div>

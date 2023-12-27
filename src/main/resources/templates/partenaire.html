@@ -4,7 +4,17 @@
 	  layout:decorate="~{template}">
 <head>
 <meta charset="UTF-8">
-<title>Choisir un partenaire</title>
+<title>Partenaires</title>
+
+<style>
+table a i{
+	transition: all 0.3s linear;
+}
+.table a:hover i{
+	transform: scale(1.5);
+}
+</style>
+
 </head>
 <body>
 <div layout:fragment="content">
@@ -25,15 +35,15 @@
   				
 					
 					<div class="table-responsive" >
-						<table  class="table table-bordered" id="dataTable" style="width:90%; font-size:13px; font-family:Arial">
+						<table  class="table table-bordered" id="dataTable" style="width:90%; font-size:13px; font-family:Arial;  ">
 							
 						<tbody>
 							<tr th:each="p:${listPartenaire}">
-							<td  ><span th:text="${p.nomPartenaire}"></span><br/><span th:text="${p.adresse}"></span>
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.nomPartenaire}"></span><br/><span th:text="${p.adresse}"></span>
 							</td>
-							<td valign="middle" style="text-align:center">
-							<a th:href="@{/modifierPartenaire(idPartenaire=${p.idPartenaire})}" title="Editer"><i class="far fa-edit" style="color:green; font-size:20px; "></i></a>&ensp;&ensp;
-							<a type="button" title="Supprimer" th:onclick="showModal([[${p.idPartenaire}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; "></i></a>
+							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
+							<a type="button" title="Editer" th:onclick="showModalModifier([[${p.idPartenaire}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idPartenaire}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
 							</td>
 							</tr>				
 						</tbody>
@@ -42,7 +52,7 @@
 						 
    </div>
    <form th:action="@{supprimerPartenaire}" method="post">
-   <!-- Fenetre modal validation -->
+   <!-- Fenetre modal supprimer -->
 <div class="modal fade" id="supPartenaire" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
     <div class="modal-content">
@@ -50,37 +60,61 @@
         <h5 class="modal-title">Partenaire</h5>
         
       </div> -->
-      <div class="modal-body" id="modal-body">
-      <h5>Supprimer ?</h5>
+      <div class="modal-body" id="modal-body-supprimer">
+      <h6>Voulez-vous supprimer ?</h6>
     	 
     	 <div style="text-align:right">
     	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/partenaire}">Non</button>
         <button type="submit" id="button" class="btn btn-danger" >Oui</button>
          </div>
       </div>
-     
-      
-      <!-- <div class="modal-footer">
-       
-        <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/partenaire}">Non</button>
-        <button type="submit" id="button" class="btn btn-danger" >Oui</button>
-         
-      </div> -->
     </div>
   </div>
   <script>
-function showModal(idPartenaire){
+function showModalSupprimer(idPartenaire){
 	var modal = new bootstrap.Modal(document.getElementById('supPartenaire'), {
 		  keyboard: false
 		})
 	var data= "<input type='hidden' name='idPartenaire' value='"+idPartenaire+"' />"
-	document.getElementById('modal-body').innerHTML+=data;
+	document.getElementById('modal-body-supprimer').innerHTML+=data;
+	modal.show();
+}
+
+function showModalModifier(idPartenaire){
+	var modal = new bootstrap.Modal(document.getElementById('modPartenaire'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idPartenaire' value='"+idPartenaire+"' />"
+	document.getElementById('modal-body-modifier').innerHTML+=data;
 	modal.show();
 }
 </script>
 </div>
 
 </form>
+
+<!-- Fenetre modal modifier -->
+
+   <form th:action="@{getDonneesPartenaireAModifier}" method="post">
+   
+<div class="modal fade" id="modPartenaire" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-modifier">
+      <h6>Voulez-vous modifier ?</h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/partenaire}">Non</button>
+        <button type="submit" id="button" class="btn btn-warning" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>
+
 </div>
 
 </body>

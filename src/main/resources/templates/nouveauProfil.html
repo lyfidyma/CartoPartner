@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Nouveau profil</title>
+</head>
+<body>
+<div layout:fragment="content">
+  
+      <div class = "container">
+      <br/>
+      <div class="row">
+      <div class="col-md-11">
+       <h5>Nouveau profil</h5>
+        </div>
+         
+  		 
+  		 <hr/>
+  		 
+  		 <form th:action="@{/sauvegarderProfil}" method="post">
+  							     
+							     
+							     <span  class="form-label">Profil</span>
+							    <select id="profil" name="profil" class="form-control" >
+							      <option value="" hidden>------------</option>
+							      <option value="ROLE_ADMIN">ADMIN</option>
+							       <option value="ROLE_USER">USER</option>						       
+							    </select>
+							  
+							 							   
+						  
+						  <br></br>
+						  
+					    <button type="submit" class="btn btn-success">Enregistrer</button>
+
+					 
+						</form>
+  </div>
+  </div>
+</div>
+</body>
+</html>

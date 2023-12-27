@@ -9,6 +9,10 @@
 label{
 	font-weight:400;
 }
+
+.container{
+	background:#F8F7F7;
+}
 </style>
 
 </head>
@@ -20,10 +24,10 @@ label{
 		<hr/>
 		<div class = "container">
 		
-		<div class="col-md-6" style="margin: auto; line-height:20px;">
+		<div class="col-md-6" style="margin: auto; line-height:30px;">
 		<!-- <p id="messageSucces" th:if="${messageSucces}" th:text="${messageSucces}" class= "alert alert-success"></p>
 		<p id="messageErreur" th:if="${messageErreur}" th:text="${messageErreur}" class= "alert alert-danger"></p> -->
-		<form th:action="@{/sauvegarderProjet}" method="post"> 
+		<form th:action="@{/sauvegarderProjet}" method="post" enctype="multipart/form-data"> 
 			<label>Nom du projet</label><span style="color:red">&nbsp;*</span>
 			
 			<input type="text" class = "form-control" name="nomProjet" id="nomProjet" />
@@ -58,6 +62,9 @@ label{
 			
 			<label>Fin du projet</label>
 			<input type="date" class = "form-control" name="dateFin" id="dateFin" />
+			
+			<label>Ajouter une image</label>
+			<input type="file" class = "form-control" name="file" id="file" style="background: #F7F7D2 "/>
 			<br/>
 			<input type="checkbox" name="activate" id="activate" th:checked=true checked/><span>&nbsp;&nbsp;Activer</span>
 			<br></br>

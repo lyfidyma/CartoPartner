@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Nouvel utilisateur</title>
+<style>
+.col-md-6{
+	line-height:2;
+}
+</style>
+</head>
+<body>
+
+<div layout:fragment="content">
+  
+      <div class = "container">
+      <br/>
+      <div class="row">
+      <div class="col-md-11">
+       <h5>Nouvel utilisateur</h5>
+        </div>
+         
+  		 
+  		 <hr/>
+  		 
+  		 <form th:action="@{/sauvegarderUtilisateur}" method="post">
+  							     
+							      <div class="col-md-6">
+							     <span class="form-label">Nom</span>
+							    <input type="text" name="nomUtilisateur" class="form-control" placeholder="Nom" />
+							     
+							   <span class="form-label">Prénom</span>
+							    <input type="text" name="prenomUtilisateur" class="form-control" placeholder="Prénom" />
+							 
+							   <span class="form-label">Login</span>
+							    <input type="text" name="login" class="form-control" placeholder="login" />
+							     
+							   <span  class="form-label">Mot de passe</span>
+							    <input type="password" name="password" class="form-control" placeholder="Mot de passe" />
+							     
+							      
+							     <span class="form-label">Profil</span>
+							    <select id="profil" name="nomProfil" class="form-control">
+							      
+							      <option th:each="t:${listProfil}" th:text="${t.nomProfil}" th:value="${t.nomProfil}"></option>
+							      
+							    </select>
+							    <input type="hidden" name="idProfil"/>
+							    
+							   <input type="hidden" name="idUtilisateur"/>
+							  	<br/>						   
+					    <button type="submit" class="btn btn-success">Enregistrer</button>
+
+					 
+  </div>
+					 
+						</form>
+  </div>
+  </div>
+</div>
+
+</body>
+</html>

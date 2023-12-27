@@ -10,6 +10,15 @@
 	th:href="@{/css/bootstrap.min.css}"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
+.modal-header{
+	background: linear-gradient(to right,  #F8F7F8 ,   #F8F5F1 ,   #F8F9EA  );
+}
+.modal-body{
+	background: linear-gradient(to right,  #F8F7F8 ,   #F8F5F1 ,   #F8F9EA  );
+}
+.modal-footer{
+	background: linear-gradient(to right,  #F8F7F8 ,   #F8F5F1 ,   #F8F9EA  );
+}
 .circle
     {
     width:80px;
@@ -23,11 +32,13 @@
     margin-top:10px;
     text-align:center;
     background: Tomato;
+     transition: all 0.3s linear;
     display: inline-block;
     }
 .circle:hover
     {
      background-color: #4C0B5F;
+     transform:scale(1.1);
    }  
    
    .circleInactif
@@ -43,12 +54,14 @@
     margin-top:10px;
     text-align:center;
     background:gray;
+    transition: all 0.3s linear;
     display: inline-block;
     }
     
    .circleInactif:hover
     {
      background-color: #4C0B5F;
+     transform:scale(1.1);
    }  
 </style>
 </head>
@@ -75,11 +88,11 @@
   
       <div class="row">
 		<div class="col-md-6" th:if="${listProjet}" th:each="p:${listProjet}">
-		
-		<span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span>
-		<span class="circleInactif" th:if="${p.statut=='inactif'}" th:text="${p.statut}" ></span>
-		<h5 style="font-family:cursive; margin-left:120px; margin-top:-60px" th:text="${p.nomProjet}"></h5>
-		
+				
+		<a id="infosProjetClass" type="button" th:onclick="showInfosModal([[${p.idProjet}]])"><span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span></a>
+		<a id="infosProjetClass" type="button" th:onclick="showInfosModal([[${p.idProjet}]])"><span class="circleInactif" th:if="${p.statut=='inactif'}" th:text="${p.statut}" ></span></a>
+		<h5 style="font-family:cursive; margin-left:120px; margin-top:-70px" th:text="${p.nomProjet}"></h5>
+
 		&ensp;
 		
 		<i class="fas fa-map-marker-alt" aria-hidden="true" style="font-size:24px; color: #D0756F; margin-left:120px"></i>&nbsp;&nbsp;<span th:text="${p.localisation.libelleLocalisation}"></span>
@@ -91,6 +104,101 @@
 		</div>
 		
 		</div>
+
+<!-- Fenetre modal détails du projet -->
+<div class="modal fade" id="infosProjet" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Informations sur le projet</h5>
+        
+      </div>
+      <div class="modal-body" id="modal-body">
+    	 <table style="border:none">
+    	 	<tbody>
+    	 		<tr>
+    	 			<th>Nom du projet</th>
+    	 			<td id="nomProjet"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Responsable</th>
+    	 			<td id="responsable"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Bailleur</th>
+    	 			<td id="bailleur"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Localité</th>
+    	 			<td id="localite"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Description</th>
+    	 			<td id="description"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Type</th>
+    	 			<td id="type"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Début du projet</th>
+    	 			<td id=dateDebut></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Fin du projet</th>
+    	 			<td id="dateFin"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Statut</th>
+    	 			<td id="statut"></td>	
+    	 		</tr>
+    	 	</tbody>
+    	 </table>
+      </div>
+ 
+      <div class="modal-footer">
+       
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Fermer</button>
+         
+      </div>
+    </div>
+  </div>
+</div>
+<script th:inline="javascript">
+function showInfosModal(idProjet){
+	var modal = new bootstrap.Modal(document.getElementById('infosProjet'), {
+		  keyboard: false
+		})
+	modal.show();
+	$.get('/getInfosProjet', {idProjet:idProjet}, function (data) { 
+		if(!data){
+			  document.getElementById('nomProjet').innerHTML= "";
+			  document.getElementById('responsable').innerHTML= "";
+			  document.getElementById('bailleur').innerHTML= "";
+			  document.getElementById('localite').innerHTML= "";
+			  document.getElementById('description').innerHTML= "";
+			  document.getElementById('type').innerHTML= "";
+			  document.getElementById('dateDebut').innerHTML= "";
+			  document.getElementById('dateFin').innerHTML= "";
+			  document.getElementById('statut').innerHTML= "";
+			  
+		  }else{
+			  document.getElementById('nomProjet').innerHTML= data.nomProjet;
+			  document.getElementById('responsable').innerHTML= data.responsable;
+			  document.getElementById('bailleur').innerHTML= data.bailleur;
+			  document.getElementById('localite').innerHTML= data.localite;
+			  document.getElementById('description').innerHTML= data.description;
+			  document.getElementById('type').innerHTML= data.type;
+			  document.getElementById('dateDebut').innerHTML= data.dateDebut;
+			  document.getElementById('dateFin').innerHTML= data.dateFin;
+			  document.getElementById('statut').innerHTML= data.statut;
+		  }
+ })
+		
+	
+}
+    
+  </script>
       </div>
   </div>
 
