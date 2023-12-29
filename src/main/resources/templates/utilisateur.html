@@ -12,9 +12,7 @@ table a i{
 .table a:hover i{
 	transform: scale(1.5);
 }
-.col-md-6{
-	line-height:2;
-}
+
 </style>
 </head>
 <body>
@@ -39,11 +37,15 @@ table a i{
 							
 						<tbody>
 							<tr th:each="u:${listUtilisateur}">
-							<td style="width:80%; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${u.nomUtilisateur}"></span><br/><span th:text="${u.prenomUtilisateur}"></span>
+							<td style="width:50%; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${u.prenomUtilisateur}+' '+${u.nomUtilisateur}"></span>
 							</td>
+							<th:block th:each="p:${u.profil}">
+							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.nomProfil}"></span>
+							</td>
+							</th:block>
 							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
-							<a type="button" title="Editer" ><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
-							<a type="button" title="Supprimer" ><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							<a type="button" title="Editer" th:onclick="showModalModifier([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
 							</td>
 							</tr>				
 						</tbody>
@@ -51,6 +53,73 @@ table a i{
 						 </div>
   </div>
   </div>
+  
+   <form th:action="@{supprimerUtilisateur}" method="post">
+   <!-- Fenetre modal supprimer -->
+<div class="modal fade" id="supUtilisateur" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title">Partenaire</h5>
+        
+      </div> -->
+      <div class="modal-body" id="modal-body-supprimer">
+      <h6>Voulez-vous supprimer <span id="prenomEtNomUserSup"></span> ? </h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/utilisateur}">Non</button>
+        <button type="submit" id="button" class="btn btn-danger" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+  <script>
+function showModalSupprimer(idUtilisateur, nomUtilisateur, prenomUtilisateur){
+	var modal = new bootstrap.Modal(document.getElementById('supUtilisateur'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idUtilisateur' value='"+idUtilisateur+"' />"
+	document.getElementById('modal-body-supprimer').innerHTML+=data;
+	document.getElementById('prenomEtNomUserSup').innerHTML = prenomUtilisateur+' '+nomUtilisateur;
+	modal.show();
+}
+
+function showModalModifier(idUtilisateur, nomUtilisateur, prenomUtilisateur){
+	var modal = new bootstrap.Modal(document.getElementById('modUtilisateur'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idUtilisateur' value='"+idUtilisateur+"' />"
+	document.getElementById('modal-body-modifier').innerHTML+=data;
+	document.getElementById('prenomEtNomUserMod').innerHTML = prenomUtilisateur+' '+nomUtilisateur;
+	modal.show();
+}
+</script>
+</div>
+
+</form>
+
+<!-- Fenetre modal modifier -->
+
+   <form th:action="@{getDonneesUtilisateurAModifier}" method="post">
+   
+<div class="modal fade" id="modUtilisateur" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-modifier">
+      <h6>Voulez-vous modifier l'utilisateur <span id="prenomEtNomUserMod"></span> ? </h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/utilisateur}">Non</button>
+        <button type="submit" id="button" class="btn btn-warning" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>
+  
 </div>
 
 </body>

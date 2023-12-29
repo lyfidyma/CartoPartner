@@ -21,6 +21,7 @@ import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
 import com.carto.sn.entities.Utilisateur;
 import com.carto.sn.service.ICarto;
+import com.carto.sn.storage.CustomMultipartFile;
 
 @Controller
 public class CartoController {
@@ -82,7 +83,7 @@ public class CartoController {
 		model.addAttribute("listLocalisation", listLocalisation);
 		if(nomProjet!=null)
 			model.addAttribute("nomProjet", nomProjet);
-		//model.addAttribute("idProjet", idProjet);
+		model.addAttribute("idProjet", idProjet);
 		return "choixPartenaire";
 	}
 	
@@ -92,7 +93,9 @@ public class CartoController {
 	}
 	
 	@RequestMapping("localisation")
-	public String localisation() {
+	public String localisation(Model model) {
+		List <Localisation> listLocalisation = iCarto.toutesLesLocalisations();
+		model.addAttribute("listLocalisation", listLocalisation);
 		return "localisation";
 	}
 	
@@ -136,14 +139,17 @@ public class CartoController {
 	}
 	
 	@RequestMapping("sauvegarderChoixPartenaire")
-		public String sauvegarderChoixPartenaire(String nomProjet, String nomDuPartenaire, String libelleDeLaLocalisation, 
-				MultipartFile file,String radioButtonSelected, RedirectAttributes ra) throws IOException{
-			String responsable="responsable";
-			String description="description";
+		public String sauvegarderChoixPartenaire(Long idProjet, String nomProjet, String nomDuPartenaire, String libelleDeLaLocalisation, 
+				String radioButtonSelected, RedirectAttributes ra) throws IOException{
+			
+			String responsable=iCarto.projetParId(idProjet).get().getResponsable();
+			String description= iCarto.projetParId(idProjet).get().getDescription();
 			LocalDate dateDebut=LocalDate.now();
 			LocalDate dateFin=LocalDate.now();
 			String statut="En cours";
 			String type="";
+			MultipartFile file = new CustomMultipartFile(iCarto.projetParId(idProjet).get().getDataImage());
+		        
 			if(radioButtonSelected.equals("rouge"))
 				type="Egalité de genre";
 			else if(radioButtonSelected.equals("orange"))
@@ -192,7 +198,9 @@ public class CartoController {
 	}
 	
 	@RequestMapping("nouveauProfil")
-	public String nouveauProfil() {
+	public String nouveauProfil(Model model) {
+		List <Profil> listProfil = iCarto.tousLesProfils();
+		model.addAttribute("listProfil", listProfil);
 		return "nouveauProfil";
 	}
 	
@@ -203,23 +211,64 @@ public class CartoController {
 	}
 	
 	@RequestMapping("utilisateur")
-	public String utiisateur(Model model) {
+	public String utilisateur(Model model) {
 		List <Utilisateur> listUtilisateur = iCarto.tousLesUtilisateurs();
 		model.addAttribute("listUtilisateur", listUtilisateur);
 		return "utilisateur";
 	}
 	
 	@RequestMapping("nouvelUtilisateur")
-	public String nouvelUtiisateur(Model model) {
+	public String nouvelUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, 
+			@ModelAttribute("unProfil") Profil unProfil, Model model) {
 		List <Profil> listProfil = iCarto.tousLesProfils();
 		model.addAttribute("listProfil", listProfil);
 		return "nouvelUtilisateur";
 	}
 	
 	@RequestMapping("sauvegarderUtilisateur")
-	public String sauvegarderUtilisateur(String nomUtilisateur, String prenomUtilisateur, String login, String password, String profil) {
-		iCarto.ajoutUtilisateur(nomUtilisateur, prenomUtilisateur, login, password, profil);
+	public String sauvegarderUtilisateur(Long idUtilisateur, String nomUtilisateur, String prenomUtilisateur, String login, String password, String nomProfil) {
+		iCarto.ajoutUtilisateur(idUtilisateur, nomUtilisateur, prenomUtilisateur, login, password, nomProfil);
 		return "redirect:/utilisateur";
 	}
 	
+	@RequestMapping("supprimerUtilisateur")
+	public String supprimerUtilisateur(Long idUtilisateur) {
+		iCarto.supprimerUtilisateur(idUtilisateur);
+		return "redirect:/utilisateur";
+	}
+	
+	@RequestMapping("getDonneesUtilisateurAModifier")
+	public String getDonneesUtilisateurAModifier(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, 
+			@ModelAttribute("unProfil") Profil unProfil, Model model, Long idUtilisateur) {
+		
+		unUtilisateur = iCarto.findUtilisateurById(idUtilisateur).get();
+		model.addAttribute("unUtilisateur", unUtilisateur);
+		List <Profil> listProfil = iCarto.tousLesProfils();
+		model.addAttribute("listProfil",listProfil);
+		model.addAttribute("flagProfil", iCarto.findUtilisateurById(idUtilisateur).get().getProfil());
+		
+		return "nouvelUtilisateur";
+	}
+	
+	@RequestMapping("supprimerLocalisation")
+	public String supprimerLocalsation(Long idLocalisation) {
+		iCarto.supprimerLocalisation(idLocalisation);
+		return "redirect:/localisation";
+	}
+	
+	@RequestMapping("parametres")
+	public String parametres() {
+		return "parametres";
+	}
+	
+	@RequestMapping("supprimerProfil")
+	public String supprimerProfil(Long idProfil) {
+		iCarto.supprimerProfil(idProfil);
+		return "redirect:/nouveauProfil";
+	}
+	
+	@RequestMapping("appErreur")
+	public String appErreur() {
+		return "appErreur";
+	}
 }

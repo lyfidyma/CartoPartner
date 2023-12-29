@@ -11,13 +11,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
 .modal-header{
-	background: linear-gradient(to right,  #F8F7F8 ,   #F8F5F1 ,   #F8F9EA  );
+	background: linear-gradient(to right,   #EEF6DF  ,   #F8F5F1 ,   #F8F9EA  );
 }
 .modal-body{
 	background: linear-gradient(to right,  #F8F7F8 ,   #F8F5F1 ,   #F8F9EA  );
 }
 .modal-footer{
-	background: linear-gradient(to right,  #F8F7F8 ,   #F8F5F1 ,   #F8F9EA  );
+	background: linear-gradient(to right,  #F8F9EA ,   #F8F5F1 ,    #EEF6DF    );
 }
 .circle
     {
@@ -32,7 +32,7 @@
     margin-top:10px;
     text-align:center;
     background: Tomato;
-     transition: all 0.3s linear;
+    transition: all 0.3s linear;
     display: inline-block;
     }
 .circle:hover
@@ -89,10 +89,9 @@
       <div class="row">
 		<div class="col-md-6" th:if="${listProjet}" th:each="p:${listProjet}">
 				
-		<a id="infosProjetClass" type="button" th:onclick="showInfosModal([[${p.idProjet}]])"><span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span></a>
-		<a id="infosProjetClass" type="button" th:onclick="showInfosModal([[${p.idProjet}]])"><span class="circleInactif" th:if="${p.statut=='inactif'}" th:text="${p.statut}" ></span></a>
+		<a id="infosProjetClass" type="button" th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.responsable}]], [[${p.partenaire.nomPartenaire}]], [[${p.localisation.libelleLocalisation}]], [[${p.description}]], [[${p.type}]], [[${p.dateDebut}]], [[${p.dateFin}]], [[${p.statut}]])"><span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span></a>
+		<a id="infosProjetClass" type="button" th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.responsable}]], [[${p.partenaire.nomPartenaire}]], [[${p.localisation.libelleLocalisation}]], [[${p.description}]], [[${p.type}]], [[${p.dateDebut}]], [[${p.dateFin}]], [[${p.statut}]])"><span class="circleInactif" th:if="${p.statut=='inactif'}" th:text="${p.statut}" ></span></a>
 		<h5 style="font-family:cursive; margin-left:120px; margin-top:-70px" th:text="${p.nomProjet}"></h5>
-
 		&ensp;
 		
 		<i class="fas fa-map-marker-alt" aria-hidden="true" style="font-size:24px; color: #D0756F; margin-left:120px"></i>&nbsp;&nbsp;<span th:text="${p.localisation.libelleLocalisation}"></span>
@@ -110,7 +109,7 @@
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Informations sur le projet</h5>
+        <h5 class="modal-title" style="font-family:Fantasy">Informations sur le projet</h5>
         
       </div>
       <div class="modal-body" id="modal-body">
@@ -165,36 +164,23 @@
   </div>
 </div>
 <script th:inline="javascript">
-function showInfosModal(idProjet){
+function showInfosModal(idProjet, nomProjet, responsable, bailleur, localite, description, type, dateDebut, dateFin, statut){
 	var modal = new bootstrap.Modal(document.getElementById('infosProjet'), {
 		  keyboard: false
 		})
-	modal.show();
-	$.get('/getInfosProjet', {idProjet:idProjet}, function (data) { 
-		if(!data){
-			  document.getElementById('nomProjet').innerHTML= "";
-			  document.getElementById('responsable').innerHTML= "";
-			  document.getElementById('bailleur').innerHTML= "";
-			  document.getElementById('localite').innerHTML= "";
-			  document.getElementById('description').innerHTML= "";
-			  document.getElementById('type').innerHTML= "";
-			  document.getElementById('dateDebut').innerHTML= "";
-			  document.getElementById('dateFin').innerHTML= "";
-			  document.getElementById('statut').innerHTML= "";
+	
 			  
-		  }else{
-			  document.getElementById('nomProjet').innerHTML= data.nomProjet;
-			  document.getElementById('responsable').innerHTML= data.responsable;
-			  document.getElementById('bailleur').innerHTML= data.bailleur;
-			  document.getElementById('localite').innerHTML= data.localite;
-			  document.getElementById('description').innerHTML= data.description;
-			  document.getElementById('type').innerHTML= data.type;
-			  document.getElementById('dateDebut').innerHTML= data.dateDebut;
-			  document.getElementById('dateFin').innerHTML= data.dateFin;
-			  document.getElementById('statut').innerHTML= data.statut;
-		  }
- })
-		
+			  document.getElementById('nomProjet').innerHTML= nomProjet;
+			  document.getElementById('responsable').innerHTML= responsable;
+			  document.getElementById('bailleur').innerHTML= bailleur;
+			  document.getElementById('localite').innerHTML= localite;
+			  document.getElementById('description').innerHTML= description;
+			  document.getElementById('type').innerHTML= type;
+			  document.getElementById('dateDebut').innerHTML= dateDebut;
+			  document.getElementById('dateFin').innerHTML= dateFin;
+			  document.getElementById('statut').innerHTML= statut;
+		  
+			  modal.show();
 	
 }
     

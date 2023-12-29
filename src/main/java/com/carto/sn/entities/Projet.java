@@ -36,7 +36,6 @@ public class Projet {
 	private String responsable;
 	private String description;
 	private String type;
-	private String cheminImage;
 	@Lob
     @Column(length = Integer.MAX_VALUE)
     private byte[] dataImage;

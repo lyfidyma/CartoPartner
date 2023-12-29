@@ -34,6 +34,7 @@ input[type='radio']:hover {
 					<br></br>
 					<form th:action="@{/sauvegarderChoixPartenaire}" method="post" >
 					<input type="hidden" name="nomProjet" th:value="${nomProjet}"/>
+					<input type="hidden" name="idProjet" th:value="${idProjet}"/>
 						
 					<div class="table-responsive" th:if="${listPartenaire}">
 						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:12px; font-family:Times">
@@ -99,7 +100,7 @@ input[type='radio']:hover {
       <div class="modal-footer">
        
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:href="@{/choixPartenaire}">Fermer</button>
-        <a type="button" id="button" class="btn btn-primary" th:onclick="getTypeDeProjet()">Valider</a>
+        <a type="button" id="buttonValider" class="btn btn-primary" >Valider</a>
          
       </div>
     </div>
@@ -113,64 +114,70 @@ function getIdRadioButtonSelected(idButtonRadioSelected, nomPart, libLocalisatio
 		  keyboard: false
 		})
 	var data = "<input type='hidden' id='idButtonRadioSel' />"
+	
 	var dataPartenaire = "<input type='hidden' id='nomPart' value='"+nomPart+"' />"
 	var dataLocalisation = "<input type='hidden' id='libLocalisation' value='"+libLocalisation+"' />"
 	document.getElementById('modal-body').innerHTML+=data;
+	
 	document.getElementById('modal-body').innerHTML+=dataPartenaire;
 	document.getElementById('modal-body').innerHTML+=dataLocalisation;
 	modal.show();
 	document.getElementById('idButtonRadioSel').value=idButtonRadioSelected;
+	
+	document.getElementById('buttonValider').addEventListener('click', function(){
+		modal.hide();
+		var idR=document.getElementById('idButtonRadioSel').value;
+		var radioButtonRouge=document.getElementById('radioButtonRouge');
+		var radioButtonOrange=document.getElementById('radioButtonOrange');
+		var radioButtonJaune=document.getElementById('radioButtonJaune');
+		var radioButtonAucun=document.getElementById('radioButtonAucun');
+		
+		var nomPart = document.getElementById('nomPart').value;
+		var libLoc = document.getElementById('libLocalisation').value;
+		
+		var dataNomPartenaire = "<input type='hidden' name='nomDuPartenaire' id='nomDuPartenaire' value='"+nomPart+"' />"
+		
+		var dataLibelleLocalisation = "<input type='hidden' name='libelleDeLaLocalisation' id='libelleDeLaLocalisation' value='"+libLoc+"' />"
+		
+		document.getElementById('bodyForm').innerHTML+=dataNomPartenaire;
+		document.getElementById('bodyForm').innerHTML+=dataLibelleLocalisation;
+		
+		if(document.getElementById('radioButtonRouge').checked){
+			document.getElementById(idR).checked = true;
+			document.getElementById(idR).style.accentColor = "red";
+			document.getElementById(idR).value = "rouge";
+			document.getElementById('radioButtonSelected').value = "rouge";
+			
+		}
+		else if(document.getElementById('radioButtonOrange').checked){
+			document.getElementById(idR).checked = true;
+			document.getElementById(idR).style.accentColor = "orange";
+			document.getElementById(idR).value = "orange";
+			document.getElementById('radioButtonSelected').value = "orange";
+		}
+			
+		else if(document.getElementById('radioButtonJaune').checked){
+		
+			document.getElementById(idR).checked = true;
+			document.getElementById(idR).style.accentColor = "yellow";
+			document.getElementById(idR).value = "jaune";
+			document.getElementById('radioButtonSelected').value = "jaune";
+		}
+		else if(document.getElementById('radioButtonAucun').checked){
+			document.getElementById(idR).checked = false;
+			modal.hide();
+		}
+		else{
+			document.getElementById(idR).checked = false;
+		}
+		modal.hide();
+		
+	})
+		
+	
+	    
 }
-</script>
-<script th:inline="javascript">
 
-function getTypeDeProjet(){
-	
-	var idR=document.getElementById('idButtonRadioSel').value;
-	var radioButtonRouge=document.getElementById('radioButtonRouge');
-	var radioButtonOrange=document.getElementById('radioButtonOrange');
-	var radioButtonJaune=document.getElementById('radioButtonJaune');
-	var radioButtonAucun=document.getElementById('radioButtonAucun');
-	var nomPart = document.getElementById('nomPart').value;
-	var libLoc = document.getElementById('libLocalisation').value;
-	var dataNomPartenaire = "<input type='hidden' name='nomDuPartenaire' id='nomDuPartenaire' value='"+nomPart+"' />"
-	
-	var dataLibelleLocalisation = "<input type='hidden' name='libelleDeLaLocalisation' id='libelleDeLaLocalisation' value='"+libLoc+"' />"
-	
-	document.getElementById('bodyForm').innerHTML+=dataNomPartenaire;
-	document.getElementById('bodyForm').innerHTML+=dataLibelleLocalisation;
-	
-	if(document.getElementById('radioButtonRouge').checked){
-		document.getElementById(idR).checked = true;
-		document.getElementById(idR).style.accentColor = "red";
-		document.getElementById(idR).value = "rouge";
-		document.getElementById('radioButtonSelected').value = "rouge";
-		
-	}
-	else if(document.getElementById('radioButtonOrange').checked){
-		document.getElementById(idR).checked = true;
-		document.getElementById(idR).style.accentColor = "orange";
-		document.getElementById(idR).value = "orange";
-		document.getElementById('radioButtonSelected').value = "orange";
-		modal.hide();
-	}
-		
-	else if(document.getElementById('radioButtonJaune').checked){
-	
-		document.getElementById(idR).checked = true;
-		document.getElementById(idR).style.accentColor = "yellow";
-		document.getElementById(idR).value = "jaune";
-		document.getElementById('radioButtonSelected').value = "jaune";
-		modal.hide();
-	}
-	else if(document.getElementById('radioButtonAucun').checked){
-		document.getElementById(idR).checked = false;
-		modal.hide();
-	}
-	else
-		document.getElementById(idR).checked = false;
-	modal.hide();
-}
 </script>
 </form>
 						

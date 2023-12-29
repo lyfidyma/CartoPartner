@@ -1,4 +1,4 @@
-package com.carto.sn;
+package com.carto.sn.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

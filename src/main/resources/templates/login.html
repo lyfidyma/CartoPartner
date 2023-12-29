@@ -5,9 +5,9 @@
         
         
         <style>
-        .col-md-6{
+        .connexion{
         margin:auto;
-        margin-top:150px;
+        margin-top:200px;
         }
         
         </style>
@@ -19,39 +19,28 @@
     <body >
      
      <div class="container">
-    <div class="col-md-6">
+    <div class="connexion col-md-4">
     
     
     
-        <div th:if="${param.error}" class= "alert alert-danger"><i class="fa fa-info-circle"></i>
-            <span ><i class="glyphicon glyphicon-info-sign"></i></span>&nbsp;Identifiant ou mot de passe invalide
+        <div th:if="${param.error}" class= "alert text-danger">
+        Identifiant ou mot de passe invalide
         </div>
-        <div th:if="${param.logout}" class= "alert alert-success">
-             <span ><i class="glyphicon glyphicon-info-sign"></i></span>&nbsp;Vous êtes déconnecté
+        <div th:if="${param.logout}" class= "alert text-success">
+             Déconnecté
         </div>
         <form th:action="@{/login}" method="post">
-<span class="form-label" > Login</span>
-            
-             
-             <input type="text" name="username" class="form-control" id="username" placeholder="login"/> 
-           
-            
-           <br/>
-              
-            <span  class="form-label" > Mot de passe</span>
-          
-             
-             <input type="password" name="password" class="form-control" id="password" placeholder="Mot de passe"/> 
-            
-             <br/>
-             
+		<span> Login</span>          
+             <input type="text" name="username" class="form-control" id="username" placeholder="login"/>      
+           <br/>            
+            <span> Mot de passe</span>
+              <div class="input-group">
+             <input type="password" name="password" class="form-control" id="password" placeholder="mot de passe"/> 
+             <i class="fa fa-eye-slash" aria-hidden="true"></i>
+             </div>       
+             <br/>      
             <button type="submit" class="form-control btn btn-primary" >Connexion </button>
-           
-             
-           
-        </form>
-        
-        
+         </form>    
 		</div>
 	</div>	
     </body>

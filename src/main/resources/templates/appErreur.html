@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div layout:fragment="content">
+  
+      <div class = "container">
+      <br/>
+      <div class="row">
+      <div class="col-md-11">
+       <h5>Erreur</h5>
+        </div>
+  		 
+  		 <hr/>
+  		 
+  		 La requête ne peut être exécutée...
+  		 <a th:href="@{index}">Accueil</a>
+  		 </div>
+  		 </div>
+  		 </div>
+</body>
+</html>

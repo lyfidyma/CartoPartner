@@ -88,16 +88,8 @@ public class CartoImpl implements ICarto{
 			String description, String type,  MultipartFile file, String statut, LocalDate dateDebut, LocalDate dateFin) throws IOException{
 		
 		Projet proj = null;
-		 String cheminImage = null;
 		Localisation loc = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
 		Partenaire part = partenaireRepository.findByNomPartenaire(nomPartenaire);
-		/*
-		 * if(file.isEmpty()==false) { storageService.init();
-		 * storageService.store(file); Path path =
-		 * storageService.load(file.getOriginalFilename()); cheminImage =
-		 * MvcUriComponentsBuilder .fromMethodName(FileUploadController.class,
-		 * "serveFile", path.getFileName().toString()).build().toString(); }
-		 */
 		proj = projetRepository.save(new Projet(nomProjet, dateDebut, dateFin, responsable, description, type, file.getBytes(), statut, part, loc));
 		return proj;
 	}
@@ -156,14 +148,24 @@ public class CartoImpl implements ICarto{
 	}
 
 	@Override
-	public Utilisateur ajoutUtilisateur(String nom, String prenom, String login, String password, String profil) {
+	public Utilisateur ajoutUtilisateur(Long idUtilisateur, String nom, String prenom, String login, String password, String profil) {
 		Utilisateur utilisateur = null;
 		Profil profilRole = profilRepository.findByNomProfil(profil);
 		Set<Profil> roles = Stream.of(profilRole)
                 .collect(Collectors.toCollection(HashSet::new));
-		
+		if(idUtilisateur == null) {
 			utilisateur = utilisateurRepository.save(new Utilisateur(nom, prenom, login, passwordEncoder.encode(password)));
-			utilisateur.setProfil(roles);
+			
+		}else if(idUtilisateur!=null){
+			utilisateur = utilisateurRepository.findById(idUtilisateur).orElse(utilisateur);
+			utilisateur.setNomUtilisateur(nom);
+			utilisateur.setPrenomUtilisateur(prenom);
+			utilisateur.setLogin(login);
+			if(password.isBlank()==false)
+				utilisateur.setPassword(passwordEncoder.encode(password));
+				utilisateurRepository.save(utilisateur);
+		}
+		utilisateur.setProfil(roles);
 		return utilisateur;
 	}
 
@@ -175,6 +177,29 @@ public class CartoImpl implements ICarto{
 	@Override
 	public List<Utilisateur> tousLesUtilisateurs() {
 		return utilisateurRepository.findAll();
+	}
+
+	@Override
+	public void supprimerUtilisateur(Long idUtilisateur) {
+		 utilisateurRepository.deleteById(idUtilisateur);
+		
+	}
+
+	@Override
+	public Optional<Utilisateur> findUtilisateurById(Long idUtilisateur) {
+		return utilisateurRepository.findById(idUtilisateur);
+	}
+
+	@Override
+	public void supprimerLocalisation(Long idLocalisation) {
+		localisationRepository.deleteById(idLocalisation);
+		
+	}
+
+	@Override
+	public void supprimerProfil(Long idProfil) {
+		profilRepository.deleteById(idProfil);
+		
 	}
 
 	

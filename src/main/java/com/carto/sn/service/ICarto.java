@@ -32,8 +32,12 @@ public interface ICarto {
 	public Optional <Partenaire> findPartenaireById(Long id);
 	public List<Projet> chercher(String motCle);
 	public Profil ajoutProfil(String profil);
-	public Utilisateur ajoutUtilisateur(String nom, String prenom, String login, String password, String profil);
+	public Utilisateur ajoutUtilisateur(Long idUtilisateur, String nom, String prenom, String login, String password, String profil);
 	public List <Profil> tousLesProfils();
 	public List <Utilisateur> tousLesUtilisateurs();
+	public void supprimerUtilisateur(Long idUtilisateur);
+	public Optional<Utilisateur> findUtilisateurById(Long idUtilisateur);
+	public void supprimerLocalisation(Long idLocalisation);
+	public void supprimerProfil(Long idProfil);
 
 }
