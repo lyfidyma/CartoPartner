@@ -13,6 +13,9 @@ table a i{
 .table a:hover i{
 	transform: scale(1.5);
 }
+.error{
+	color:red;
+}
 
 </style>
 </head>
@@ -21,37 +24,36 @@ table a i{
   
       <div class = "container">
       <br/>
-     
-      
-       <h5>Nouveau profil</h5>
-       
-         
-  		 
+       <h5>Profils</h5> 		 
   		 <hr/>
-  		 <div class="row">
-  		  <div class="col-md-6">
-  		 <form th:action="@{/sauvegarderProfil}" method="post">
-  							     
+  		<div style="margin: auto; background:#FFFF; width:50%; border-radius:10px; border: 2px solid #F6DFE3; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+  		  <div class="col-md-8" style="margin: auto;">
+  		 <form th:action="@{/sauvegarderProfil}" method="post" th:object="${unProfil}">
+  			<br/>				     
+							  <div class="form-floating  mb-3">	  
 							     
-							     <span  class="form-label">Profil</span>
-							    <select id="profil" name="profil" class="form-control" >
+							    <select id="profil" th:field="*{nomProfil}" class="form-control" >
 							      <option value="" hidden>------------</option>
 							      <option value="ROLE_ADMIN">ADMIN</option>
 							       <option value="ROLE_USER">USER</option>						       
 							    </select>
-							  
-							 							   
+							    <label  class="form-label">Profil</label>
+								  <span th:if="${#fields.hasErrors('nomProfil')}" th:errors="*{nomProfil}" th:errorclass="error"></span>
+								  <span style="color:red">[[${messageDoublon}]]</span>
+							 		</div>					   
 						  
-						  <br/>
+						
 						  
-					    <button type="submit" class="btn btn-success">Enregistrer</button>
+					    <button type="submit" class="btn btn-success" style="margin-left:160px">Enregistrer</button>
 
-					 
+					 <br></br>
 						</form>
 						</div>
-						<div class="col-md" style="margin-left:300px; margin-top:25px">
+						</div>
+						<div class="col-md-6" style="margin:auto; margin-top:25px" th:if="${listProfil}">
 			<div class="table-responsive" >
-						<table  class="table table-bordered" id="dataTable" style="width:60%; font-size:13px; font-family:Arial;  ">
+						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px; font-family:Arial;  ">
 							
 						<tbody>
 							<tr th:each="p:${listProfil}">
@@ -63,9 +65,7 @@ table a i{
 							</tr>				
 						</tbody>
 						</table>
-						 </div>
-						 </div>
-						  </div>
+						 
 <form th:action="@{supprimerProfil}" method="post">
    <!-- Fenetre modal supprimer -->
 <div class="modal fade" id="supProfil" role="dialog">
@@ -96,7 +96,9 @@ function showModalSupprimer(idProfil, nomProfil){
 </div>
 
 </form>
- 
+ </div>
+ </div>
+  
   </div>
 </div>
 </body>

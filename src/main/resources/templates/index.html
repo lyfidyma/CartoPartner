@@ -31,7 +31,7 @@
     margin-left:20px;
     margin-top:10px;
     text-align:center;
-    background: Tomato;
+    background: #E74C3C;
     transition: all 0.3s linear;
     display: inline-block;
     }
@@ -53,7 +53,7 @@
     margin-left:20px;
     margin-top:10px;
     text-align:center;
-    background:gray;
+    background:#5D6D7E;
     transition: all 0.3s linear;
     display: inline-block;
     }
@@ -65,26 +65,28 @@
    }  
 </style>
 </head>
-<body>
-  <div layout:fragment="content">
+<body >
+  <div layout:fragment="content" >
   
-      <div class = "container">
+      <div class = "container" >
       <br/>
-      <div class="row">
+      <div class="row" >
       <div class="col-md-11">
-       <h5>Projets</h5>
+      
         </div>
          <div class="col-md-1">
   		<a class="btn btn-outline-danger" th:href="@{/nouveauProjet}" style="color:black">Ajouter</a>
   		 </div>
   		 &ensp;
   		 
-  		 <hr/>
+  		 
   </div>
   
      
       
-  
+  <div>
+	<h4 th:if="${listProjet.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouveauProjet}">Ajouter un projet</a> </h4>
+	</div>
   
       <div class="row">
 		<div class="col-md-6" th:if="${listProjet}" th:each="p:${listProjet}">
@@ -100,40 +102,39 @@
 		<span th:text="${p.dateDebut}" style="margin-left:135px"></span>&nbsp;au&nbsp;<span th:text="${p.dateFin}"></span>
 		<br></br>
 		<br></br>
-		</div>
 		
-		</div>
 
 <!-- Fenetre modal détails du projet -->
-<div class="modal fade" id="infosProjet" role="dialog">
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-    <div class="modal-content">
+<div class="modal fade" id="infosProjet" role="dialog" >
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document" >
+    <div class="modal-content" >
       <div class="modal-header">
         <h5 class="modal-title" style="font-family:Fantasy">Informations sur le projet</h5>
         
       </div>
-      <div class="modal-body" id="modal-body">
+      <div class="modal-body" id="modal-body" >
     	 <table style="border:none">
     	 	<tbody>
     	 		<tr>
-    	 			<th>Nom du projet</th>
+    	 			<th style="width:30%">Nom du projet</th>
     	 			<td id="nomProjet"></td>	
     	 		</tr>
     	 		<tr>
     	 			<th>Responsable</th>
     	 			<td id="responsable"></td>	
     	 		</tr>
-    	 		<tr>
-    	 			<th>Bailleur</th>
-    	 			<td id="bailleur"></td>	
-    	 		</tr>
-    	 		<tr>
-    	 			<th>Localité</th>
-    	 			<td id="localite"></td>	
-    	 		</tr>
+    	 		
     	 		<tr>
     	 			<th>Description</th>
     	 			<td id="description"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Bailleur</th>
+    	 			<td id="nomPartenaire"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Localisation</th>
+    	 			<td id="libelleLocalisation"></td>	
     	 		</tr>
     	 		<tr>
     	 			<th>Type</th>
@@ -164,7 +165,7 @@
   </div>
 </div>
 <script th:inline="javascript">
-function showInfosModal(idProjet, nomProjet, responsable, bailleur, localite, description, type, dateDebut, dateFin, statut){
+function showInfosModal(idProjet, nomProjet, responsable, nomPartenaire, libelleLocalisation, description, type, dateDebut, dateFin, statut){
 	var modal = new bootstrap.Modal(document.getElementById('infosProjet'), {
 		  keyboard: false
 		})
@@ -172,9 +173,9 @@ function showInfosModal(idProjet, nomProjet, responsable, bailleur, localite, de
 			  
 			  document.getElementById('nomProjet').innerHTML= nomProjet;
 			  document.getElementById('responsable').innerHTML= responsable;
-			  document.getElementById('bailleur').innerHTML= bailleur;
-			  document.getElementById('localite').innerHTML= localite;
 			  document.getElementById('description').innerHTML= description;
+			  document.getElementById('nomPartenaire').innerHTML= nomPartenaire;
+			  document.getElementById('libelleLocalisation').innerHTML= libelleLocalisation;
 			  document.getElementById('type').innerHTML= type;
 			  document.getElementById('dateDebut').innerHTML= dateDebut;
 			  document.getElementById('dateFin').innerHTML= dateFin;
@@ -185,6 +186,9 @@ function showInfosModal(idProjet, nomProjet, responsable, bailleur, localite, de
 }
     
   </script>
+  </div>
+		
+		</div>
       </div>
   </div>
 

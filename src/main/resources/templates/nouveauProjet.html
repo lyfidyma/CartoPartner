@@ -6,13 +6,15 @@
 <meta charset="UTF-8">
 <title>Nouveau projet</title>
 <style>
-label{
-	font-weight:400;
+.error{
+	color:red;
 }
-
-.container{
-	background:#F8F7F7;
-}
+<!--.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label,
+.form-floating>.form-select~label {
+  opacity: .65;
+  transform: scale(.85) translateY(-.5rem) translateX(.15rem);
+}-->
 </style>
 
 </head>
@@ -20,59 +22,96 @@ label{
 	<div layout:fragment="content">
       
    
+		
+		<div class = "container">
+		 &ensp;
 		<h5>Nouveau projet</h5>
 		<hr/>
-		<div class = "container">
-		
-		<div class="col-md-6" style="margin: auto; line-height:30px;">
+		<div style="margin: auto; background:#FFFF; width:60%; border-radius:10px; border: 2px solid #FFFFFF; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+		<div class="col-md-9" style="margin: auto; line-height:30px;">
 		<span style="color:red">[[${messageFile}]]</span>
-		<form th:action="@{/sauvegarderProjet}" method="post" enctype="multipart/form-data"> 
-			<label>Nom du projet</label><span style="color:red">&nbsp;*</span>
+		
+		<form th:action="@{/sauvegarderProjet}" method="post" enctype="multipart/form-data" th:object="${unProjet}"> 
+		<input type="hidden" th:field="*{idProjet}"/>
+		<br/>
+			<div class="form-floating  mb-3">		
+			<input type="text" class = "form-control" th:field="*{nomProjet}" id="nomProjet" placeholder="Nom du projet"/>
+			<label for="nomProjet">Nom du projet<span style="color:red">&nbsp;*</span></label>
+			<span th:if="${messageErreurNomProj}" th:text="${messageErreurNomProj}" style="color:red"></span>
+			</div>
 			
-			<input type="text" class = "form-control" name="nomProjet" id="nomProjet" />
+			<div class="form-floating  mb-3">	
+			<input type="text" class = "form-control" th:field="*{responsable}" id="responsable" placeholder="Responsable"/>
+			<label for="responsable">Responsable</label>
+			</div>
 			
-			<label>Responsable</label>
-			<input type="text" class = "form-control" name="responsable" id="responsable" />
-			
-			<label>Bailleur</label>
-			<select id="nomPartenaire" name="nomPartenaire" class="form-control">
-			<option value="" hidden></option>
+			<div th:object="${unPartenaire}">
+			<div class="form-floating mb-3">	
+			<select class="form-select" id="nomPartenaire" th:field="*{nomPartenaire}" >
+			<option value="" hidden>Sélectionner</option>
 			<option th:each="b:${listPartenaire}" th:text="${b.nomPartenaire}" th:value="${b.nomPartenaire}"></option>
 			</select>
+			<label for="nomPartenaire">Bailleur<span style="color:red">&nbsp;*</span></label>
+			<span th:if="${messageErreurPart}" th:text="${messageErreurPart}" style="color:red"></span>
+			</div>
+			</div>
 			
-			<label>Localités</label>
-			<select id="libelleLocalisation" name="libelleLocalisation" class="form-control">
-			<option value="" hidden></option>
+			<div th:object="${uneLocalisation}">
+			<div class="form-floating mb-3">	
+			<select id="libelleLocalisation" th:field="*{libelleLocalisation}" class="form-control">
+			<option value="" hidden >Sélectionner</option>
 			<option th:each="b:${listLocalisation}" th:text="${b.libelleLocalisation}" th:value="${b.libelleLocalisation}"></option>
 			</select>
+			<label for="libelleLocalisation">Localités<span style="color:red">&nbsp;*</span></label>
+			<span style="color:red">[[${messageErreurLoc}]]</span>
+			</div>
+			</div>
 			
-			<label>Description</label>
-			<textarea class = "form-control" name="description" id="description" rows="3" style="resize:none"></textarea>
+			<div class="form-floating mb-3">
+			<input type="text" class = "form-control" th:field="*{description}" id="description" placeholder="Description"/>
+			<label for="description">Description</label>
+			</div>
 			
-			<label>Type</label>
-			<select id="type" name="type" class="form-control">
-			<option value="" hidden></option>
+			<div class="form-floating mb-3">
+			<select id="type" th:field="*{type}" class="form-control">
+			<option value="" hidden>Sélectionner</option>
 			<option value="Egalite de genre" >Egalité de genre</option>
 			<option value="Education / Formation professionnelle" >Education / Formation professionnelle</option>
 			<option value="Gouvernance" >Gouvernance</option>
 			</select>
-			<label>Début du projet</label>
-			<input type="date" class = "form-control" name="dateDebut" id="dateDebut" />
+			<label for="type">Type<span style="color:red">&nbsp;*</span></label>
+			<span style="color:red">[[${messageErreurType}]]</span>
+			</div>
 			
-			<label>Fin du projet</label>
-			<input type="date" class = "form-control" name="dateFin" id="dateFin" />
+			<div class="form-floating mb-3">
+			<input type="date" class = "form-control" name="dateDebut" th:value="${dateDebutString}" id="dateDebut" />
+			<label for="dateDebut">Début du projet</label>
+			</div>
 			
-			<label>Ajouter une image</label>
+			<div class="form-floating mb-3">
+			<input type="date" class = "form-control" name="dateFin" th:value="${dateFinString}" id="dateFin" />
+			<label for="dateFin">Fin du projet</label>
+			</div>
+			
+			<label for="file">Ajouter une image</label>
 			<input type="file" class = "form-control" name="file" id="file" style="background: #F7F7D2 "/>
+			
+			
 			<br/>
-			<input type="checkbox" name="activate" id="activate" th:checked=true checked/><span>&nbsp;&nbsp;Activer</span>
+			<input type="checkbox" style="width:18px; height:18px" name="activate" id="activate" th:checked=true checked/>
+			<label for="activate">&nbsp;&nbsp;Activer</label>
 			<br></br>
 			
-			<button type="submit" class="btn btn-success" style="margin-left:280px" >Enregistrer</button>
-			
+			<button type="submit" class="btn btn-success" style="margin-left:250px" >Enregistrer</button>
 			<br></br>
+			
+			
 		</form>
+		
 		</div>
+		</div>
+		<br></br>
       </div>
   </div>
 </body>

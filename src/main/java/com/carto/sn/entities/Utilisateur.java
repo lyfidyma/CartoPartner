@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,12 @@ public class Utilisateur {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long idUtilisateur;
 	//@NotBlank(message="Renseigner le nom")
+	@NotEmpty(message="Renseigner le nom")
 	private String nomUtilisateur;
 	//@NotBlank(message="Renseigner le prénom")
+	@NotEmpty(message="Renseigner le prénom")
 	private String prenomUtilisateur;
+	@NotEmpty(message="Renseigner le login")
 	private String login;
 	private String password;
 	@ManyToMany(fetch = FetchType.EAGER)

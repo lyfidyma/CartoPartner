@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Localisation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idLocalisation;
+	@NotEmpty(message="Renseigner la localité")
 	private String libelleLocalisation;
 	@OneToMany(mappedBy = "localisation")
 	private Collection <Projet> projet;

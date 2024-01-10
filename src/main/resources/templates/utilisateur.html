@@ -12,7 +12,9 @@ table a i{
 .table a:hover i{
 	transform: scale(1.5);
 }
-
+table td:hover{
+	background:#E6EBF0;
+}
 </style>
 </head>
 <body>
@@ -23,7 +25,7 @@ table a i{
       <br/>
       <div class="row">
       <div class="col-md-11">
-       <h5>Utilisateur</h5>
+       <h5>Utilisateurs</h5>
         </div>
          <div class="col-md-1">
   		<a class="btn btn-outline-danger" th:href="@{/nouvelUtilisateur}" style="color:black">Ajouter</a>
@@ -31,8 +33,10 @@ table a i{
   		 &ensp;
   		 
   		 <hr/>
-  		 
-  		 <div class="table-responsive" >
+  	<div>
+	<h4 th:if="${listUtilisateur.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouvelUtilisateur}">Ajouter un utilisateur</a> </h4>
+	</div>	 
+  		 <div class="table-responsive" th:if="${listUtilisateur}">
 						<table  class="table table-bordered" id="dataTable" style="width:90%; font-size:13px; font-family:Arial;  ">
 							
 						<tbody>
@@ -50,9 +54,7 @@ table a i{
 							</tr>				
 						</tbody>
 						</table>
-						 </div>
-  </div>
-  </div>
+						 
   
    <form th:action="@{supprimerUtilisateur}" method="post">
    <!-- Fenetre modal supprimer -->
@@ -94,6 +96,7 @@ function showModalModifier(idUtilisateur, nomUtilisateur, prenomUtilisateur){
 	modal.show();
 }
 </script>
+
 </div>
 
 </form>
@@ -119,7 +122,9 @@ function showModalModifier(idUtilisateur, nomUtilisateur, prenomUtilisateur){
 </div>
 
 </form>
-  
+  </div>
+  </div>
+  </div>
 </div>
 
 </body>

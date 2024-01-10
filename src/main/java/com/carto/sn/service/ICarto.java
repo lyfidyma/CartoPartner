@@ -11,6 +11,7 @@ import com.carto.sn.entities.Localisation;
 import com.carto.sn.entities.Partenaire;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
+import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
 import com.carto.sn.entities.Utilisateur;
 
 
@@ -27,7 +28,7 @@ public interface ICarto {
 			String description, String type, String statut, LocalDate dateDebut, LocalDate dateFin);
 	public void supprimerPartenaire(Long idPartenaire);
 	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse);
-	public List <Projet> projetEtTypes(String nomProjet);
+	public List <ProjetGroupByNomProjetTypeLocalisation> projetEtTypes(String nomProjet);
 	public Optional <Projet> projetParId(Long id);
 	public Optional <Partenaire> findPartenaireById(Long id);
 	public List<Projet> chercher(String motCle);
@@ -39,5 +40,9 @@ public interface ICarto {
 	public Optional<Utilisateur> findUtilisateurById(Long idUtilisateur);
 	public void supprimerLocalisation(Long idLocalisation);
 	public void supprimerProfil(Long idProfil);
+	public void supprimerProjet(Long idProjet);
+	public Optional <Localisation> findLocalisationById(Long idLocalisation);
+	public Projet modifierProjet(Long idProjet, String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
+			String description, String type, MultipartFile file, String statut, LocalDate dateDebut, LocalDate dateFin) throws IOException;
 
 }

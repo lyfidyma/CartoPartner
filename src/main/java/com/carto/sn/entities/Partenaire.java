@@ -6,8 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +23,7 @@ public class Partenaire {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idPartenaire;
+	@NotEmpty(message="Renseigner le nom du partenaire")
 	private String nomPartenaire;
 	private String adresse;
 	@OneToMany(mappedBy = "partenaire")

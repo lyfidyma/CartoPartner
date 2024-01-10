@@ -12,30 +12,45 @@ table a i{
 .table a:hover i{
 	transform: scale(1.5);
 }
+table td:hover{
+	background:#E6EBF0;
+}
+.error{
+	color:red;
+}
 </style>
 </head>
 <body>
 	<div layout:fragment="content">
      
       	<br/>
-		<h5>Nouvelle localité</h5>
-		<hr/>
+		
 		<div class = "container">
-		<div class="row">
-		<div class="col-md-6" >
-		<form th:action="@{/sauvegarderLocalisation}" method="post"> 
-			<span>Nom de la localité</span><span style="color:red">&nbsp;*</span>
-			<input type="text" class = "form-control" name="nomLocalisation" id="nomLocalisation" placeholder="Localité"/>	
-			<br/>
-			<button type="submit" class="btn btn-success">Enregistrer</button>
+		<h5>Localisation</h5>
+		<hr/>
+		<div style="margin: auto; background:#FFFF; width:50%; border-radius:10px; border: 2px solid #FFFFFF; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+		<div class="col-md-8" style="margin: auto;">
+		<br/>
+		<form th:action="@{/sauvegarderLocalisation}" method="post"  th:object="${uneLocalisation}"> 
+		<div class="form-floating  mb-3">		
 			
+			<input type="text" class = "form-control" th:field="*{libelleLocalisation}" id="nomLocalisation" placeholder="Localité"/>	
+			<label>Nom de la localité<span style="color:red">&nbsp;*</span></label>
+			<span th:if="${#fields.hasErrors('libelleLocalisation')}" th:errors="*{libelleLocalisation}" th:errorclass="error"></span>
+			<span style="color:red">[[${messageDoublon}]]</span>
+			</div>
+			
+			<button type="submit" class="btn btn-success"  style="margin-left:150px">Enregistrer</button>
+			<br></br>
 		</form>
-		
 		</div>
+		</div>
+		<br></br>
 		
-		<div class="col-md" style="margin-left:300px; margin-top:25px">
+		<div class="col-md-6" style="margin:auto">
 			<div class="table-responsive" >
-						<table  class="table table-bordered" id="dataTable" style="width:60%; font-size:13px; font-family:Arial;  ">
+						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px; font-family:Arial;  ">
 							
 						<tbody>
 							<tr th:each="l:${listLocalisation}">
@@ -49,7 +64,7 @@ table a i{
 						</table>
 						 </div>
 						 </div>
-		</div>
+		
       </div>
       
          <form th:action="@{supprimerLocalisation}" method="post">

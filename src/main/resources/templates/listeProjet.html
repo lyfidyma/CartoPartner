@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Liste des projets</title>
+<style>
+table a i{
+	transition: all 0.3s linear;
+}
+.table a:hover i{
+	transform: scale(1.5);
+}
+table td:hover{
+	background:#E6EBF0;
+}
+</style>
+</head>
+<body>
+
+<div layout:fragment="content">
+  
+      <div class = "container">
+      <br/>
+      <div class="row">
+      <div class="col-md-9">
+       <h5>Liste des projets</h5>
+        </div>
+ 		 
+  		 <hr/>
+  		 &ensp;
+  		 <div>
+	<h4 th:if="${listProjet.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouveauProjet}">Aucun projet</a> </h4>
+	</div>
+  		 <div class="table-responsive" th:if="${listProjet}" >
+						<table  class="table table-bordered" id="dataTable" style="font-size:13px; font-family:Arial;  ">
+							
+						<tbody>
+							<tr th:each="p:${listProjet}">
+							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.nomProjet}"></span>
+							</td>
+							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.partenaire.nomPartenaire}"></span>
+							</td>
+							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.localisation.libelleLocalisation}"></span>
+							</td>
+							
+							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
+							<a type="button" title="Editer" th:onclick="showModalModifier([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.localisation.libelleLocalisation}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.localisation.libelleLocalisation}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							</td>
+							</tr>				
+						</tbody>
+						</table>
+						 
+  
+   <form th:action="@{supprimerProjet}" method="post">
+   <!-- Fenetre modal supprimer -->
+<div class="modal fade" id="supProjet" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+     
+      <div class="modal-body" id="modal-body-supprimer">
+      <h6>Voulez-vous supprimer <span id="nomProjetSup"></span> ? </h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/listeProjet}">Non</button>
+        <button type="submit" id="button" class="btn btn-danger" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+  <script>
+function showModalSupprimer(idProjet, nomProjet, localisation){
+	var modal = new bootstrap.Modal(document.getElementById('supProjet'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idProjet' value='"+idProjet+"' />"
+	document.getElementById('modal-body-supprimer').innerHTML+=data;
+	document.getElementById('nomProjetSup').innerHTML = nomProjet+' dans la zone de '+localisation;
+	modal.show();
+}
+
+function showModalModifier(idProjet, nomProjet,localisation){
+	var modal = new bootstrap.Modal(document.getElementById('modProjet'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idProjet' value='"+idProjet+"' />"
+	document.getElementById('modal-body-modifier').innerHTML+=data;
+	document.getElementById('nomProjetMod').innerHTML =nomProjet+' dans la zone de  '+localisation;
+	modal.show();
+}
+</script>
+</div>
+
+</form>
+
+<!-- Fenetre modal modifier -->
+
+   <form th:action="@{getDonneesProjetAModifier}" method="post">
+   
+<div class="modal fade" id="modProjet" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-modifier">
+      <h6>Voulez-vous modifier le projet <span id="nomProjetMod"></span> ? </h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/listeProjet}">Non</button>
+        <button type="submit" id="button" class="btn btn-warning" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>
+  </div>
+  </div>
+  </div>
+</div>
+
+</body>
+</html>

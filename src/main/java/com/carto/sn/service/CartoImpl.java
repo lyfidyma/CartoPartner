@@ -24,6 +24,7 @@ import com.carto.sn.entities.Localisation;
 import com.carto.sn.entities.Partenaire;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
+import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
 import com.carto.sn.entities.Utilisateur;
 
 @Service
@@ -111,7 +112,7 @@ public class CartoImpl implements ICarto{
 	}
 
 	@Override
-	public List<Projet> projetEtTypes(String nomProjet) {
+	public List<ProjetGroupByNomProjetTypeLocalisation> projetEtTypes(String nomProjet) {
 		return projetRepository.findByNomProjet(nomProjet);
 	}
 
@@ -200,6 +201,41 @@ public class CartoImpl implements ICarto{
 	public void supprimerProfil(Long idProfil) {
 		profilRepository.deleteById(idProfil);
 		
+	}
+
+	@Override
+	public void supprimerProjet(Long idProjet) {
+		projetRepository.deleteById(idProjet);
+		
+	}
+
+	@Override
+	public Optional<Localisation> findLocalisationById(Long idLocalisation) {
+		return localisationRepository.findById(idLocalisation);
+	}
+
+	@Override
+	public Projet modifierProjet(Long idProjet, String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation,
+			String description, String type, MultipartFile file, String statut, LocalDate dateDebut, LocalDate dateFin)
+			throws IOException {
+		Projet projet = null;
+		
+		projet = projetRepository.findById(idProjet).orElse(projet);
+		projet.setNomProjet(nomProjet);
+		projet.setResponsable(responsable);
+		projet.setDescription(description);
+		projet.setType(type);
+		projet.setStatut(statut);
+		projet.setDateDebut(dateDebut);
+		projet.setDateFin(dateFin);
+		Partenaire partenaire = partenaireRepository.findByNomPartenaire(nomPartenaire);
+		projet.setPartenaire(partenaire);
+		Localisation localisation = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
+		projet.setLocalisation(localisation);
+		if(file.isEmpty()==false)
+			projet.setDataImage(file.getBytes());
+		projetRepository.save(projet);
+		return projet;
 	}
 
 	

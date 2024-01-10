@@ -1,3 +1,8 @@
+
+.navbar-toggler:hover{
+	background: rgba(76, 17, 99 , 0.6) ;
+}
+
 .offcanvas {
   font-family: cursive, sans-serif; 
 }

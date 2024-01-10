@@ -5,6 +5,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Nouveau partenaire</title>
+<style>
+.error{
+	color:red;
+}
+
+
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -14,20 +21,31 @@
 		<br/>
 		<h5>Nouveau partenaire</h5>
 		<hr/>
-		<div class="col-md-6" > 
+		<div style="margin: auto; background:#FFFF; width:60%; border-radius:10px; border: 2px solid #FFFFFF; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+		<div class="col-md-9" style="margin:auto; margin-top:50px"> 
 
 		<!-- <p id="messageSucces" th:if="${messageSucces}" th:text="${messageSucces}" class= "alert alert-success"></p> -->
-		<form th:action="@{/sauvegarderPartenaire}" method="post"> 
+		<form th:action="@{/sauvegarderPartenaire}" method="post" th:object="${unPartenaire}"> 
+		
 			<input type="hidden" class = "form-control" name="idPartenaire" th:value="${idPartenaire}"/>
-			<span>Nom du partenaire</span><span style="color:red">&nbsp;</span>
-			<input type="text" class = "form-control" name="nomPartenaire" th:value="${nomPartenaire}" id="nomPartenaire" placeholder="Nom du partenaire"/>	
-			<br/>
-			<span>Adresse</span>
-			<input type="text" class = "form-control" name="adresse" th:value="${adresse}" id="adresse" placeholder="Adresse"/>
-			<br/>
-			<button type="submit" class="btn btn-success">Enregistrer</button>
 			
+			<div class="form-floating  mb-3">	
+			<input type="text" class = "form-control" th:field="*{nomPartenaire}" id="nomPartenaire" placeholder="Nom du partenaire"/>	
+			<label for="nomPartenaire">Nom du partenaire<span style="color:red">&nbsp;*</span></label>
+			<span th:if="${#fields.hasErrors('nomPartenaire')}" th:errors="*{nomPartenaire}" th:errorclass="error"></span>
+			<span style="color:red">[[${messageDoublon}]]</span>
+			</div>
+			
+			<div class="form-floating  mb-3">	
+			<input type="text" class = "form-control" th:field="*{adresse}" id="adresse" placeholder="Adresse"/>
+			<label>Adresse</label>
+			</div>
+			<br/>
+			<button type="submit" class="btn btn-success" style="margin-left:240px">Enregistrer</button>
+		<br></br>
 		</form>
+		</div>
 		</div>
       </div>
   </div>

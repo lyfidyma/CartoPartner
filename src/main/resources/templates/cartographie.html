@@ -8,31 +8,90 @@
 <style>
 
 </style>
+
 <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/@geoapify/leaflet-address-search-plugin@^1/dist/L.Control.GeoapifyAddressSearch.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+<script src="https://unpkg.com/@geoapify/leaflet-address-search-plugin@^1/dist/L.Control.GeoapifyAddressSearch.min.js"></script>
     
 </head>
 <body>
 <div layout:fragment="content">
 <br/>
 <div class=container>
+<input type="hidden" id="projet" th:value="${listProjet}"/>
+<input type="hidden" id="partenaire" th:value="${listPartenaire}"/>
+<input type="hidden" id="localisation" th:value="${listLocalisation}"/>
 <div id="map" style="width: 100%; height: 80vh"></div> 
+
+
 <script type="text/javascript">
+
+let projet = document.getElementById('projet').value;
+let partenaire = document.getElementById('partenaire').value;
+let localisation = document.getElementById('localisation').value;
+
     let mapOptions = {
     	    center:[15.363, -15.595],
-    	    zoom:10
+    	    zoom:8
     	}
 
-
+  
     	let map = new L.map('map' , mapOptions);
 
     	let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
     	map.addLayer(layer);
+    	let apiKey = "1ff01f80c3fb4dd6bc698a2516e7c0df",
+    	 marker = null;
+    	let locations = [
+    	    {
+    	        "id": 1,
+    	        "lat": 14.772,
+    	        "long":  -17.38,
+    	        "title": "Dakar",
+    	        "url":"https://www.booking.com/"
+    	    },
+    	    {
+    	        "id": 2,
+    	        "lat": 15.363,
+    	        "long": -15.595,
+    	        
+    	        "title": "Louga",
+    	        "url":"https://www.google.com/"
+    	    },
+    	  
+    	]
 
-    	let marker = new L.Marker([14.772, -17.38]);
+    	let popupOption = {
+    	    "closeButton":false
+    	}
+
+    	locations.forEach(element => {
+    	    new L.Marker([element.lat,element.long]).addTo(map)
+    	    .on("mouseover",event =>{
+    	        event.target.bindPopup('<div class="card"> <span>'+element.title+'</span></div>',popupOption).openPopup();
+    	    })
+    	    .on("mouseout", event => {
+    	        event.target.closePopup();
+    	    })
+    	    .on("click" , () => {
+    	        window.open(element.url);
+    	    })
+    	});
+
+    	
+
+    	/* let marker = new L.Marker([14.772, -17.38]);
+    	marker.on("mouseover",event =>{
+            event.target.bindPopup('Dakar').openPopup();
+        })
     	let mark = new L.Marker([15.363, -15.595]);
+    	mark.on("mouseover",event =>{
+            event.target.bindPopup('Louga').openPopup();
+        })
     	marker.addTo(map);
-    	mark.addTo(map);
+    	mark.addTo(map); */
     </script>
 	 
 	

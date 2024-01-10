@@ -13,6 +13,10 @@ table a i{
 .table a:hover i{
 	transform: scale(1.5);
 }
+
+table td:hover{
+	background:#E6EBF0;
+}
 </style>
 
 </head>
@@ -32,9 +36,11 @@ table a i{
   		 <hr/>
   </div>
   
-  				
+  		<div>
+	<h4 th:if="${listPartenaire.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouveauPartenaire}">Ajouter un partenaire</a> </h4>
+	</div>		
 					
-					<div class="table-responsive" >
+					<div class="table-responsive" th:if="${listPartenaire}" >
 						<table  class="table table-bordered" id="dataTable" style="width:90%; font-size:13px; font-family:Arial;  ">
 							
 						<tbody>
@@ -48,9 +54,7 @@ table a i{
 							</tr>				
 						</tbody>
 						</table>
-						 </div>
-						 
-   </div>
+						
    <form th:action="@{supprimerPartenaire}" method="post">
    <!-- Fenetre modal supprimer -->
 <div class="modal fade" id="supPartenaire" role="dialog">
@@ -114,7 +118,9 @@ function showModalModifier(idPartenaire){
 </div>
 
 </form>
-
+ </div>
+						 
+   </div>
 </div>
 
 </body>

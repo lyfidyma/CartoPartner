@@ -5,11 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Nouvel utilisateur</title>
-<style>
-.utilisateur{
-	line-height:3;
-}
-</style>
+
 
  <script type="text/javascript"> 
  $(document).ready(function(){	
@@ -32,42 +28,54 @@
          
   		 
   		 <hr/>
-  		 
-  		 <div class="utilisateur col-md-6">
+  		 <div style="margin: auto; background:#FFFF; width:60%; border-radius:10px; border: 2px solid #F6DFE3 ; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+  		 <div class="utilisateur col-md-9" style="margin: auto;">
   		 <form th:action="@{/sauvegarderUtilisateur}" method="post">
   				<div th:object="${unUtilisateur}">
-							      
-							     <span class="form-label">Nom</span>
-							    <input type="text" th:field="*{nomUtilisateur}" class="form-control" placeholder="Nom" />
-							     
-							   <span class="form-label">Prénom</span>
-							    <input type="text" th:field="*{prenomUtilisateur}" class="form-control" placeholder="Prénom" />
-							 
-							   <span class="form-label">Login</span>
-							    <input type="text" th:field="*{login}" class="form-control" placeholder="login" />
-							     
-							   <span  class="form-label">Mot de passe</span>
-							    <input type="password" th:field="*{password}" class="form-control" placeholder="Mot de passe" />
-							     
-							      <div th:object="${unProfil}">
-							     <label for="profil" class="form-label">Profil</label>
-							    <select id="profil" th:field="*{nomProfil}" class="form-control">
-							      
-							      <option th:each="t:${listProfil}" th:text="${t.nomProfil}" th:value="${t.nomProfil}"></option>
-							      
-							    </select>
-							    <input type="hidden" th:field="*{idProfil}"/>
-							    </div>
-							   <input type="hidden" th:field="*{idUtilisateur}"/>
-							  	<br/>	
-							  	</div>	
-							  				   
-					    <button type="submit" class="btn btn-success">Enregistrer</button>
+							<br/>      
+				    <div class="form-floating  mb-3">
+				    <input type="text" th:field="*{nomUtilisateur}" class="form-control" placeholder="Nom" />
+				     <label class="form-label">Nom</label>
+				      </div>
+				     
+				     <div class="form-floating  mb-3"> 
+				    <input type="text" th:field="*{prenomUtilisateur}" class="form-control" placeholder="Prénom" />
+				   <label class="form-label">Prénom</label>
+				  </div>
+				  
+				  <div class="form-floating  mb-3">
+				    <input type="text" th:field="*{login}" class="form-control" placeholder="login" />
+				    <label class="form-label">Login</label>
+				     </div>
+				     	     
+				   <div class="form-floating  mb-3">
+				    <input type="password" th:field="*{password}" class="form-control" placeholder="Mot de passe" />
+				      <label  class="form-label">Mot de passe</label>
+				      </div>
+				      
+				      
+				      <div th:object="${unProfil}">
+				      <div class="form-floating  mb-3">
+				    <select id="profil" th:field="*{nomProfil}" class="form-control">
+				      <option th:each="t:${listProfil}" th:text="${t.nomProfil}" th:value="${t.nomProfil}"></option> 
+				    </select>
+				    <label for="profil" class="form-label">Profil</label>
+				    </div>
+				    
+				    <input type="hidden" th:field="*{idProfil}"/>
+				    </div>
+				   <input type="hidden" th:field="*{idUtilisateur}"/>
+				  	<br/>	
+				  	</div>	
+						  				   
+				    <button type="submit" class="btn btn-success" style="margin-left:230px">Enregistrer</button>
 
-					 
+					 <br></br>
   
 					 
 						</form>
+						</div>
 						</div>	
   </div>
   </div>
