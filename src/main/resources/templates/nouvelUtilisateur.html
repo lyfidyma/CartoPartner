@@ -5,7 +5,16 @@
 <head>
 <meta charset="UTF-8">
 <title>Nouvel utilisateur</title>
+<style>
+.error{
+	color:red;
+}
 
+.input-group-text:hover{
+	background: lightblue;
+}
+
+</style>
 
  <script type="text/javascript"> 
  $(document).ready(function(){	
@@ -36,24 +45,41 @@
 							<br/>      
 				    <div class="form-floating  mb-3">
 				    <input type="text" th:field="*{nomUtilisateur}" class="form-control" placeholder="Nom" />
-				     <label class="form-label">Nom</label>
+				     <label class="form-label">Nom<span style="color:red">&nbsp;*</span></label>
+				      <span th:if="${#fields.hasErrors('nomUtilisateur')}" th:errors="*{nomUtilisateur}" th:errorclass="error"></span>
+								 
 				      </div>
 				     
 				     <div class="form-floating  mb-3"> 
 				    <input type="text" th:field="*{prenomUtilisateur}" class="form-control" placeholder="Prénom" />
-				   <label class="form-label">Prénom</label>
+				    <span th:if="${#fields.hasErrors('prenomUtilisateur')}" th:errors="*{prenomUtilisateur}" th:errorclass="error"></span>
+				   <label class="form-label">Prénom<span style="color:red">&nbsp;*</span></label>
 				  </div>
 				  
 				  <div class="form-floating  mb-3">
 				    <input type="text" th:field="*{login}" class="form-control" placeholder="login" />
-				    <label class="form-label">Login</label>
+				    
+				    <label class="form-label">Login<span style="color:red">&nbsp;*</span></label>
+				    <span th:if="${#fields.hasErrors('login')}" th:errors="*{login}" th:errorclass="error"></span>
+				     <span style="color:red">[[${messageDoublon}]]</span>
 				     </div>
 				     	     
-				   <div class="form-floating  mb-3">
-				    <input type="password" th:field="*{password}" class="form-control" placeholder="Mot de passe" />
+				   <div class="form-floating  mb-3 input-group">
+				    <input type="password" th:field="*{password}" class="form-control" placeholder="Mot de passe" style="border-right:none"/>
+				     <span class="input-group-text" style="border-left:none;background:#FFFF "><i class="fa fa-eye-slash" aria-hidden="true" onclick="showPassword()"></i></span>
 				      <label  class="form-label">Mot de passe</label>
+				     
 				      </div>
-				      
+				      <script>
+	function showPassword() {
+  var x = document.getElementById("password");
+  if (x.type === "password") {
+    x.type = "text";
+  } else {
+    x.type = "password";
+  }
+}
+	</script>
 				      
 				      <div th:object="${unProfil}">
 				      <div class="form-floating  mb-3">

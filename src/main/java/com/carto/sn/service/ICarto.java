@@ -11,6 +11,7 @@ import com.carto.sn.entities.Localisation;
 import com.carto.sn.entities.Partenaire;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
+import com.carto.sn.entities.ProjetGroupByNomProjet;
 import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
 import com.carto.sn.entities.Utilisateur;
 
@@ -44,5 +45,6 @@ public interface ICarto {
 	public Optional <Localisation> findLocalisationById(Long idLocalisation);
 	public Projet modifierProjet(Long idProjet, String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
 			String description, String type, MultipartFile file, String statut, LocalDate dateDebut, LocalDate dateFin) throws IOException;
-
+	public List <ProjetGroupByNomProjet> groupByNomProjet();
+	public List <Projet> findOneIdByProjetName(String nomProjet);
 }

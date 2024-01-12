@@ -56,6 +56,12 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
         		.requestMatchers("/img/**")).permitAll());
         httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
+        		.requestMatchers("https://nominatim.openstreetmap.org/**")).permitAll());
+        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
+        		.requestMatchers("http://{s}.tile.openstreetmap.org/**")).permitAll());
+        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
+        		.requestMatchers("https://{s}.tile.openstreetmap.org/**")).permitAll());
+        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
         		.requestMatchers("/user/**" )).hasRole("USER"));
         httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
         		.requestMatchers("/admin/**" )).hasRole("ADMIN"));

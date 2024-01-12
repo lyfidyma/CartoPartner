@@ -24,6 +24,7 @@ import com.carto.sn.entities.Localisation;
 import com.carto.sn.entities.Partenaire;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
+import com.carto.sn.entities.ProjetGroupByNomProjet;
 import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
 import com.carto.sn.entities.Utilisateur;
 
@@ -236,6 +237,16 @@ public class CartoImpl implements ICarto{
 			projet.setDataImage(file.getBytes());
 		projetRepository.save(projet);
 		return projet;
+	}
+
+	@Override
+	public List<ProjetGroupByNomProjet> groupByNomProjet() {
+		return projetRepository.findByProjet();
+	}
+
+	@Override
+	public  List <Projet> findOneIdByProjetName(String nomProjet) {
+		return projetRepository.findOneIdByProjetName(nomProjet);
 	}
 
 	

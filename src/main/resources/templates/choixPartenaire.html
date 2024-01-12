@@ -5,7 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Choisir un partenaire</title>
- 
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <style>
 
 
@@ -98,8 +98,26 @@ document.addEventListener("DOMContentLoaded", function(event){
   		 
   		 <hr/>
   
-  <br/>
-						<h6 th:text="'Projet :'+' '+${nomProjet}" style="margin:auto"></h6>
+  <br/>					
+ 						 <div class="row">
+  						<div class="col-md-6">
+  						<form  th:action="@{/choixPartenaire}" method="post" th:object="${unProjet}">
+  						 	
+						<div class="input-group">
+						<select class="form-select" id="nomProjet" th:field="*{nomProjet}">
+						 <option th:each="b:${listGroupByProjet}" th:text="${b.nomProjet}" th:value="${b.nomProjet}"></option>
+						</select>
+						
+						<button type="submit" class="btn btn-warning" >Changer</button>
+						
+						</div>
+						</form>
+						</div>
+						<div class="col-md-6" style="text-align:right">
+     		 <a th:href="@{/excelExport}" class="btn btn-success" style="border: 1px solid green; background-color: white; color: green;">
+ 			<i class="fas fa-file-excel"></i></a>
+ 			 </div>
+ 			 </div>
 					<input type="hidden" name="listProjetType" id="listProjetType" th:value="${listProjetType}"/>
 					<br></br>
 					<form th:action="@{/sauvegarderChoixPartenaire}" method="post" >
@@ -111,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function(event){
 						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:12px; font-family:Times">
 						<thead>	
 							<tr >
-							<td ></td>
+							<td th:text=${nomProjet}></td>
 							<th:block  th:each="l:${listLocalisation}">						
 							<td th:text="${l.libelleLocalisation}" style="text-align:center; background:lightcyan">
 							<input type="hidden" id="libelleLocalisation" name="libelleLocalisation"  th:value="${l.libelleLocalisation}"/>
@@ -135,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function(event){
 								
 								</th:block>
 																
-									 <input th:if="${test} eq 1" type="radio" name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" th:value="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px;box-shadow:0 0 5px 0px lightblue inset;" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" />								
+									 <input th:if="${test} eq 1" type="radio" th:name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" th:value="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px;box-shadow:0 0 5px 0px lightblue inset;" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" />								
 								 
 								</td> 								
 								

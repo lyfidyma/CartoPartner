@@ -42,11 +42,11 @@
 			</div>
 			
 			<div class="form-floating  mb-3">	
-			<input type="text" class = "form-control" th:field="*{responsable}" id="responsable" placeholder="Responsable"/>
-			<label for="responsable">Responsable</label>
+			<input type="text" class = "form-control" th:field="*{responsable}" id="responsable" placeholder="Point focal"/>
+			<label for="responsable">Point focal</label>
 			</div>
 			
-			<div th:object="${unPartenaire}">
+			<!-- <div th:object="${unPartenaire}">
 			<div class="form-floating mb-3">	
 			<select class="form-select" id="nomPartenaire" th:field="*{nomPartenaire}" >
 			<option value="" hidden>Sélectionner</option>
@@ -55,9 +55,9 @@
 			<label for="nomPartenaire">Bailleur<span style="color:red">&nbsp;*</span></label>
 			<span th:if="${messageErreurPart}" th:text="${messageErreurPart}" style="color:red"></span>
 			</div>
-			</div>
+			</div> -->
 			
-			<div th:object="${uneLocalisation}">
+			<!-- <div th:object="${uneLocalisation}">
 			<div class="form-floating mb-3">	
 			<select id="libelleLocalisation" th:field="*{libelleLocalisation}" class="form-control">
 			<option value="" hidden >Sélectionner</option>
@@ -66,7 +66,7 @@
 			<label for="libelleLocalisation">Localités<span style="color:red">&nbsp;*</span></label>
 			<span style="color:red">[[${messageErreurLoc}]]</span>
 			</div>
-			</div>
+			</div> -->
 			
 			<div class="form-floating mb-3">
 			<input type="text" class = "form-control" th:field="*{description}" id="description" placeholder="Description"/>
@@ -84,7 +84,7 @@
 			<span style="color:red">[[${messageErreurType}]]</span>
 			</div>
 			
-			<div class="form-floating mb-3">
+			<!-- <div class="form-floating mb-3">
 			<input type="date" class = "form-control" name="dateDebut" th:value="${dateDebutString}" id="dateDebut" />
 			<label for="dateDebut">Début du projet</label>
 			</div>
@@ -92,7 +92,7 @@
 			<div class="form-floating mb-3">
 			<input type="date" class = "form-control" name="dateFin" th:value="${dateFinString}" id="dateFin" />
 			<label for="dateFin">Fin du projet</label>
-			</div>
+			</div> -->
 			
 			<label for="file">Ajouter une image</label>
 			<input type="file" class = "form-control" name="file" id="file" style="background: #F7F7D2 "/>

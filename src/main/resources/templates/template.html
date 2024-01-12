@@ -33,18 +33,18 @@
     </button>
     <!-- <a class="navbar-brand" href="#">Cartographie des partenaires</a> -->
    <div class="btn-group">
-  <a type="button">Cartographie des partenaires</a>
+  <span style="cursor:pointer" data-bs-toggle="dropdown">Cartographie des partenaires</span>
   <a type="button" class="dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" style="color:white" aria-expanded="false">
     <span class="visually-hidden">Toggle Dropdown</span>
   </a>
   <ul class="dropdown-menu">
     <li>
     	<form th:action="@{logout}">
-    		<button class="dropdown-item" type="submit">Se déconnecter</button>
+    		<button class="dropdown-item" type="submit"><i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Se déconnecter</button>
     	</form>
     </li>
     <li><hr class="dropdown-divider"></li>
-    <li><a class="dropdown-item" th:href="@{parametres}">Paramètres</a></li>
+    <li><a class="dropdown-item" th:href="@{parametres}"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;&nbsp;Paramètres</a></li>
   </ul>
 </div>
     <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel" style="width:330px">

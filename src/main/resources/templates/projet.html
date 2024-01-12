@@ -97,10 +97,10 @@
 		<br></br>
 		<h5 style="font-family:cursive; margin-left:390px; margin-top:-170px" th:text="${p.nomProjet}"></h5>
 		
-		<i class="fas fa-map-marker-alt" aria-hidden="true" style="font-size:24px; color: #D0756F; margin-left:390px"></i>&nbsp;&nbsp;<span th:text="${p.localisation.libelleLocalisation}"></span>
+		<label style="margin-left:390px">Point focal : </label>&nbsp;<span th:text="${p.responsable}"></span>
 		<br/>
 		
-		<span th:text="${p.dateDebut}" style="margin-left:390px"></span>&nbsp;au&nbsp;<span th:text="${p.dateFin}"></span>
+		<label style="margin-left:390px">Type : </label>&nbsp;<span th:text="${p.type}" ></span>
 		<br/>
 		<a th:href="@{/choixPartenaire(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="margin-left:390px" >Choisir partenaire</a>
 		<br></br>

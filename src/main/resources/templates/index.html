@@ -91,21 +91,21 @@
       <div class="row">
 		<div class="col-md-6" th:if="${listProjet}" th:each="p:${listProjet}">
 				
-		<a id="infosProjetClass" type="button" th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.responsable}]], [[${p.partenaire.nomPartenaire}]], [[${p.localisation.libelleLocalisation}]], [[${p.description}]], [[${p.type}]], [[${p.dateDebut}]], [[${p.dateFin}]], [[${p.statut}]])"><span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span></a>
-		<a id="infosProjetClass" type="button" th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.responsable}]], [[${p.partenaire.nomPartenaire}]], [[${p.localisation.libelleLocalisation}]], [[${p.description}]], [[${p.type}]], [[${p.dateDebut}]], [[${p.dateFin}]], [[${p.statut}]])"><span class="circleInactif" th:if="${p.statut=='inactif'}" th:text="${p.statut}" ></span></a>
+		<a id="infosProjetClass" type="button" ><span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span></a>
+		<a id="infosProjetClass" type="button"><span class="circleInactif" th:if="${p.statut=='inactif'}" th:text="${p.statut}" ></span></a>
 		<h5 style="font-family:cursive; margin-left:120px; margin-top:-70px" th:text="${p.nomProjet}"></h5>
-		&ensp;
 		
-		<i class="fas fa-map-marker-alt" aria-hidden="true" style="font-size:24px; color: #D0756F; margin-left:120px"></i>&nbsp;&nbsp;<span th:text="${p.localisation.libelleLocalisation}"></span>
+		
+		<label style="margin-left:135px">Point focal : </label>&nbsp;<span th:text="${p.responsable}"></span>
 		<br/>
 		
-		<span th:text="${p.dateDebut}" style="margin-left:135px"></span>&nbsp;au&nbsp;<span th:text="${p.dateFin}"></span>
+		<label style="margin-left:135px">Type : </label>&nbsp;<span th:text="${p.type}"></span>
 		<br></br>
 		<br></br>
 		
 
 <!-- Fenetre modal détails du projet -->
-<div class="modal fade" id="infosProjet" role="dialog" >
+<!-- <div class="modal fade" id="infosProjet" role="dialog" >
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document" >
     <div class="modal-content" >
       <div class="modal-header">
@@ -185,7 +185,7 @@ function showInfosModal(idProjet, nomProjet, responsable, nomPartenaire, libelle
 	
 }
     
-  </script>
+  </script> -->
   </div>
 		
 		</div>

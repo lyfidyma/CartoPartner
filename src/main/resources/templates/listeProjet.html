@@ -40,14 +40,14 @@ table td:hover{
 							<tr th:each="p:${listProjet}">
 							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.nomProjet}"></span>
 							</td>
-							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.partenaire.nomPartenaire}"></span>
+							<!-- <td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.partenaire.nomPartenaire}"></span>
 							</td>
 							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.localisation.libelleLocalisation}"></span>
-							</td>
+							</td> -->
 							
 							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
-							<a type="button" title="Editer" th:onclick="showModalModifier([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.localisation.libelleLocalisation}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
-							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.localisation.libelleLocalisation}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							<a type="button" title="Editer" th:onclick="showModalModifier([[${p.idProjet}]], [[${p.nomProjet}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idProjet}]], [[${p.nomProjet}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
 							</td>
 							</tr>				
 						</tbody>
@@ -71,13 +71,13 @@ table td:hover{
     </div>
   </div>
   <script>
-function showModalSupprimer(idProjet, nomProjet, localisation){
+function showModalSupprimer(idProjet, nomProjet){
 	var modal = new bootstrap.Modal(document.getElementById('supProjet'), {
 		  keyboard: false
 		})
 	var data= "<input type='hidden' name='idProjet' value='"+idProjet+"' />"
 	document.getElementById('modal-body-supprimer').innerHTML+=data;
-	document.getElementById('nomProjetSup').innerHTML = nomProjet+' dans la zone de '+localisation;
+	document.getElementById('nomProjetSup').innerHTML = nomProjet;
 	modal.show();
 }
 
@@ -87,7 +87,7 @@ function showModalModifier(idProjet, nomProjet,localisation){
 		})
 	var data= "<input type='hidden' name='idProjet' value='"+idProjet+"' />"
 	document.getElementById('modal-body-modifier').innerHTML+=data;
-	document.getElementById('nomProjetMod').innerHTML =nomProjet+' dans la zone de  '+localisation;
+	document.getElementById('nomProjetMod').innerHTML =nomProjet;
 	modal.show();
 }
 </script>

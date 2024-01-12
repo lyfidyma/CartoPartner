@@ -51,7 +51,7 @@ public class ProjetGroupByNomProjetTypeLocalisation {
 	public String getNomPartenaire() {
 		return nomPartenaire;
 	}
-	public void setNomPartenaire() {
+	public void setNomPartenaire(String nomPartenaire) {
 		this.nomPartenaire = nomPartenaire;
 	}
 	

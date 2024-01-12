@@ -24,10 +24,8 @@ public class Utilisateur {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long idUtilisateur;
-	//@NotBlank(message="Renseigner le nom")
 	@NotEmpty(message="Renseigner le nom")
 	private String nomUtilisateur;
-	//@NotBlank(message="Renseigner le prénom")
 	@NotEmpty(message="Renseigner le prénom")
 	private String prenomUtilisateur;
 	@NotEmpty(message="Renseigner le login")
