@@ -15,8 +15,9 @@ public class GeocodingService {
 	private final OkHttpClient httpClient = new OkHttpClient();
 
     public JSONObject search(String query) throws IOException {
+    	String count="Sénégal";
         Request request = new Request.Builder()
-            .url("https://nominatim.openstreetmap.org/search?format=json&q=" + query)
+            .url("https://nominatim.openstreetmap.org/search?format=json&city=" + query+"&country="+count)
             .build();
 
         try (Response response = httpClient.newCall(request).execute()) {

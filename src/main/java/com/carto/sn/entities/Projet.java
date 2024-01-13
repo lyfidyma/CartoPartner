@@ -31,17 +31,14 @@ public class Projet {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idProjet;
 	private String nomProjet;
-	@DateTimeFormat(pattern="dd/mm/yyyy")
-	private LocalDate dateDebut;
-	@DateTimeFormat(pattern="dd/mm/yyyy")
-	private LocalDate dateFin;
 	private String responsable;
 	private String description;
 	private String type;
+	private int duree;
+	private String temps;
 	@Lob
     @Column(length = Integer.MAX_VALUE)
     private byte[] dataImage;
-
 	private String statut;
 	
 	@ManyToOne
@@ -51,56 +48,51 @@ public class Projet {
 	@JoinColumn(name="idLocalisation", updatable = true)
 	private Localisation localisation;
 
-	
-	public Projet(String nomProjet, LocalDate dateDebut, LocalDate dateFin, String responsable,
-			String description, String type, String cheminImage, String statut, Partenaire partenaire, Localisation localisation) {
+
+	 public String generateBase64Image() {
+	        return Base64.encodeBase64String(this.dataImage);
+	    }
+
+
+	public Projet(String nomProjet, String responsable, String description, String type, int duree, String temps,
+			byte[] dataImage, String statut) {
 		super();
 		this.nomProjet = nomProjet;
-		this.dateDebut = dateDebut;
-		this.dateFin = dateFin;
 		this.responsable = responsable;
 		this.description = description;
 		this.type = type;
+		this.duree = duree;
+		this.temps = temps;
+		this.dataImage = dataImage;
 		this.statut = statut;
-		this.partenaire = partenaire;
-		this.localisation = localisation;
 	}
 
 
-	public Projet(String nomProjet, LocalDate dateDebut, LocalDate dateFin, String responsable, String description,
-			String type, String statut, Partenaire partenaire, Localisation localisation) {
+	public Projet(String nomProjet, String responsable, String description, String type, int duree, String temps,
+			byte[] dataImage, String statut, Partenaire partenaire, Localisation localisation) {
 		super();
 		this.nomProjet = nomProjet;
-		this.dateDebut = dateDebut;
-		this.dateFin = dateFin;
 		this.responsable = responsable;
 		this.description = description;
 		this.type = type;
-		this.statut = statut;
-		this.partenaire = partenaire;
-		this.localisation = localisation;
-	}
-
-
-	public Projet(String nomProjet, LocalDate dateDebut, LocalDate dateFin, String responsable, String description,
-			String type, byte[] dataImage, String statut, Partenaire partenaire, Localisation localisation) {
-		super();
-		this.nomProjet = nomProjet;
-		this.dateDebut = dateDebut;
-		this.dateFin = dateFin;
-		this.responsable = responsable;
-		this.description = description;
-		this.type = type;
+		this.duree = duree;
+		this.temps = temps;
 		this.dataImage = dataImage;
 		this.statut = statut;
 		this.partenaire = partenaire;
 		this.localisation = localisation;
 	}
-	 public String generateBase64Image() {
-	        return Base64.encodeBase64String(this.dataImage);
-	    }
 
-	
+
+	public Projet(String nomProjet, String type, Partenaire partenaire, Localisation localisation) {
+		super();
+		this.nomProjet = nomProjet;
+		this.type = type;
+		this.partenaire = partenaire;
+		this.localisation = localisation;
+	}
+
+
 	
 
 }

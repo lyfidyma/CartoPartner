@@ -84,15 +84,22 @@
 			<span style="color:red">[[${messageErreurType}]]</span>
 			</div>
 			
-			<!-- <div class="form-floating mb-3">
-			<input type="date" class = "form-control" name="dateDebut" th:value="${dateDebutString}" id="dateDebut" />
-			<label for="dateDebut">Début du projet</label>
+			<div class="form-floating mb-3">
+			<select id="duree" th:field="*{duree}" class="form-control">
+			<option value="" hidden>Sélectionner</option>
+			<option value="1" >1</option>
+			<option value="2" >2</option>
+			<option value="3" >3</option>
+			</select>
+			<label for="duree">Durée<span style="color:red">&nbsp;*</span></label>
+			
+			<select id="temps" th:field="*{temps}" class="form-control">
+			<option selected value="année" >année</option>
+			<option value="mois" >mois</option>
+			</select>
+			
 			</div>
 			
-			<div class="form-floating mb-3">
-			<input type="date" class = "form-control" name="dateFin" th:value="${dateFinString}" id="dateFin" />
-			<label for="dateFin">Fin du projet</label>
-			</div> -->
 			
 			<label for="file">Ajouter une image</label>
 			<input type="file" class = "form-control" name="file" id="file" style="background: #F7F7D2 "/>

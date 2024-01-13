@@ -87,23 +87,22 @@ public class CartoImpl implements ICarto{
 
 	@Override
 	public Projet ajoutProjet(String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
-			String description, String type,  MultipartFile file, String statut, LocalDate dateDebut, LocalDate dateFin) throws IOException{
+			String description, String type,  MultipartFile file, String statut, int duree, String temps) throws IOException{
 		
 		Projet proj = null;
 		Localisation loc = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
 		Partenaire part = partenaireRepository.findByNomPartenaire(nomPartenaire);
-		proj = projetRepository.save(new Projet(nomProjet, dateDebut, dateFin, responsable, description, type, file.getBytes(), statut, part, loc));
+		proj = projetRepository.save(new Projet(nomProjet, responsable, description, type, duree, temps, file.getBytes(), statut, part, loc));
 		return proj;
 	}
 
 	@Override
 	public Projet ajouterPartenaireAuProjet(String nomProjet, String responsable, String nomPartenaire,
-			String libelleLocalisation, String description, String type, String statut, LocalDate dateDebut,
-			LocalDate dateFin) {
+			String libelleLocalisation, String description, String type, String statut, int duree, String temps) {
 		Projet proj = null;
 		Localisation loc = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
 		Partenaire part = partenaireRepository.findByNomPartenaire(nomPartenaire);
-		proj = projetRepository.save(new Projet(nomProjet, dateDebut, dateFin, responsable, description, type, statut, part, loc));
+		proj = projetRepository.save(new Projet(nomProjet, type, part, loc));
 		return proj;
 	}
 
@@ -217,7 +216,7 @@ public class CartoImpl implements ICarto{
 
 	@Override
 	public Projet modifierProjet(Long idProjet, String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation,
-			String description, String type, MultipartFile file, String statut, LocalDate dateDebut, LocalDate dateFin)
+			String description, String type, MultipartFile file, String statut, int duree, String temps)
 			throws IOException {
 		Projet projet = null;
 		
@@ -227,8 +226,6 @@ public class CartoImpl implements ICarto{
 		projet.setDescription(description);
 		projet.setType(type);
 		projet.setStatut(statut);
-		projet.setDateDebut(dateDebut);
-		projet.setDateFin(dateFin);
 		Partenaire partenaire = partenaireRepository.findByNomPartenaire(nomPartenaire);
 		projet.setPartenaire(partenaire);
 		Localisation localisation = localisationRepository.findByLibelleLocalisation(libelleLocalisation);

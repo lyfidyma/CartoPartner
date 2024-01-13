@@ -127,7 +127,7 @@ public class CartoController {
 	}
 	
 	@RequestMapping("cartographie")
-	public String  cartographie(Model model, String nomProjet, RedirectAttributes ra) {
+	public String  cartographie(Model model, String query, String nomProjet, RedirectAttributes ra) {
 		
 		  List <ProjetGroupByNomProjet> listProjet = iCarto.groupByNomProjet(); 
 		  List <Partenaire> listPartenaire = iCarto.tousLesPartenaires(); 
@@ -135,30 +135,45 @@ public class CartoController {
 		  model.addAttribute("listProjet", listProjet);
 		  model.addAttribute("listPartenaire", listPartenaire);
 		  model.addAttribute("listLocalisation", listLocalisation);
-		  List <ProjetGroupByNomProjetTypeLocalisation> listLocProjet = null;
-		  List <String> locat = new ArrayList<>();
-		 if(nomProjet!=null) {
-			listLocProjet = iCarto.projetEtTypes(nomProjet);
-		 	 
+		  JSONObject location;
+		 List <String> listLat = new ArrayList<>();
+		 List <String> listLong = new ArrayList<>();
+		 List <Long> listId = new ArrayList<>();
+		  if(query==null) {
+			
+			  for(int i=0; i<listLocalisation.size(); i++) {
+				  try {
+					location = geocodingService.search(listLocalisation.get(i).getLibelleLocalisation());
+					listLat.add(location.getString("lat"));
+					listLong.add(location.getString("lon"));
+					listId.add(location.getLong("osm_id"));
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			  }
+			  model.addAttribute("listId",listId);
+			  model.addAttribute("listLat",listLat);
+			  model.addAttribute("listLong",listLong);
+			  
+		  }
+		  
+		  if(query!=null) {
 		 
-		 String l="Paris";
-	//	 for(int i = 0; i< listLocProjet.size(); i++) {
-			 
-		//	 locat.add(listLocProjet.get(i).getLocalisation());	
-			 JSONObject loc;
-		        try {
-		            loc = geocodingService.search(l);
-		            model.addAttribute("loc", loc);
-		        } catch (IOException e) {
-		            e.printStackTrace();
-		        }
-
-		        return "cartographie";
-		    }
-		 //}
+		
+	        try {
+	            location = geocodingService.search(query);
+	            
+	            model.addAttribute("locationLat", location.getString("lat"));
+	            model.addAttribute("locationLon", location.getString("lon"));
+	            
+	           
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+		  }
 		 
-		 
-		 
+		  
 		return "cartographie";
 	}
 	
@@ -209,7 +224,7 @@ public class CartoController {
 			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("uneLocalisation") Localisation uneLocalisation, 
 			Model model, Long idProjet, String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
 			String description, String type, String statut, MultipartFile file,
-			LocalDate dateDebut, LocalDate dateFin, boolean activate, RedirectAttributes ra) throws IOException{
+			int duree, String temps, boolean activate, RedirectAttributes ra) throws IOException{
 		
 		if(nomProjet.isBlank()) {
 			List <Localisation> listLocalisation = iCarto.toutesLesLocalisations();
@@ -229,23 +244,7 @@ public class CartoController {
 			return "nouveauProjet";
 			
 		}
-		/*
-		 * if(libelleLocalisation.isBlank()) {
-		 * 
-		 * List <Localisation> listLocalisation = iCarto.toutesLesLocalisations(); List
-		 * <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
-		 * model.addAttribute("listLocalisation", listLocalisation);
-		 * model.addAttribute("listPartenaire", listPartenaire);
-		 * model.addAttribute("messageErreurLoc", "Renseigner la localisation"); return
-		 * "nouveauProjet"; } if(nomPartenaire.isBlank()) {
-		 * 
-		 * List <Localisation> listLocalisation = iCarto.toutesLesLocalisations(); List
-		 * <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
-		 * model.addAttribute("listLocalisation", listLocalisation);
-		 * model.addAttribute("listPartenaire", listPartenaire);
-		 * model.addAttribute("messageErreurPart", "Renseigner le nom du partenaire");
-		 * return "nouveauProjet"; }
-		 */
+		
 		
 		if(activate==true) {
 			statut = "En cours";
@@ -253,12 +252,12 @@ public class CartoController {
 			statut = "inactif";
 		}
 		if(idProjet == null) {
-			iCarto.ajoutProjet(nomProjet, responsable, nomPartenaire, libelleLocalisation, description, type, file, statut, dateDebut, dateFin);
+			iCarto.ajoutProjet(nomProjet, responsable, nomPartenaire, libelleLocalisation, description, type, file, statut, duree, temps);
 			ra.addFlashAttribute("flagEnregistrement", "1");
 			return "redirect:/projet";
 		}
 		else if (idProjet != null) {
-			iCarto.modifierProjet(idProjet, nomProjet, responsable, nomPartenaire, libelleLocalisation, description, type, file, statut, dateDebut, dateFin);
+			iCarto.modifierProjet(idProjet, nomProjet, responsable, nomPartenaire, libelleLocalisation, description, type, file, statut, duree, temps);
 			ra.addFlashAttribute("flagModification", "1");
 			return "redirect:/listeProjet";
 		}
@@ -272,9 +271,9 @@ public class CartoController {
 			
 			String responsable=iCarto.projetParId(idProjet).get().getResponsable();
 			String description= iCarto.projetParId(idProjet).get().getDescription();
-			LocalDate dateDebut=LocalDate.now();
-			LocalDate dateFin=LocalDate.now();
-			String statut="En cours";
+			int duree = iCarto.projetParId(idProjet).get().getDuree();
+			String temps = iCarto.projetParId(idProjet).get().getTemps();
+			String statut=iCarto.projetParId(idProjet).get().getStatut();
 			String type="";
 			MultipartFile file = new CustomMultipartFile(iCarto.projetParId(idProjet).get().getDataImage());
 		    
@@ -293,7 +292,7 @@ public class CartoController {
 				type = "Gouvernance";
 			
 			iCarto.ajoutProjet(nomProjet, responsable, nomDuPartenaire, libelleDeLaLocalisation, description, type, file, 
-					statut, dateDebut, dateFin);
+					statut, duree, temps);
 		model.addAttribute("idProjet", idProjet);
 		model.addAttribute("nomProjet", nomProjet);
 		model.addAttribute("flag", "1");
@@ -307,26 +306,6 @@ public class CartoController {
 		return "redirect:/partenaire";
 	}
 	
-	@RequestMapping("getInfosProjet")
-	@ResponseBody
-	public Object getInfosProjet(Long idProjet) {	
-		if(iCarto.projetParId(idProjet)==null) {
-			return null;
-		}else {
-			Map<String, Object> object = new HashMap<>();
-			object.put("nomProjet", iCarto.projetParId(idProjet).get().getNomProjet());
-			object.put("responsable", iCarto.projetParId(idProjet).get().getResponsable());
-			object.put("bailleur", iCarto.projetParId(idProjet).get().getPartenaire().getNomPartenaire());
-			object.put("localite", iCarto.projetParId(idProjet).get().getLocalisation().getLibelleLocalisation());
-			object.put("description", iCarto.projetParId(idProjet).get().getDescription());
-			object.put("type", iCarto.projetParId(idProjet).get().getType());
-			object.put("dateDebut", iCarto.projetParId(idProjet).get().getDateDebut());
-			object.put("dateFin", iCarto.projetParId(idProjet).get().getDateFin());
-			object.put("statut", iCarto.projetParId(idProjet).get().getStatut());
-			
-			return object;
-		}
-	}
 	
 	@RequestMapping("getDonneesPartenaireAModifier")
 	public String modifierPartenaire(@ModelAttribute("unPartenaire") Partenaire unPartenaire, Model model, Long idPartenaire ) {
@@ -471,15 +450,11 @@ public class CartoController {
 		uneLocalisation = iCarto.findLocalisationById(unProjet.getLocalisation().getIdLocalisation()).get();
 		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List <Localisation> listLocalisation = iCarto.toutesLesLocalisations();
-		String dateDebutString =unProjet.getDateDebut().toString();
-		String dateFinString = unProjet.getDateFin().toString();
 		model.addAttribute("unProjet", unProjet);
 		model.addAttribute("unPartenaire", unPartenaire);
 		model.addAttribute("uneLocalisation", uneLocalisation);
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listLocalisation", listLocalisation);
-		model.addAttribute("dateDebutString", dateDebutString);
-		model.addAttribute("dateFinString", dateFinString);
 		
 		return "nouveauProjet";
 	}
@@ -493,6 +468,7 @@ public class CartoController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+       
 
         return "cartographie";
     }

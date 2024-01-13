@@ -18,6 +18,7 @@ table td:hover{
 .error{
 	color:red;
 }
+
 </style>
 </head>
 <body>
@@ -35,10 +36,17 @@ table td:hover{
 		<form th:action="@{/sauvegarderLocalisation}" method="post"  th:object="${uneLocalisation}"> 
 		<div class="form-floating  mb-3">		
 			
-			<input type="text" class = "form-control" th:field="*{libelleLocalisation}" id="nomLocalisation" placeholder="Localité"/>	
-			<label>Nom de la localité<span style="color:red">&nbsp;*</span></label>
+			<input type="text" class = "form-control" th:field="*{libelleLocalisation}" id="nomLocalisation" placeholder="Région"/>	
+			<label>Région<span style="color:red">&nbsp;*</span></label>
 			<span th:if="${#fields.hasErrors('libelleLocalisation')}" th:errors="*{libelleLocalisation}" th:errorclass="error"></span>
 			<span style="color:red">[[${messageDoublon}]]</span>
+			</div>
+			
+			<div class="form-floating  mb-3">		
+			
+			<input type="text" class = "form-control"  id="pays" placeholder="Pays"/>	
+			<label>Pays</label>
+				
 			</div>
 			
 			<button type="submit" class="btn btn-success"  style="margin-left:150px">Enregistrer</button>

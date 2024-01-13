@@ -24,9 +24,9 @@ public interface ICarto {
 	public List <Localisation> toutesLesLocalisations();
 	public List <Projet> tousLesProjets();
 	public Projet ajoutProjet(String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
-			String description, String type, MultipartFile file, String statut, LocalDate dateDebut, LocalDate dateFin) throws IOException;
+			String description, String type, MultipartFile file, String statut, int duree, String temps) throws IOException;
 	public Projet ajouterPartenaireAuProjet(String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
-			String description, String type, String statut, LocalDate dateDebut, LocalDate dateFin);
+			String description, String type, String statut, int duree, String temps);
 	public void supprimerPartenaire(Long idPartenaire);
 	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse);
 	public List <ProjetGroupByNomProjetTypeLocalisation> projetEtTypes(String nomProjet);
@@ -44,7 +44,7 @@ public interface ICarto {
 	public void supprimerProjet(Long idProjet);
 	public Optional <Localisation> findLocalisationById(Long idLocalisation);
 	public Projet modifierProjet(Long idProjet, String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
-			String description, String type, MultipartFile file, String statut, LocalDate dateDebut, LocalDate dateFin) throws IOException;
+			String description, String type, MultipartFile file, String statut, int duree, String temps) throws IOException;
 	public List <ProjetGroupByNomProjet> groupByNomProjet();
 	public List <Projet> findOneIdByProjetName(String nomProjet);
 }
