@@ -6,9 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.carto.sn.entities.Localisation;
 import com.carto.sn.entities.Partenaire;
 import com.carto.sn.entities.Projet;
+import com.carto.sn.entities.Region;
+import com.carto.sn.entities.Type;
 import com.carto.sn.export.ProjetExport;
 import com.carto.sn.service.ICarto;
 
@@ -22,11 +23,13 @@ public class ExcelController {
 		ModelAndView mav = new ModelAndView();
 		mav.setView(new ProjetExport());
 		List<Projet> list = iCarto.tousLesProjets();
-		List <Localisation> listLoc = iCarto.toutesLesLocalisations();
+		List <Region> listLoc = iCarto.toutesLesRegions();
 		List <Partenaire> listPart = iCarto.tousLesPartenaires();
+		List <Type> listType = iCarto.tousLesTypes();
 		mav.addObject("list", list);
 		mav.addObject("listLoc", listLoc);
 		mav.addObject("listPart", listPart);
+		mav.addObject("listType", listType);
 		
 		return mav;
 		

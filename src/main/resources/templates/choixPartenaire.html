@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function(event){
   						 	
 						<div class="input-group">
 						<select class="form-select" id="nomProjet" th:field="*{nomProjet}">
-						 <option th:each="b:${listGroupByProjet}" th:text="${b.nomProjet}" th:value="${b.nomProjet}"></option>
+						 <option th:each="b:${listProjet}" th:text="${b.nomProjet}" th:value="${b.nomProjet}"></option>
 						</select>
 						
 						<button type="submit" class="btn btn-warning" >Changer</button>
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", function(event){
  			<i class="fas fa-file-excel"></i></a>
  			 </div>
  			 </div>
-					<input type="hidden" name="listProjetType" id="listProjetType" th:value="${listProjetType}"/>
+					<input type="hidden" name="listProjet" id="listProjet" th:value="${listProjet}"/>
 					<br></br>
 					<form th:action="@{/sauvegarderChoixPartenaire}" method="post" >
 					<input type="hidden" name="nomProjet" th:value="${nomProjet}"/>
@@ -130,9 +130,9 @@ document.addEventListener("DOMContentLoaded", function(event){
 						<thead>	
 							<tr >
 							<td th:text=${nomProjet}></td>
-							<th:block  th:each="l:${listLocalisation}">						
-							<td th:text="${l.libelleLocalisation}" style="text-align:center; background:lightcyan">
-							<input type="hidden" id="libelleLocalisation" name="libelleLocalisation"  th:value="${l.libelleLocalisation}"/>
+							<th:block  th:each="l:${listRegion}">						
+							<td th:text="${l.nomRegion}" style="text-align:center; background:lightcyan">
+							<input type="hidden" id="idRegion" name="idRegion"  th:value="${l.idRegion}"/>
 							</td>
 							
 							</th:block>
@@ -143,17 +143,23 @@ document.addEventListener("DOMContentLoaded", function(event){
 						
 							<tr  th:each="p:${listPartenaire}" valign="middle" >
 							<td th:text="${p.nomPartenaire}" style="background:lightcyan">
-							<input  type="hidden" id="nomPartenaire" name="nomPartenaire"  th:value="${p.nomPartenaire}" />
+							<input  type="hidden" id="idPartenaire" name="idPartenaire"  th:value="${p.idPartenaire}" />
 							</td>	
-								 <td th:each="l:${listLocalisation}" style="text-align:center; padding:20px" th:with="test=1">
-									<th:block th:with="test=2" th:each="pr:${listProjetType}" th:if="${pr.localisation} eq ${l.libelleLocalisation}">
-									<input class="rouge"  th:if="${pr.type} eq 'Egalite de genre' and ${pr.idLocalisation} eq ${l.idLocalisation} and ${pr.idPartenaire} eq ${p.idPartenaire}" type="radio" th:name="${p.idPartenaire}+'-'+${l.idLocalisation}" id="radioButton1" th:value="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px" checked />								
-									<input class="orange"  th:if="${pr.type} eq 'Education / Formation professionnelle' and ${pr.idPartenaire} eq ${p.idPartenaire}" type="radio" th:name="${p.idPartenaire}+'-'+${l.idLocalisation}" id="radioButton2" th:value="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px; " checked />
-									<input class="jaune"  th:if="${pr.type} eq 'Gouvernance' and ${pr.idLocalisation} eq ${l.idLocalisation} and ${pr.idPartenaire} eq ${p.idPartenaire}" type="radio"  th:name="${p.idPartenaire}+'-'+${l.idLocalisation}" id="radioButton3" th:value="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px;" checked />
-								
+								 <td th:each="l:${listRegion}" style="text-align:center; padding:20px" th:with="test=1">
+									<th:block th:with="test=2" th:each="pr:${listProjet}" >
+									<th:block th:each="o:${pr.region}" th:if="${o.nomRegion} eq ${l.nomRegion}">
+									<th:block th:each="t:${pr.type}" th:if="${o.nomRegion} eq ${l.nomRegion}">
+									<th:block th:each="j:${pr.partenaire}" th:if="${o.nomRegion} eq ${l.nomRegion}">
+									<input class="rouge"  th:if="${t.nomType} eq 'Egalite de genre' and ${o.idRegion} eq ${l.idRegion} and ${j.idPartenaire} eq ${p.idPartenaire}" type="radio" th:name="${p.idPartenaire}+'-'+${l.idRegion}" id="radioButton1" th:value="${p.idPartenaire}+'-'+${l.idRegion}" style="height:20px; width:20px" checked />								
+									<input class="orange"  th:if="${t.nomType} eq 'Education / Formation professionnelle' and ${j.idPartenaire} eq ${p.idPartenaire}" type="radio" th:name="${p.idPartenaire}+'-'+${l.idRegion}" id="radioButton2" th:value="${p.idPartenaire}+'-'+${l.idRegion}" style="height:20px; width:20px; " checked />
+									<input class="jaune"  th:if="${t.nomType} eq 'Gouvernance' and ${o.idRegion} eq ${l.idRegion} and ${j.idPartenaire} eq ${p.idPartenaire}" type="radio"  th:name="${p.idPartenaire}+'-'+${l.idRegion}" id="radioButton3" th:value="${p.idPartenaire}+'-'+${l.idRegion}" style="height:20px; width:20px;" checked />
+								<input  type="hidden" id="idType" name="idType"  th:value="${t.nomType}" />
+								</th:block>
+								</th:block>
+								</th:block>
 								</th:block>
 																
-									 <input th:if="${test} eq 1" type="radio" th:name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idLocalisation}" th:value="${p.idPartenaire}+'-'+${l.idLocalisation}" style="height:20px; width:20px;box-shadow:0 0 5px 0px lightblue inset;" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idLocalisation}]], [[${p.nomPartenaire}]], [[${l.libelleLocalisation}]])" />								
+									 <input th:if="${test} eq 1" type="radio" th:name="radioButtonSelected" th:id="${p.idPartenaire}+'-'+${l.idRegion}" th:value="${p.idPartenaire}+'-'+${l.idRegion}" style="height:20px; width:20px;box-shadow:0 0 5px 0px lightblue inset;" th:onclick="getIdRadioButtonSelected([[${p.idPartenaire}+'-'+${l.idRegion}]], [[${p.nomPartenaire}]], [[${l.nomRegion}]])" />								
 								 
 								</td> 								
 								
@@ -235,7 +241,7 @@ function getIdRadioButtonSelected(idButtonRadioSelected, nomPart, libLocalisatio
 		
 		var dataNomPartenaire = "<input type='hidden' name='nomDuPartenaire' id='nomDuPartenaire' value='"+nomParte+"' />"
 		
-		var dataLibelleLocalisation = "<input type='hidden' name='libelleDeLaLocalisation' id='libelleDeLaLocalisation' value='"+libLoc+"' />"
+		var dataLibelleLocalisation = "<input type='hidden' name='nomRegion' id='libelleDeLaLocalisation' value='"+libLoc+"' />"
 		
 		document.getElementById('bodyForm').innerHTML+=dataNomPartenaire;
 		document.getElementById('bodyForm').innerHTML+=dataLibelleLocalisation;

@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,10 +21,11 @@ public class Pays {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idPays;
-	private String pays;
-	public Pays(String pays) {
+	@NotBlank(message="Renseigner le nom du pays")
+	private String nomPays;
+	public Pays(String nomPays) {
 		super();
-		this.pays = pays;
+		this.nomPays = nomPays;
 	}
 	
 

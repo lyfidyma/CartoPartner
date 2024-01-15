@@ -1,14 +1,17 @@
 package com.carto.sn.entities;
 
 import java.util.Collection;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +27,8 @@ public class Region {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idRegion;
-	private String region;
+	@NotBlank(message="Renseigner le nom de la région")
+	private String nomRegion;
 	
 	@OneToMany(mappedBy = "region")
 	private Collection <Departement> departement;
@@ -33,9 +37,26 @@ public class Region {
 	@JoinColumn(name="idPays", updatable = true)
 	private Pays pays;
 	
-	public Region(String region) {
+	@ManyToMany(mappedBy = "region")
+	Set <Projet> projet;
+	
+	public Region(String nomRegion) {
 		super();
-		this.region = region;
+		this.nomRegion = nomRegion;
 	}
 
+	public Region(@NotBlank(message = "Renseigner le nom de la région") String nomRegion,
+			Collection<Departement> departement, Pays pays) {
+		super();
+		this.nomRegion = nomRegion;
+		this.departement = departement;
+		this.pays = pays;
+	}
+
+	public Region(@NotBlank(message = "Renseigner le nom de la région") String nomRegion, Pays pays) {
+		super();
+		this.nomRegion = nomRegion;
+		this.pays = pays;
+	}
+	
 }

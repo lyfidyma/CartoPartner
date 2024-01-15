@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Lier partenaire</title>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+</style>
+
+
+ <link rel="stylesheet" type="text/css"
+	href="../static/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}"/>
+	
+<SCRIPT type="text/javascript">
+		function addRow(tableID) {
+
+			var table = document.getElementById(tableID);
+
+			var rowCount = table.rows.length;
+			var row = table.insertRow(rowCount);
+
+			var colCount = table.rows[0].cells.length;
+
+			for(var i=0; i<colCount; i++) {
+
+				var newcell	= row.insertCell(i);
+
+				newcell.innerHTML = "<style:box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5)>"+table.rows[1].cells[i].innerHTML;
+				//alert(newcell.childNodes);
+				switch(newcell.childNodes[0].type) {
+					case "text":
+							newcell.childNodes[0].value = "";
+							break;
+					case "checkbox":
+							newcell.childNodes[0].checked = false;
+							break;
+					case "select-one":
+							newcell.childNodes[0].selectedIndex = 0;
+							break;
+				}
+			}
+		}
+
+		function deleteRow(tableID) {
+			try {
+			var table = document.getElementById(tableID);
+			var rowCount = table.rows.length;
+
+			for(var i=0; i<rowCount; i++) {
+				var row = table.rows[i];
+				var chkbox = row.cells[0].childNodes[0];
+				if(null != chkbox && true == chkbox.checked) {
+					if(rowCount <= 1) {
+						alert("Cannot delete all the rows.");
+						break;
+					}
+					table.deleteRow(i);
+					rowCount--;
+					i--;
+				}
+
+
+			}
+			}catch(e) {
+				alert(e);
+			}
+		}
+
+	</SCRIPT>
+</head>
+<body >
+<div layout:fragment="content">
+<div class = "container">
+<br/>     
+       <h5>Lier Partenaire</h5>     		 
+  		 <hr/> 
+				
+  
+
+<form  th:action="@{/sauvegarderChoixPartenaire}" method="post" th:object="${unProjet}">
+<div class="input-group"  th:object="${unProjet}" style="width:80%;">
+						<select class="form-select" id="nomProjet" th:field="*{nomProjet}">
+						 <option th:each="b:${listProjet}" th:text="${b.nomProjet}" th:value="${b.nomProjet}"></option>
+						</select>
+						
+						
+						
+						</div>
+						<br/>
+						<div class="row">
+ 		<div class=" input-group">
+ 		<a type="button"  onclick="addRow('dataTable')"><i style="width:5px; height:5px; cursor:pointer" class="fa fa-plus" aria-hidden="true"></i></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a type="button"  onclick="deleteRow('dataTable')" style="cursor:pointer" ><i style="width:5px; height:5px; cursor:pointer; color:red" class="fa fa-minus" aria-hidden="true"></i></a>
+	</div>
+</div>
+<div class="table-responsive" >
+	<table  class="table table-bordered" id="dataTable" style="width:80%; font-size:13px; font-family:Arial;	" >
+		<thead>
+                    <tr >
+                    	<th></th>
+                    	
+                        <th style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">Partenaire</th>
+                        <th style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">Localisation</th>
+                        
+                    </tr>
+                    </thead>
+		<TR>
+		
+			<TD style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">
+			<INPUT type="checkbox"  name="chk" style="width:20px; height:20px; "/>
+			 
+			</TD>
+			
+			<TD style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">
+			<INPUT type="text" list="list-partenaire" class="form-control" name="nomDuPartenaire"/>
+			<datalist id="list-partenaire">
+							   <option th:each="c:${listPartenaire}" th:value="${c.nomPartenaire}" th:text="${c.nomPartenaire}"></option>
+							   </datalist>
+			</TD>
+			
+			<TD style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">
+				<INPUT type="text" list="list-region" class="form-control" name="nomRegion"/>
+			<datalist id="list-region">
+							   <option th:each="c:${listRegion}" th:value="${c.nomRegion}" th:text="${c.nomRegion}"></option>
+							   </datalist>
+			</TD>
+		</TR>
+	</TABLE>
+ 						 
+  		</div>	
+  		<br/>
+						 <button type="submit" class="btn btn-success" style="margin-left:450px">Enregistrer</button>
+  			</form>		
+   </div>
+</div>
+
+
+</body>
+</html>

@@ -14,10 +14,10 @@ import okhttp3.Response;
 public class GeocodingService {
 	private final OkHttpClient httpClient = new OkHttpClient();
 
-    public JSONObject search(String query) throws IOException {
-    	String count="Sénégal";
+    public JSONObject search(String regionGeocod, String paysGeocod) throws IOException {
+    	
         Request request = new Request.Builder()
-            .url("https://nominatim.openstreetmap.org/search?format=json&city=" + query+"&country="+count)
+            .url("https://nominatim.openstreetmap.org/search?format=json&city=" + regionGeocod+"&country="+paysGeocod)
             .build();
 
         try (Response response = httpClient.newCall(request).execute()) {

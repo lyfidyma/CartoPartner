@@ -1,7 +1,6 @@
 package com.carto.sn.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -15,17 +14,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.carto.sn.dao.LocalisationRepository;
+import com.carto.sn.dao.DepartementRepository;
 import com.carto.sn.dao.PartenaireRepository;
+import com.carto.sn.dao.PaysRepository;
 import com.carto.sn.dao.ProfilRepository;
 import com.carto.sn.dao.ProjetRepository;
+import com.carto.sn.dao.RegionRepository;
+import com.carto.sn.dao.TypeRepository;
 import com.carto.sn.dao.UtilisateurRepository;
-import com.carto.sn.entities.Localisation;
+import com.carto.sn.entities.Departement;
 import com.carto.sn.entities.Partenaire;
+import com.carto.sn.entities.Pays;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
 import com.carto.sn.entities.ProjetGroupByNomProjet;
 import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
+import com.carto.sn.entities.Region;
+import com.carto.sn.entities.Type;
 import com.carto.sn.entities.Utilisateur;
 
 @Service
@@ -33,7 +38,11 @@ import com.carto.sn.entities.Utilisateur;
 public class CartoImpl implements ICarto{
 	
 	@Autowired
-	private LocalisationRepository localisationRepository;
+	private RegionRepository regionRepository;
+	@Autowired
+	private PaysRepository paysRepository;
+	@Autowired
+	private DepartementRepository departementRepository;
 	@Autowired
 	private PartenaireRepository partenaireRepository;
 	@Autowired
@@ -45,13 +54,17 @@ public class CartoImpl implements ICarto{
 	@Autowired
 	private UtilisateurRepository utilisateurRepository;
 	@Autowired
+	private TypeRepository typeRepository;
+	@Autowired
 	PasswordEncoder passwordEncoder;
 
 	@Override
-	public Localisation ajoutLocalisation(String libelle) {
-		Localisation localisation = null;
-		localisation = localisationRepository.save(new Localisation(libelle));
-		return localisation;
+	public Region ajoutRegion(String nomDepartement, String nomRegion, String nomPays) {
+		Pays unPays = paysRepository.save(new Pays(nomPays));
+		Region uneRegion = regionRepository.save(new Region(nomRegion, unPays));
+		Departement unDepartement = departementRepository.save(new Departement(nomDepartement, uneRegion));
+		
+		return uneRegion;
 	}
 
 	@Override
@@ -76,8 +89,8 @@ public class CartoImpl implements ICarto{
 	}
 
 	@Override
-	public List<Localisation> toutesLesLocalisations() {
-		return localisationRepository.findAll();
+	public List<Region> toutesLesRegions() {
+		return regionRepository.findAll();
 	}
 	
 	@Override
@@ -86,23 +99,26 @@ public class CartoImpl implements ICarto{
 	}
 
 	@Override
-	public Projet ajoutProjet(String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
-			String description, String type,  MultipartFile file, String statut, int duree, String temps) throws IOException{
-		
+	public Projet ajoutProjet(String nomProjet, String pointFocal, 
+			String description, String nomType,  MultipartFile file, String statut, int duree, String temps) throws IOException{
+		Type typeProjet = typeRepository.findByNomType(nomType);
 		Projet proj = null;
-		Localisation loc = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
-		Partenaire part = partenaireRepository.findByNomPartenaire(nomPartenaire);
-		proj = projetRepository.save(new Projet(nomProjet, responsable, description, type, duree, temps, file.getBytes(), statut, part, loc));
+		Set<Type> sType = Stream.of(typeProjet)
+                .collect(Collectors.toCollection(HashSet::new));
+		
+		
+		proj = projetRepository.save(new Projet(nomProjet, pointFocal, description, duree, temps, file.getBytes(), statut));
+		proj.setType(sType);
 		return proj;
 	}
 
 	@Override
-	public Projet ajouterPartenaireAuProjet(String nomProjet, String responsable, String nomPartenaire,
+	public Projet ajouterPartenaireAuProjet(String nomProjet, String pointFocal, String nomPartenaire,
 			String libelleLocalisation, String description, String type, String statut, int duree, String temps) {
 		Projet proj = null;
-		Localisation loc = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
+		//Localisation loc = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
 		Partenaire part = partenaireRepository.findByNomPartenaire(nomPartenaire);
-		proj = projetRepository.save(new Projet(nomProjet, type, part, loc));
+		//proj = projetRepository.save(new Projet(nomProjet, type, part, loc));
 		return proj;
 	}
 
@@ -113,7 +129,8 @@ public class CartoImpl implements ICarto{
 
 	@Override
 	public List<ProjetGroupByNomProjetTypeLocalisation> projetEtTypes(String nomProjet) {
-		return projetRepository.findByNomProjet(nomProjet);
+		//return projetRepository.findByNomProjet(nomProjet);
+		return null;
 	}
 
 	@Override
@@ -192,8 +209,8 @@ public class CartoImpl implements ICarto{
 	}
 
 	@Override
-	public void supprimerLocalisation(Long idLocalisation) {
-		localisationRepository.deleteById(idLocalisation);
+	public void supprimerRegion(Long idRegion) {
+		regionRepository.deleteById(idRegion);
 		
 	}
 
@@ -210,26 +227,26 @@ public class CartoImpl implements ICarto{
 	}
 
 	@Override
-	public Optional<Localisation> findLocalisationById(Long idLocalisation) {
-		return localisationRepository.findById(idLocalisation);
+	public Optional<Region> findRegionById(Long idRegion) {
+		return regionRepository.findById(idRegion);
 	}
 
 	@Override
-	public Projet modifierProjet(Long idProjet, String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation,
+	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal, String nomPartenaire, String libelleLocalisation,
 			String description, String type, MultipartFile file, String statut, int duree, String temps)
 			throws IOException {
 		Projet projet = null;
 		
 		projet = projetRepository.findById(idProjet).orElse(projet);
 		projet.setNomProjet(nomProjet);
-		projet.setResponsable(responsable);
+		projet.setPointFocal(pointFocal);
 		projet.setDescription(description);
-		projet.setType(type);
+		//projet.setType(type);
 		projet.setStatut(statut);
 		Partenaire partenaire = partenaireRepository.findByNomPartenaire(nomPartenaire);
-		projet.setPartenaire(partenaire);
-		Localisation localisation = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
-		projet.setLocalisation(localisation);
+		//projet.setPartenaire(partenaire);
+		//Localisation localisation = localisationRepository.findByLibelleLocalisation(libelleLocalisation);
+	//	projet.setLocalisation(localisation);
 		if(file.isEmpty()==false)
 			projet.setDataImage(file.getBytes());
 		projetRepository.save(projet);
@@ -238,12 +255,68 @@ public class CartoImpl implements ICarto{
 
 	@Override
 	public List<ProjetGroupByNomProjet> groupByNomProjet() {
-		return projetRepository.findByProjet();
+		//return projetRepository.findByProjet();
+		return null;
 	}
 
 	@Override
 	public  List <Projet> findOneIdByProjetName(String nomProjet) {
 		return projetRepository.findOneIdByProjetName(nomProjet);
+	}
+
+	@Override
+	public Type ajoutType(String type, String couleur) {
+		Type unType = null;
+		unType = typeRepository.save(new Type(type, couleur));
+		return unType;
+	}
+
+	@Override
+	public void supprimerType(Long idType) {
+		typeRepository.deleteById(idType);
+		
+	}
+
+	@Override
+	public List<Type> tousLesTypes() {
+		return typeRepository.findAll();
+	}
+
+	@Override
+	public List<Departement> tousLesDepartements() {
+		return departementRepository.findAll();
+	}
+
+	@Override
+	public List<Pays> tousLesPays() {
+		return paysRepository.findAll();
+	}
+
+	@Override
+	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomType)  {
+		
+		Projet proj = projetRepository.findByNomProjet(nomProjet);
+		if(nomType!=null) {
+		Type typeProjet = typeRepository.findByNomType(nomType);
+		Set<Type> sType = Stream.of(typeProjet)
+                .collect(Collectors.toCollection(HashSet::new));
+		proj.getType().add(typeProjet);
+		}
+		Partenaire part = partenaireRepository.findByNomPartenaire(nomDuPartenaire);
+		Set<Partenaire> sPartenaire = Stream.of(part)
+                .collect(Collectors.toCollection(HashSet::new));
+		
+		Region reg = regionRepository.findByNomRegion(nomRegion);
+		Set<Region> sRegion = Stream.of(reg)
+                .collect(Collectors.toCollection(HashSet::new));
+		
+		
+		
+		proj.getPartenaire().add(part);
+		proj.getRegion().add(reg);
+		projetRepository.save(proj);
+		
+		return proj;
 	}
 
 	

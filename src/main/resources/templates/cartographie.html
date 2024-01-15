@@ -7,6 +7,8 @@
 <title>Cartographie</title>
 <style>
 
+
+
 </style>
 
 <link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
@@ -21,21 +23,22 @@
 <br/>
 <div class=container>
 <input type="hidden" id="projet" th:value="${listProjet}"/>
-<input type="hidden" id="partenaire" th:value="${listPartenaire}"/>
-<input type="hidden" id="localisation" th:value="${listLocalisation}"/>
-<input type="hidden" id="loc" th:value="${loc}"/>
 
 
-<div class="offcanvas offcanvas-start show" data-bs-scroll="true" data-bs-backdrop="false" style="width:200px;margin-top:54px;" tabindex="-1" id="offcanvas"  aria-labelledby="offcanvasLabel">
-  
-  <div class="offcanvas-body" style="background:  #FBFCFC">
- 
-         <div class="row">
+<div class="row flex-nowrap" style="margin-left:-120px;background:white;  ">
+
+        <div class="col-auto col-md-3 col-xl px-sm-2 px-0 ">
         
-		<div class="col-md" th:if="${listProjet}" th:each="p:${listProjet}" style="margin:auto">
-		<a th:href="@{cartographie(query = 'Tambacounda')}"><img class = "image" th:if="${p.dataImage.length==0} " src="../static/img/background.jpeg}"  th:src="@{/img/background.jpeg}" width="150" height="100" alt="test" style=" border-radius:4%; border:1px solid gray; border: 2px solid #FFFFFF; 
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-0 text-white min-vh-100" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5)">
+                
+ 
+         <div class="row" >
+       
+		<div th:if="${listProjet}" th:each="p:${listProjet}">
+		
+		<a th:href="@{cartographie(idProjet=${p.idProjet})}"><img class = "image" th:if="${p.dataImage.length==0} " src="../static/img/background.jpeg}"  th:src="@{/img/background.jpeg}" width="150" height="100" alt="test" style=" border-radius:4%; border:1px solid gray; border: 2px solid #FFFFFF; 
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);"/></a>
-		<a th:href="@{cartographie(nomProjet=${p.nomProjet})}"><img class = "image" th:if="${p.dataImage.length>0}" th:src="@{'data:image/jpeg;base64,'+${p.generateBase64Image()}}" width="150" height="100" alt="" style="border-radius:4%;border:1px solid gray; border: 2px solid #FFFFFF; 
+		<a th:href="@{cartographie(idProjet=${p.idProjet})}"><img class = "image" th:if="${p.dataImage.length>0}" th:src="@{'data:image/jpeg;base64,'+${p.generateBase64Image()}}" width="150" height="100" alt="" style="border-radius:4%;border:1px solid gray; border: 2px solid #FFFFFF; 
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);"/></a>
 		<br></br>
 		
@@ -43,30 +46,78 @@
 		 
 		</div>
   </div>
- <!--  <div class="offcanvas-footer">
   
-   
-    <button type="button" class="btn-close" style="margin-left:220px" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div> -->
+  
 </div>
+	<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div class="col-auto px-0">
+            <div id="sidebar" class="collapse collapse-horizontal show border-end">
+                <div id="sidebar-nav" style="width:200px;" >
+                <br/>
+                    <p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>Filtrer par</span> </p>
+                    <form th:action="@{cartographieDetails}" method="post" id="formulaire">
+                    <input type="checkbox"   name="type" id="type" value="type" style="width:20px;height:20px">&nbsp;<span>Type</span>
+                   
+                   <br/>
+
+                    <input type="checkbox"  name="region" id="region" value="region" style="width:20px;height:20px">&nbsp;<span>Région</span>
+                     
+                    <br/>
+                    
+                    <input type="checkbox"  name="departement" id="departement" value="departement" style="width:20px;height:20px">&nbsp;<span>Département</span>
+               </form>
+               <p></p>
+              <a type="button" class="btn btn-secondary" th:href="@{cartographie}" >Tous les projets</a>
+               <script th:inline="javascript">
+			/*<![CDATA[*/		
 	
-<div id="map" style="width: 99%; height: 92vh;margin-top:-20px; margin-left:90px;"></div> 
+		/*]]>*/
+		</script>
+                <hr/>
+                
+                &nbsp;&nbsp;<b><label>Projets &nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</label></b><span th:text="${nombreProjets}"></span> 
+                <br/>
+               &nbsp;&nbsp;<b><label>Régions :  &nbsp; &nbsp;&nbsp; </label></b><span th:text="${nombreRegions}"></span> 
+                </div>
+            </div>
+        </div>
+        <main class="col ps-md-1">
+       
+            <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse"  class="border rounded-3 p-1 text-decoration-none"  ><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+           
+            <div class="page-header pt-3">
+               
+            </div>
+            
+            <hr>
+            <div class="row">
+                <div class="col-12">
+                    <div id="map" style="width: 112%; height: 87vh; margin-top:-50px;"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+ 
 
 
 <script th:inline="javascript">
 /*<![CDATA[*/
 var listLat = /*[[${listLat}]]*/ 'default';
 var listLong = /*[[${listLong}]]*/ 'default';
-var listId = /*[[${listId}]]*/ 'default';
+var listName = /*[[${listName}]]*/ 'default';
+var listTypeParRegion = /*[[${listTypeParRegion}]]*/ 'default';
 var locationLat = /*[[${locationLat}]]*/ 'default';
 var locationLon = /*[[${locationLon}]]*/ 'default';
+
 let locations={};
 let listLocations=[];
 
 if(locationLat==null || locationLon==null){
-	let mapOptions = {
-		    center:[14.6537, -16.2337],
-		    zoom:7
+	 let mapOptions = {
+		    center:[14.695, -17.4463],
+		    zoom:10
 		}
 
 		let mapList = new L.map('map' , mapOptions);
@@ -81,19 +132,26 @@ if(locationLat==null || locationLon==null){
 	        "id": i,
 	        "lat":  listLat[i],
 	        "long": listLong[i],
-	        "title": "Dakar",
+	        "title": listName[i],
 	        "url":"https://www.google.com/"
 	    }
 	 listLocations.push(locations);
 	
-	
+	 if(listTypeParRegion!=null){
+			var circle = L.circle([listLat[i], listLong[i]],{
+				color:'white',
+				fillColor:listTypeParRegion,
+				fillOpacity:0.8,
+				radius:2500
+				}).addTo(mapList);
+			}
 	}	
 	
 	
 	let popupOption = {
 	    "closeButton":false
 	}
-
+	
 	listLocations.forEach(element => {
 	    new L.Marker([element.lat,element.long]).addTo(mapList)
 	    .on("mouseover",event =>{
@@ -103,7 +161,10 @@ if(locationLat==null || locationLon==null){
 	        event.target.closePopup();
 	    })
 	   
-	});
+	}); 
+	
+	
+	
 		
 	
 }else{
@@ -117,11 +178,13 @@ L.marker([locationLat, locationLon]).addTo(map)
     .bindPopup((locationLat, locationLon).display_name)
     .openPopup();
 }
+
+
 /*]]>*/
 </script>
 
 
-
+ </div>
 	</div>
 	</div>
 </body>

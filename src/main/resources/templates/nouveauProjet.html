@@ -42,8 +42,8 @@
 			</div>
 			
 			<div class="form-floating  mb-3">	
-			<input type="text" class = "form-control" th:field="*{responsable}" id="responsable" placeholder="Point focal"/>
-			<label for="responsable">Point focal</label>
+			<input type="text" class = "form-control" th:field="*{pointFocal}" id="pointFocal" placeholder="Point focal"/>
+			<label for="pointFocal">Point focal</label>
 			</div>
 			
 			<!-- <div th:object="${unPartenaire}">
@@ -73,41 +73,54 @@
 			<label for="description">Description</label>
 			</div>
 			
+			<div th:object="${unType}">
 			<div class="form-floating mb-3">
-			<select id="type" th:field="*{type}" class="form-control">
+			<select id="type" th:field="*{nomType}" class="form-control">
 			<option value="" hidden>Sélectionner</option>
-			<option value="Egalite de genre" >Egalité de genre</option>
-			<option value="Education / Formation professionnelle" >Education / Formation professionnelle</option>
-			<option value="Gouvernance" >Gouvernance</option>
+			<option th:each="t:${listType}" th:text="${t.nomType}" th:value="${t.nomType}"></option>
 			</select>
 			<label for="type">Type<span style="color:red">&nbsp;*</span></label>
 			<span style="color:red">[[${messageErreurType}]]</span>
 			</div>
+			</div>
 			
-			<div class="form-floating mb-3">
+			<div class="row">
+			<div class=" col-md-2">
+			<label for="duree">Durée<span style="color:red">&nbsp;*</span></label>
 			<select id="duree" th:field="*{duree}" class="form-control">
-			<option value="" hidden>Sélectionner</option>
 			<option value="1" >1</option>
 			<option value="2" >2</option>
 			<option value="3" >3</option>
-			</select>
-			<label for="duree">Durée<span style="color:red">&nbsp;*</span></label>
-			
-			<select id="temps" th:field="*{temps}" class="form-control">
-			<option selected value="année" >année</option>
-			<option value="mois" >mois</option>
+			<option value="4" >4</option>
+			<option value="5" >5</option>
 			</select>
 			
 			</div>
 			
 			
+			<div class="col-md-4 mb-3">
+			<label for="temps"></label>
+			<select id="temps" th:field="*{temps}" class="form-control">
+			<option value="année" >année</option>
+			<option value="mois" >mois</option>
+			</select>
+			
+			</div>
+			</div>
+			<div class="form-floating mb-3">
+			<select id="statut" th:field="*{statut}" class="form-control">
+			<option value="En cours" >En cours</option>
+			<option value="Inactif" >Inactif</option>
+			<option value="Clôturé" >Clôturé</option>
+			</select>
+			<label for="statut">Statut</label>
+			</div>
+			
 			<label for="file">Ajouter une image</label>
 			<input type="file" class = "form-control" name="file" id="file" style="background: #F7F7D2 "/>
-			
-			
-			<br/>
+			<!-- <br/>
 			<input type="checkbox" style="width:18px; height:18px" name="activate" id="activate" th:checked=true checked/>
-			<label for="activate">&nbsp;&nbsp;Activer</label>
+			<label for="activate">&nbsp;&nbsp;Activer</label> -->
 			<br></br>
 			
 			<button type="submit" class="btn btn-success" style="margin-left:250px" >Enregistrer</button>

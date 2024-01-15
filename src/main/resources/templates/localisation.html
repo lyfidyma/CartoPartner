@@ -33,19 +33,24 @@ table td:hover{
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
 		<div class="col-md-8" style="margin: auto;">
 		<br/>
-		<form th:action="@{/sauvegarderLocalisation}" method="post"  th:object="${uneLocalisation}"> 
+		<form th:action="@{/sauvegarderLocalisation}" method="post"  th:object="${uneRegion}"> 
+		
+		<div class="form-floating  mb-3"  th:object="${unDepartement}">		
+			<input type="text" class = "form-control"  th:field="*{nomDepartement}" id="nomDepartement" placeholder="Département"/>	
+			<label>Département<span style="color:red">&nbsp;*</span></label>
+				
+			</div>
+		
 		<div class="form-floating  mb-3">		
-			
-			<input type="text" class = "form-control" th:field="*{libelleLocalisation}" id="nomLocalisation" placeholder="Région"/>	
+			<input type="text" class = "form-control" th:field="*{nomRegion}" id="nomRegion" placeholder="Région"/>	
 			<label>Région<span style="color:red">&nbsp;*</span></label>
-			<span th:if="${#fields.hasErrors('libelleLocalisation')}" th:errors="*{libelleLocalisation}" th:errorclass="error"></span>
+			<span th:if="${#fields.hasErrors('nomRegion')}" th:errors="*{nomRegion}" th:errorclass="error"></span>
 			<span style="color:red">[[${messageDoublon}]]</span>
 			</div>
 			
-			<div class="form-floating  mb-3">		
-			
-			<input type="text" class = "form-control"  id="pays" placeholder="Pays"/>	
-			<label>Pays</label>
+			<div class="form-floating  mb-3"  th:object="${unPays}">		
+			<input type="text" class = "form-control"  th:field="*{nomPays}" id="nomPays" placeholder="Pays"/>	
+			<label>Pays<span style="color:red">&nbsp;*</span></label>
 				
 			</div>
 			
@@ -61,11 +66,15 @@ table td:hover{
 						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px; font-family:Arial;  ">
 							
 						<tbody>
-							<tr th:each="l:${listLocalisation}">
-							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.libelleLocalisation}"></span>
+							<tr th:each="l:${listDepartement}">
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.nomDepartement}"></span>
+							</td>
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.region.nomRegion}"></span>
+							</td>
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.region.pays.nomPays}"></span>
 							</td>
 							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
-							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${l.idLocalisation}]], [[${l.libelleLocalisation}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${l.idDepartement}]], [[${l.nomDepartement}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
 							</td>
 							</tr>				
 						</tbody>

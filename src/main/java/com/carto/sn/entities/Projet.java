@@ -1,20 +1,18 @@
 package com.carto.sn.entities;
 
-import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Set;
 
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.persistence.ManyToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,9 +29,8 @@ public class Projet {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idProjet;
 	private String nomProjet;
-	private String responsable;
+	private String pointFocal;
 	private String description;
-	private String type;
 	private int duree;
 	private String temps;
 	@Lob
@@ -41,26 +38,25 @@ public class Projet {
     private byte[] dataImage;
 	private String statut;
 	
-	@ManyToOne
-	@JoinColumn(name="idPartenaire", updatable = true)
-	private Partenaire partenaire;
-	@ManyToOne
-	@JoinColumn(name="idLocalisation", updatable = true)
-	private Localisation localisation;
-
+	@ManyToMany(fetch = FetchType.EAGER)
+	Set <Partenaire> partenaire;
+	@ManyToMany(fetch = FetchType.EAGER)
+	Set <Region> region;
+	@ManyToMany(fetch = FetchType.EAGER)
+	Set <Type> type; 
+	
 
 	 public String generateBase64Image() {
 	        return Base64.encodeBase64String(this.dataImage);
 	    }
 
 
-	public Projet(String nomProjet, String responsable, String description, String type, int duree, String temps,
-			byte[] dataImage, String statut) {
+	public Projet(String nomProjet, String pointFocal, String description, int duree, String temps, byte[] dataImage,
+			String statut) {
 		super();
 		this.nomProjet = nomProjet;
-		this.responsable = responsable;
+		this.pointFocal = pointFocal;
 		this.description = description;
-		this.type = type;
 		this.duree = duree;
 		this.temps = temps;
 		this.dataImage = dataImage;
@@ -68,30 +64,44 @@ public class Projet {
 	}
 
 
-	public Projet(String nomProjet, String responsable, String description, String type, int duree, String temps,
-			byte[] dataImage, String statut, Partenaire partenaire, Localisation localisation) {
+	public Projet(String nomProjet, String pointFocal, String description, int duree, String temps, byte[] dataImage,
+			String statut, Set<Partenaire> partenaire, Set<Region> region, Set<Type> type) {
 		super();
 		this.nomProjet = nomProjet;
-		this.responsable = responsable;
+		this.pointFocal = pointFocal;
 		this.description = description;
-		this.type = type;
 		this.duree = duree;
 		this.temps = temps;
 		this.dataImage = dataImage;
 		this.statut = statut;
 		this.partenaire = partenaire;
-		this.localisation = localisation;
+		this.region = region;
+		this.type = type;
 	}
 
 
-	public Projet(String nomProjet, String type, Partenaire partenaire, Localisation localisation) {
+	public Projet(String nomProjet, Set<Partenaire> partenaire, Set<Region> region, Set<Type> type) {
 		super();
 		this.nomProjet = nomProjet;
-		this.type = type;
 		this.partenaire = partenaire;
-		this.localisation = localisation;
+		this.region = region;
+		this.type = type;
 	}
 
+
+	public Projet(String nomProjet, String pointFocal, String description, int duree, String temps, byte[] dataImage,
+			String statut, Set<Type> type) {
+		super();
+		this.nomProjet = nomProjet;
+		this.pointFocal = pointFocal;
+		this.description = description;
+		this.duree = duree;
+		this.temps = temps;
+		this.dataImage = dataImage;
+		this.statut = statut;
+		this.type = type;
+	}
+	 
 
 	
 

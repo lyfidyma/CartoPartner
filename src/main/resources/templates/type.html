@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Type</title>
+<style>
+table a i{
+	transition: all 0.3s linear;
+}
+.table a:hover i{
+	transform: scale(1.5);
+}
+table td:hover{
+	background:#E6EBF0;
+}
+.error{
+	color:red;
+}
+
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+     
+      	<br/>
+		
+		<div class = "container">
+		<h5>Type</h5>
+		<hr/>
+		<div style="margin: auto; background:#FFFF; width:50%; border-radius:10px; border: 2px solid #FFFFFF; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+		<div class="col-md-8" style="margin: auto;">
+		<br/>
+		<form th:action="@{/sauvegarderType}" method="post"  th:object="${unType}"> 
+		<div class="form-floating  mb-3">		
+			
+			<input type="text" class = "form-control" th:field="*{nomType}" id="nomType" placeholder="Type"/>	
+			<label>Type<span style="color:red">&nbsp;*</span></label>
+			<span th:if="${#fields.hasErrors('nomType')}" th:errors="*{nomType}" th:errorclass="error"></span>
+			<span style="color:red">[[${messageDoublon}]]</span>
+			</div>
+			
+			<div >		
+			<label>Couleur</label>
+			<input type="color" class = "form-control"  th:field="*{couleur}" id="color" placeholder="Couleur"/>	
+			</div>
+			<br></br>
+			<button type="submit" class="btn btn-success"  style="margin-left:150px">Enregistrer</button>
+			<br></br>
+		</form>
+		</div>
+		</div>
+		<br></br>
+		
+		<div class="col-md-6" style="margin:auto">
+			<div class="table-responsive" >
+						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px; font-family:Arial;  ">
+							
+						<tbody>
+							<tr th:each="l:${listType}">
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.nomType}"></span>
+							</td>
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.couleur}"></span>
+							</td>
+							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
+							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${l.idType}]], [[${l.nomType}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							</td>
+							</tr>				
+						</tbody>
+						</table>
+						 </div>
+						 </div>
+		
+      </div>
+      
+         <form th:action="@{supprimerType}" method="post">
+   <!-- Fenetre modal supprimer -->
+<div class="modal fade" id="supType" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-body" id="modal-body-supprimer">
+      <h6>Voulez-vous supprimer <span id="nomType"></span> ?</h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/type}">Non</button>
+        <button type="submit" id="button" class="btn btn-danger" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+  <script>
+function showModalSupprimer(idType, nomType){
+	var modal = new bootstrap.Modal(document.getElementById('supType'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idType' value='"+idType+"' />"
+	document.getElementById('modal-body-supprimer').innerHTML+=data;
+	document.getElementById('nomType').innerHTML=nomType;
+	modal.show();
+}
+
+</script>
+</div>
+
+</form>
+  </div>
+
+</body>
+</html>

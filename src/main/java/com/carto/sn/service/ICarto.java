@@ -1,31 +1,33 @@
 package com.carto.sn.service;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.carto.sn.entities.Localisation;
+import com.carto.sn.entities.Departement;
 import com.carto.sn.entities.Partenaire;
+import com.carto.sn.entities.Pays;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
 import com.carto.sn.entities.ProjetGroupByNomProjet;
 import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
+import com.carto.sn.entities.Region;
+import com.carto.sn.entities.Type;
 import com.carto.sn.entities.Utilisateur;
 
 
 public interface ICarto {
 	
-	public Localisation ajoutLocalisation(String libelle);
+	public Region ajoutRegion(String nomDepartement, String nomRegion, String nomPays);
 	public Partenaire ajoutPartenaire(Long idPartenaire, String nomPartenaire, String adresse);
 	public List <Partenaire> tousLesPartenaires();
-	public List <Localisation> toutesLesLocalisations();
+	public List <Region> toutesLesRegions();
 	public List <Projet> tousLesProjets();
-	public Projet ajoutProjet(String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
-			String description, String type, MultipartFile file, String statut, int duree, String temps) throws IOException;
-	public Projet ajouterPartenaireAuProjet(String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
+	public Projet ajoutProjet(String nomProjet, String pointFocal, 
+			String description, String nomType, MultipartFile file, String statut, int duree, String temps) throws IOException;
+	public Projet ajouterPartenaireAuProjet(String nomProjet, String pointFocal, String nomPartenaire, String libelleRegion, 
 			String description, String type, String statut, int duree, String temps);
 	public void supprimerPartenaire(Long idPartenaire);
 	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse);
@@ -39,12 +41,18 @@ public interface ICarto {
 	public List <Utilisateur> tousLesUtilisateurs();
 	public void supprimerUtilisateur(Long idUtilisateur);
 	public Optional<Utilisateur> findUtilisateurById(Long idUtilisateur);
-	public void supprimerLocalisation(Long idLocalisation);
+	public void supprimerRegion(Long idRegion);
 	public void supprimerProfil(Long idProfil);
 	public void supprimerProjet(Long idProjet);
-	public Optional <Localisation> findLocalisationById(Long idLocalisation);
-	public Projet modifierProjet(Long idProjet, String nomProjet, String responsable, String nomPartenaire, String libelleLocalisation, 
+	public Optional <Region> findRegionById(Long idRegion);
+	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal, String nomPartenaire, String libelleRegion, 
 			String description, String type, MultipartFile file, String statut, int duree, String temps) throws IOException;
 	public List <ProjetGroupByNomProjet> groupByNomProjet();
 	public List <Projet> findOneIdByProjetName(String nomProjet);
+	public Type ajoutType(String type, String couleur);
+	public void supprimerType(Long idType);
+	public List <Type> tousLesTypes();
+	public List<Departement> tousLesDepartements();
+	public List<Pays> tousLesPays();
+	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomType);
 }

@@ -96,10 +96,12 @@
 		<h5 style="font-family:cursive; margin-left:120px; margin-top:-70px" th:text="${p.nomProjet}"></h5>
 		
 		
-		<label style="margin-left:135px">Point focal : </label>&nbsp;<span th:text="${p.responsable}"></span>
+		<label style="margin-left:135px">Point focal : </label>&nbsp;<span th:text="${p.pointFocal}"></span>
 		<br/>
 		
-		<label style="margin-left:135px">Type : </label>&nbsp;<span th:text="${p.type}"></span>
+		<div th:each="t:${p.type}">
+		<label style="margin-left:135px">Type : </label>&nbsp;<span th:text="${t.nomType}"></span>
+		</div>
 		<br></br>
 		<br></br>
 		
