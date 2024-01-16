@@ -39,6 +39,7 @@
 			<input type="text" class = "form-control" th:field="*{nomProjet}" id="nomProjet" placeholder="Nom du projet"/>
 			<label for="nomProjet">Nom du projet<span style="color:red">&nbsp;*</span></label>
 			<span th:if="${messageErreurNomProj}" th:text="${messageErreurNomProj}" style="color:red"></span>
+			<span style="color:red">[[${messageDoublon}]]</span>
 			</div>
 			
 			<div class="form-floating  mb-3">	
@@ -110,7 +111,7 @@
 			<div class="form-floating mb-3">
 			<select id="statut" th:field="*{statut}" class="form-control">
 			<option value="En cours" >En cours</option>
-			<option value="Inactif" >Inactif</option>
+			<option value="En plan" >En planification</option>
 			<option value="Clôturé" >Clôturé</option>
 			</select>
 			<label for="statut">Statut</label>

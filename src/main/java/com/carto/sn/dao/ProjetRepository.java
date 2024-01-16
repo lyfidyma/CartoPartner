@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.carto.sn.entities.Projet;
-import com.carto.sn.entities.ProjetGroupByNomProjet;
-import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
 
 public interface ProjetRepository extends JpaRepository<Projet, Long>{
 	

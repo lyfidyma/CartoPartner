@@ -9,30 +9,13 @@
 <style>
 
 
-.rouge {
+.typeClass {
 	appearance:none;
-	background:red;
  	border-radius:50px;
  	border: 2px solid #FFFFFF;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
 }
 
-
-.orange {
-	appearance:none;
-	background:#F39C12;
- 	border-radius:50px;
- 	border: 2px solid #FFFFFF;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-}
-
-.jaune {
-	appearance:none;
-	background:yellow;
-	border-radius:50px;
-	border: 2px solid #FFFFFF;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
-}
 
 
 .modalRouge:checked {
@@ -184,9 +167,10 @@ document.addEventListener("DOMContentLoaded", function(event){
         
       </div>
       <div class="modal-body" id="modal-body">
-    	 <input class="modalRouge" type = "radio"  name="radioButtonModal" id="radioButtonRouge"  style=" height:20px; width:20px; transition: box-shadow 0.3s ease;"/>&nbsp;&nbsp;<span style="color:red">Rouge</span> : Egalité de genre<br/>
-		 <input class="modalOrange" type = "radio"  name="radioButtonModal" id="radioButtonOrange" style="height:20px; width:20px; transition: box-shadow 0.3s ease;"/>&nbsp;&nbsp;<span style="color:orange">Orange</span> : Education / Formation professionnelle<br/>
-		 <input class="modalJaune" type = "radio"  name="radioButtonModal" id="radioButtonJaune" style="height:20px; width:20px; transition: box-shadow 0.3s ease;"/>&nbsp;&nbsp;<span style="color:yellow;">Jaune</span> : Gouvernance<br/>
+    	 
+		 <div th:each="t:${listType}">
+						 <input class="modalType" name="radioButtonModal" id="radioButtonModal" type = radio th:style="'height:20px; width:20px;transform:none; transition: box-shadow 0.3s ease; background:' + ${t.couleur} +''"/><span th:text="${t.nomType}"></span><br/>
+						 </div>
 		 <input type = "radio"  name="radioButtonModal" id="radioButtonAucun" style="height:20px; width:20px;"/>&nbsp;&nbsp;<span>Aucun</span><br/>
       </div>
      
@@ -282,10 +266,9 @@ function getIdRadioButtonSelected(idButtonRadioSelected, nomPart, libLocalisatio
 
 						
 						 Légende<br/>
-						 <input class="rouge" type = radio style="height:20px; width:20px;transform:none;" checked/>&nbsp;&nbsp;Rouge : Egalité de genre<br/>
-						 <input class="orange" type = radio style=" height:20px; width:20px;transform:none; " checked/>&nbsp;&nbsp;Orange : Education / Formation professionnelle<br/>
-						 <input class="jaune" type = radio style="height:20px; width:20px;transform:none;" checked/>&nbsp;&nbsp;Jaune : Gouvernance<br/>
-	
+						 <div th:each="t:${listType}">
+						 <input class="typeClass" type = radio th:style="'height:20px; width:20px;transform:none; background:' + ${t.couleur} +''"  checked/><span th:text="${t.nomType}"></span><br/>
+						 </div>
 	<!-- Fenetre modal succes-->
 
    <form th:action="@{choixPartenaire(nomProjet=${nomProjet}, idProjet=${idProjet})}" method="post">

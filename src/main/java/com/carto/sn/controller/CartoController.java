@@ -2,8 +2,10 @@ package com.carto.sn.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONObject;
@@ -38,12 +40,12 @@ public class CartoController {
 	@Autowired
     private GeocodingService geocodingService;
 
-	@RequestMapping({"/", "index"})
-	public String accueil(Model model) {
+	@RequestMapping("/index")
+	public String index(Model model) {
 		//List <ProjetGroupByNomProjet> listProjet = iCarto.groupByNomProjet();
-		List <Projet> listProjet = iCarto.tousLesProjets();
-		model.addAttribute("listProjet", listProjet);
-		return "index";
+		//List <Projet> listProjet = iCarto.tousLesProjets();
+		//model.addAttribute("listProjet", listProjet);
+		return "test";
 	}
 	
 	@RequestMapping("projet")
@@ -94,7 +96,9 @@ public class CartoController {
 		List <Projet> listProjet= iCarto.tousLesProjets();
 		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List <Region> listRegion = iCarto.toutesLesRegions();
+		List <Type> listType = iCarto.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
+		model.addAttribute("listType", listType);
 		//model.addAttribute("listGroupByProjet", listGroupByProjet);
 		
 		
@@ -126,44 +130,61 @@ public class CartoController {
 	@RequestMapping("cartographie")
 	public String  cartographie(Model model, Long idProjet, String type, String departement, String region, RedirectAttributes ra) {
 		
-		 // List <ProjetGroupByNomProjet> listProjet = iCarto.groupByNomProjet(); 
+		  
 		 List <Projet> listProjet = iCarto.tousLesProjets();
 		  List <Partenaire> listPartenaire = iCarto.tousLesPartenaires(); 
 		  List <Region>  listRegion = iCarto.toutesLesRegions();
+		 
 		  model.addAttribute("listProjet", listProjet);
 		  model.addAttribute("listPartenaire", listPartenaire);
 		  model.addAttribute("listRegion", listRegion);
+		 
 		  JSONObject location;
 		 List <String> listLat = new ArrayList<>();
 		 List <String> listLong = new ArrayList<>();
 		 List <String> listName = new ArrayList<>();
+		 List <String> listPart = new ArrayList<>();
+		 HashMap <String, List<String>> listTypeRegion = new HashMap<String, List<String>>();
+		 List<String> uneListeType =  new ArrayList<>();
 		 Set <Region> listProjetsEtRegions = null;
+		 Set <Type> listProjetsEtType = null;
 		 HashSet<String> listNombreRegions=new HashSet<String>();  
 		 
 		  if(idProjet==null) {
 			  
 			  for(int i=0; i<listProjet.size(); i++) {
+					
+					  Long id = listProjet.get(i).getIdProjet(); 
+					  Set <Region> reg1 =  iCarto.projetParId(id).get().getRegion(); 
+					  Set <Type> typ1 =  iCarto.projetParId(id).get().getType();
+					 
+					  
+						  
+						
 				  listProjetsEtRegions = listProjet.get(i).getRegion();
-				  
+				  listProjetsEtType = listProjet.get(i).getType();
 				  for(Region r :listProjetsEtRegions) {
 				  try {
 					listNombreRegions.add(r.getNomRegion());
 					location = geocodingService.search(r.getNomRegion(), r.getPays().getNomPays());
 					listLat.add(location.getString("lat"));
 					listLong.add(location.getString("lon"));
-					listName.add(location.getString("name"));
-					
+					listName.add(r.getNomRegion());
 					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				  }
+				  
 			  }
+			
+			  model.addAttribute("listTypeRegion", listTypeRegion);
 			  model.addAttribute("nombreProjets", listProjet.size());
 			  model.addAttribute("nombreRegions", listNombreRegions.size());
 			  model.addAttribute("listName",listName);
 			  model.addAttribute("listLat",listLat);
 			  model.addAttribute("listLong",listLong);
+			  
 			  
 		  }
 		  
@@ -171,19 +192,27 @@ public class CartoController {
 			 
 			 Set <Region> dep = iCarto.projetParId(idProjet).get().getRegion();
 			 Set <Type> typ = iCarto.projetParId(idProjet).get().getType();
+			 Set <Partenaire> part = iCarto.projetParId(idProjet).get().getPartenaire();
 			 String listTypeParRegion=null;
-			 
+			 String nomDuType=null;
 			 for(Type t:typ) {
 				 listTypeParRegion = t.getCouleur();
+				 nomDuType = t.getNomType();
 			 }
 			 model.addAttribute("listTypeParRegion", listTypeParRegion);
+			 model.addAttribute("nomDuType", nomDuType);
+			 for(Partenaire p:part) {
+				 listPart.add(p.getNomPartenaire());
+			 }
+			 model.addAttribute("listPart", listPart);
 			 for(Region r:dep) {
 				 try {
 					 	listNombreRegions.add(r.getNomRegion());
 						location = geocodingService.search(r.getNomRegion(), r.getPays().getNomPays());
 						listLat.add(location.getString("lat"));
 						listLong.add(location.getString("lon"));
-						listName.add(location.getString("name"));
+						listName.add(r.getNomRegion());
+						
 						
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -341,6 +370,15 @@ public class CartoController {
 		}
 		
 		if(idProjet == null) {
+			List <Projet> listProjet=iCarto.tousLesProjets();
+			for(int i = 0; i<listProjet.size(); i++) {
+				if(nomProjet.equals(listProjet.get(i).getNomProjet())) {
+					List <Type> listType = iCarto.tousLesTypes();
+					model.addAttribute("listType", listType);
+					model.addAttribute("messageDoublon", "Ce projet existe");
+					return "nouveauProjet";
+				}
+			}
 			iCarto.ajoutProjet(nomProjet, pointFocal, description, nomType, file, statut, duree, temps);
 			ra.addFlashAttribute("flagEnregistrement", "1");
 			return "redirect:/nouveauProjet";
@@ -355,9 +393,11 @@ public class CartoController {
 	}
 	
 	@RequestMapping("sauvegarderChoixPartenaire")
-		public String sauvegarderChoixPartenaire(Model model, Long idProjet, String nomProjet, String nomDuPartenaire, String nomRegion, 
+		public String sauvegarderChoixPartenaire(Model model, Long idProjet, String nomProjet, String nomDuPartenaire, 
+				String nomRegion, 
 				@ModelAttribute("unProjet") Projet unProjet, String radioButtonSelected, RedirectAttributes ra) throws IOException{
 		
+			
 			//String pointFocal=iCarto.projetParId(idProjet).get().getPointFocal();
 			//String description= iCarto.projetParId(idProjet).get().getDescription();
 			//int duree = iCarto.projetParId(idProjet).get().getDuree();
@@ -571,13 +611,51 @@ public class CartoController {
 	
 	@RequestMapping("projetPartenaireRegion")
 	public String projetPartenaireRegion( @ModelAttribute ("unProjet") Projet unProjet, 
-			@ModelAttribute ("unPartenaire") Partenaire unPartenaire, @ModelAttribute ("uneRegion") Region uneRegion, Model model) {
+			@ModelAttribute ("unPartenaire") Partenaire unPartenaire, @ModelAttribute ("uneRegion") Region uneRegion,
+			 Model model) {
 		List<Projet> listProjet = iCarto.tousLesProjets();
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listRegion", listRegion);
+		
+		
+		
 		return "projetPartenaireRegion";
 	}
+	
+	@RequestMapping("lierPartenaire")
+	public String projetPartenaireRegion( @ModelAttribute ("unProjet") Projet unProjet, 
+			@ModelAttribute ("unPartenaire") Partenaire unPartenaire, @ModelAttribute ("uneRegion") Region uneRegion,
+			String nomProjet, Long idProjet, String[] nomRegion,  String[] nomDuPartenaire, String rowCount, String type, Model model) {
+		List<Projet> listProjet = iCarto.tousLesProjets();
+		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Region> listRegion = iCarto.toutesLesRegions();
+		model.addAttribute("listPartenaire", listPartenaire);
+		model.addAttribute("listProjet", listProjet);
+		model.addAttribute("listRegion", listRegion);
+		
+		if(rowCount.isBlank()==true) {
+			iCarto.ajoutPartenaireAuProjet(nomProjet, nomDuPartenaire[0], nomRegion[0], type);
+		}else if(rowCount.isBlank()== false) {
+			int rowCountInt = Integer.parseInt(rowCount);
+			
+			for(int i=0; i < rowCountInt; i++)
+				iCarto.ajoutPartenaireAuProjet(nomProjet, nomDuPartenaire[i], nomRegion[i], type);
+		}
+		
+		
+		
+		model.addAttribute("idProjet", idProjet);
+		model.addAttribute("nomProjet", nomProjet);
+		model.addAttribute("flag", "1");
+		//return "redirect:/choixPartenaire?nomProjet="+nomProjet+"&idProjet="+idProjet;
+		
+		
+		return "projetPartenaireRegion";
+	}
+	
+	
+	
 }

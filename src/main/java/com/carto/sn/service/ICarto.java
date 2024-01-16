@@ -55,4 +55,5 @@ public interface ICarto {
 	public List<Departement> tousLesDepartements();
 	public List<Pays> tousLesPays();
 	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomType);
+	
 }

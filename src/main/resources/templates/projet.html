@@ -10,6 +10,16 @@
 	th:href="@{/css/bootstrap.min.css}"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
+.modal-header{
+	background: linear-gradient(to right,   #EEF6DF  ,   #F8F5F1 ,   #F8F9EA  );
+}
+.modal-body{
+	background: linear-gradient(to right,  #F8F7F8 ,   #F8F5F1 ,   #F8F9EA  );
+}
+.modal-footer{
+	background: linear-gradient(to right,  #F8F9EA ,   #F8F5F1 ,    #EEF6DF    );
+}
+
 .circle
     {
     width:80px;
@@ -21,7 +31,7 @@
     line-height:80px;
     margin-left:10px;
     text-align:center;
-    background: #E74C3C ;
+    background: #58D68D ;
     cursor:pointer;
     transition: all 0.5s linear;
     display: inline-block;
@@ -32,8 +42,31 @@
      transform:scale(1.1);
       cursor:pointer;
    }  
+   .circlePlanification
+    {
+    width:80px;
+    height:80px;
+    border-radius:80px;
+    font-size:14px;
+    font-weight:900;
+    color:#fff;
+    line-height:80px;
+    margin-left:10px;
+    text-align:center;
+    background: #E67E22  ;
+    cursor:pointer;
+    transition: all 0.5s linear;
+    display: inline-block;
+    }
+.circlePlanification:hover
+    {
+     background-color: #4C0B5F;
+     transform:scale(1.1);
+      cursor:pointer;
+   }  
    
-   .circleInactif
+   
+   .circleCloture
     {
     width:80px;
     height:80px;
@@ -45,14 +78,14 @@
     margin-left:10px;
    	margin-top:-70px;
     text-align:center;
-    background:#5D6D7E;
+    background:#E74C3C;
     cursor:pointer;
     transition: all 0.5s linear;
     display: inline-block;
    
     }
     
-   .circleInactif:hover
+   .circleCloture:hover
     {
      background-color: #4C0B5F;
      transform:scale(1.1);
@@ -89,11 +122,15 @@
 		<div class="col-md-9" th:if="${listProjet}" th:each="p:${listProjet}" style="margin:auto">
 				
 		<span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span>
-	
-		<span class="circleInactif" th:if="${p.statut=='inactif'}" th:text="${p.statut}" ></span>
+		<span class="circlePlanification" th:if="${p.statut=='En plan'}" th:text="${p.statut}" ></span>
+		<span class="circleCloture" th:if="${p.statut=='Clôturé'}" th:text="${p.statut}" ></span>
 		&ensp;
-		<img class = "image" th:if="${p.dataImage.length==0} " src="../static/img/background.jpeg}"  th:src="@{/img/background.jpeg}" width="250" height="150" alt="" style=" border-radius:4%;"/>
-		<img class = "image" th:if="${p.dataImage.length>0}" th:src="@{'data:image/jpeg;base64,'+${p.generateBase64Image()}}" width="250" height="150" alt="" style="border-radius:4%;"/>
+		
+		<img class = "image" th:if="${p.dataImage.length==0} " src="../static/img/background.jpeg}"  th:src="@{/img/background.jpeg}" width="250" height="150" alt="" style=" border-radius:4%;"
+		th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.pointFocal}]], [[${p.duree}]], [[${p.statut}]])"/>
+		<img class = "image" th:if="${p.dataImage.length>0}" th:src="@{'data:image/jpeg;base64,'+${p.generateBase64Image()}}" width="250" height="150" alt="" style="border-radius:4%;"
+		th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.pointFocal}]], [[${p.duree}]], [[${p.statut}]])"/>
+		
 		<br></br>
 		<h5 style="font-family:cursive; margin-left:390px; margin-top:-170px" th:text="${p.nomProjet}"></h5>
 		
@@ -110,8 +147,80 @@
 		</div>
 		
 		</div>
+		
+		<!-- Fenetre modal détails du projet -->
+<div class="modal fade" id="infosProjet" role="dialog" >
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document" >
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title" style="font-family:Fantasy">Informations sur le projet</h5>
+        
+      </div>
+      <div class="modal-body" id="modal-body" >
+    	 <table style="border:none">
+    	 	<tbody>
+    	 		<tr>
+    	 			<th style="width:30%">Nom du projet</th>
+    	 			<td id="nomProjet"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Point focal</th>
+    	 			<td id="pointFocal"></td>	
+    	 		</tr>
+    	 		
+    	 		<!-- <tr>
+    	 			<th>Partenaire</th>
+    	 			<td id="nomPartenaire"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Régions</th>
+    	 			<td id="nomRegion"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Type</th>
+    	 			<td id="type"></td>	
+    	 		</tr> -->
+    	 		<tr>
+    	 			<th>Durée du projet</th>
+    	 			<td id="duree"></td>	
+    	 		</tr>
+    	 		
+    	 		<tr>
+    	 			<th>Statut</th>
+    	 			<td id="statut"></td>	
+    	 		</tr>
+    	 	</tbody>
+    	 </table>
+      </div>
+ 
+      <div class="modal-footer">
+       
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Fermer</button>
+         
+      </div>
+    </div>
+  </div>
+</div>
+<script th:inline="javascript">
+function showInfosModal(idProjet, nomProjet, pointFocal, duree, statut){
+	var modal = new bootstrap.Modal(document.getElementById('infosProjet'), {
+		  keyboard: false
+		})
+	
+			  
+			  document.getElementById('nomProjet').innerHTML= nomProjet;
+			  document.getElementById('pointFocal').innerHTML= pointFocal;
+			 
+			  document.getElementById('duree').innerHTML= duree;
+			  document.getElementById('statut').innerHTML= statut;
+		  
+			  modal.show();
+	
+}
+    
+  </script>
       </div>
   </div>
-
+ </div>
 </body>
 </html>

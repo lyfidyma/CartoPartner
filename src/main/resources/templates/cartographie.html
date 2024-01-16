@@ -7,6 +7,54 @@
 <title>Cartographie</title>
 <style>
 
+body {
+    overflow-x: hidden;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+   
+    margin-left: 0;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+    
+}
+
+
+#sidebar-wrapper .list-group {
+    width: 12rem;
+}
+
+#page-content-wrapper {
+    min-width: 100vw;
+}
+
+#wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+}
+
+@media (min-width: 768px) {
+    #sidebar-wrapper {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        margin-left: -15rem;
+    }
+}
+label{
+	font-family:optima;
+}
+span{
+	font-family:optima;
+}
 
 
 </style>
@@ -21,16 +69,15 @@
 <body>
 <div layout:fragment="content">
 <br/>
-<div class=container>
+
 <input type="hidden" id="projet" th:value="${listProjet}"/>
 
 
-<div class="row flex-nowrap" style="margin-left:-120px;background:white;  ">
-
-        <div class="col-auto col-md-3 col-xl px-sm-2 px-0 ">
-        
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-0 text-white min-vh-100" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5)">
-                
+<div class="d-flex" id="wrapper">
+    <!-- Sidebar -->
+    <div class="bg-light border-right vh-100" id="sidebar-wrapper">
+       
+        <div class="list-group list-group-flush overflow-auto h-100">
  
          <div class="row" >
        
@@ -54,8 +101,8 @@
         <div class="col-auto px-0">
             <div id="sidebar" class="collapse collapse-horizontal show border-end">
                 <div id="sidebar-nav" style="width:200px;" >
-                <br/>
-                    <p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>Filtrer par</span> </p>
+               
+                    <b><p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>Filtrer par :</span> </p></b>
                     <form th:action="@{cartographieDetails}" method="post" id="formulaire">
                     <input type="checkbox"   name="type" id="type" value="type" style="width:20px;height:20px">&nbsp;<span>Type</span>
                    
@@ -79,6 +126,12 @@
                 &nbsp;&nbsp;<b><label>Projets &nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</label></b><span th:text="${nombreProjets}"></span> 
                 <br/>
                &nbsp;&nbsp;<b><label>Régions :  &nbsp; &nbsp;&nbsp; </label></b><span th:text="${nombreRegions}"></span> 
+               <hr/>
+               
+                &nbsp;&nbsp;<b><label>Partenaires :&nbsp; </label></b><span th:text="${listPart}"></span>
+                <br/>
+                &nbsp;&nbsp;<b><label>Type :&nbsp; </label></b><span th:text="${nomDuType}"></span>
+                <hr/>
                 </div>
             </div>
         </div>
@@ -110,7 +163,9 @@ var listName = /*[[${listName}]]*/ 'default';
 var listTypeParRegion = /*[[${listTypeParRegion}]]*/ 'default';
 var locationLat = /*[[${locationLat}]]*/ 'default';
 var locationLon = /*[[${locationLon}]]*/ 'default';
-
+var listTypeRegion = /*[[${listTypeRegion}]]*/ 'default';
+var nomDuType = /*[[${nomDuType}]]*/ 'default';
+var listPart = /*[[${listPart}]]*/ 'default';
 let locations={};
 let listLocations=[];
 
@@ -132,8 +187,8 @@ if(locationLat==null || locationLon==null){
 	        "id": i,
 	        "lat":  listLat[i],
 	        "long": listLong[i],
-	        "title": listName[i],
-	        "url":"https://www.google.com/"
+	        
+	        
 	    }
 	 listLocations.push(locations);
 	
@@ -145,6 +200,15 @@ if(locationLat==null || locationLon==null){
 				radius:2500
 				}).addTo(mapList);
 			}
+	 var mapIcon = L.icon({
+		 iconUrl:'map-marker.svg',
+		 iconSize:[64, 74],
+		 iconAnchor:[32, 74],
+		 popupAnchor:[0, -50],
+	 });
+	 
+	 
+	
 	}	
 	
 	
@@ -153,9 +217,10 @@ if(locationLat==null || locationLon==null){
 	}
 	
 	listLocations.forEach(element => {
-	    new L.Marker([element.lat,element.long]).addTo(mapList)
+	    new L.Marker([element.lat,element.long], {draggable: true, opacity:0.7, title:"Cartographie des partenaires"}).addTo(mapList)
+	    
 	    .on("mouseover",event =>{
-	        event.target.bindPopup('<div class="card"> <span>'+element.title+'</span></div>',popupOption).openPopup();
+	        event.target.bindPopup('<div class="card"> <span>'+listPart+'</span></div>',popupOption).openPopup();
 	    })
 	    .on("mouseout", event => {
 	        event.target.closePopup();
@@ -185,7 +250,7 @@ L.marker([locationLat, locationLon]).addTo(map)
 
 
  </div>
-	</div>
+	
 	</div>
 </body>
 </html>

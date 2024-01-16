@@ -28,20 +28,20 @@
     font-weight:900;
     color:#fff;
     line-height:80px;
-    margin-left:20px;
-    margin-top:10px;
+    margin-left:10px;
     text-align:center;
-    background: #E74C3C;
-    transition: all 0.3s linear;
+    background: #58D68D ;
+    cursor:pointer;
+    transition: all 0.5s linear;
     display: inline-block;
     }
 .circle:hover
     {
      background-color: #4C0B5F;
      transform:scale(1.1);
+      cursor:pointer;
    }  
-   
-   .circleInactif
+   .circlePlanification
     {
     width:80px;
     height:80px;
@@ -50,19 +50,47 @@
     font-weight:900;
     color:#fff;
     line-height:80px;
-    margin-left:20px;
-    margin-top:10px;
+    margin-left:10px;
     text-align:center;
-    background:#5D6D7E;
-    transition: all 0.3s linear;
+    background: #E67E22  ;
+    cursor:pointer;
+    transition: all 0.5s linear;
     display: inline-block;
     }
-    
-   .circleInactif:hover
+.circlePlanification:hover
     {
      background-color: #4C0B5F;
      transform:scale(1.1);
+      cursor:pointer;
    }  
+   
+   
+   .circleCloture
+    {
+    width:80px;
+    height:80px;
+    border-radius:80px;
+    font-size:14px;
+    font-weight:900;
+    color:#fff;
+    line-height:80px;
+    margin-left:10px;
+   	margin-top:-70px;
+    text-align:center;
+    background:#E74C3C;
+    cursor:pointer;
+    transition: all 0.5s linear;
+    display: inline-block;
+   
+    }
+    
+   .circleCloture:hover
+    {
+     background-color: #4C0B5F;
+     transform:scale(1.1);
+      cursor:pointer;
+   } 
+   
 </style>
 </head>
 <body >
@@ -92,7 +120,8 @@
 		<div class="col-md-6" th:if="${listProjet}" th:each="p:${listProjet}">
 				
 		<a id="infosProjetClass" type="button" ><span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span></a>
-		<a id="infosProjetClass" type="button"><span class="circleInactif" th:if="${p.statut=='inactif'}" th:text="${p.statut}" ></span></a>
+		<a id="infosProjetClass" type="button"><span class="circlePlanification" th:if="${p.statut=='En plan'}" th:text="${p.statut}" ></span></a>
+			<a id="infosProjetClass" type="button"><span class="circleCloture" th:if="${p.statut=='Clôturé'}" th:text="${p.statut}" ></span></a>
 		<h5 style="font-family:cursive; margin-left:120px; margin-top:-70px" th:text="${p.nomProjet}"></h5>
 		
 		
