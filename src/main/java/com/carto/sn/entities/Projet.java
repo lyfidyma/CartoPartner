@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +46,8 @@ public class Projet {
 	Set <Region> region;
 	@ManyToMany(fetch = FetchType.EAGER)
 	Set <Type> type; 
-	
+	@OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
+	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
 
 	 public String generateBase64Image() {
 	        return Base64.encodeBase64String(this.dataImage);

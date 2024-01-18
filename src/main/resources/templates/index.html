@@ -1,227 +1,422 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" 
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" 
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	  layout:decorate="~{template}">
 <head>
 <meta charset="UTF-8">
-<title>Accueil</title>
+<title>Choisir un partenaire</title>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<style>
+
+
+.radioProjet {
+	appearance:none;
+ 	border-radius:50px;
+ 	border: 2px solid #FFFFFF;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+}
+
+
+input[type='radio']:hover {
+  transform:scale(1.5);
+}
+
+</style>
+
+<!-- <script  th:inline="javascript">
+document.addEventListener("DOMContentLoaded", function(event){
+	let projet = document.getElementsByName('radioButtonSelected');
+	
+	
+	
+	
+	for (let i = 0; i < projet.length; i++) {
+		let projet1 = document.getElementsByName(projet[i].value);
+		for (let a = 0; a < projet1.length; a++) {
+		if( projet[i].value == projet1[a].value)
+			document.getElementById(projet[i].value).style.display="none";
+		}
+	}
+
+})
+</script> -->
  <link rel="stylesheet" type="text/css"
 	href="../static/css/bootstrap.min.css"
 	th:href="@{/css/bootstrap.min.css}"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<style>
-.modal-header{
-	background: linear-gradient(to right,   #EEF6DF  ,   #F8F5F1 ,   #F8F9EA  );
-}
-.modal-body{
-	background: linear-gradient(to right,  #F8F7F8 ,   #F8F5F1 ,   #F8F9EA  );
-}
-.modal-footer{
-	background: linear-gradient(to right,  #F8F9EA ,   #F8F5F1 ,    #EEF6DF    );
-}
-.circle
-    {
-    width:80px;
-    height:80px;
-    border-radius:80px;
-    font-size:14px;
-    font-weight:900;
-    color:#fff;
-    line-height:80px;
-    margin-left:10px;
-    text-align:center;
-    background: #58D68D ;
-    cursor:pointer;
-    transition: all 0.5s linear;
-    display: inline-block;
-    }
-.circle:hover
-    {
-     background-color: #4C0B5F;
-     transform:scale(1.1);
-      cursor:pointer;
-   }  
-   .circlePlanification
-    {
-    width:80px;
-    height:80px;
-    border-radius:80px;
-    font-size:14px;
-    font-weight:900;
-    color:#fff;
-    line-height:80px;
-    margin-left:10px;
-    text-align:center;
-    background: #E67E22  ;
-    cursor:pointer;
-    transition: all 0.5s linear;
-    display: inline-block;
-    }
-.circlePlanification:hover
-    {
-     background-color: #4C0B5F;
-     transform:scale(1.1);
-      cursor:pointer;
-   }  
-   
-   
-   .circleCloture
-    {
-    width:80px;
-    height:80px;
-    border-radius:80px;
-    font-size:14px;
-    font-weight:900;
-    color:#fff;
-    line-height:80px;
-    margin-left:10px;
-   	margin-top:-70px;
-    text-align:center;
-    background:#E74C3C;
-    cursor:pointer;
-    transition: all 0.5s linear;
-    display: inline-block;
-   
-    }
-    
-   .circleCloture:hover
-    {
-     background-color: #4C0B5F;
-     transform:scale(1.1);
-      cursor:pointer;
-   } 
-   
-</style>
 </head>
 <body >
-  <div layout:fragment="content" >
-  
-      <div class = "container" >
-      <br/>
-      <div class="row" >
-      <div class="col-md-11">
-      
-        </div>
-         <div class="col-md-1">
-  		<a class="btn btn-outline-danger" th:href="@{/nouveauProjet}" style="color:black">Ajouter</a>
-  		 </div>
-  		 &ensp;
-  		 
-  		 
-  </div>
-  
-     
-      
-  <div>
-	<h4 th:if="${listProjet.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouveauProjet}">Ajouter un projet</a> </h4>
-	</div>
-  
+<div layout:fragment="content">
+<div class = "container">
+<br/>
       <div class="row">
-		<div class="col-md-6" th:if="${listProjet}" th:each="p:${listProjet}">
+      <div class="col-md-11">
+       <h5>Accueil</h5>
+       </div>
+  		 <div class="col-md-1" style="text-align:right">
+     		 <a th:href="@{/excelExport}" class="btn btn-success" style="border: 1px solid green; background-color: white; color: green;">
+ 			<i class="fas fa-file-excel"></i></a>
+ 			 </div>
+  		 <hr/>
+   
+  <br/>					<div th:if="${listProjet}">
+ 						 
+  						
+  						<form  th:action="@{/displayChoixPartenaire}" method="post" th:object="${unProjet}">
+  						<input type="hidden" name="pageAAfficher" value="pageIndex"/>
+  						<div class="row">
+  						<div class="col-md-3">
+						
+						<select class="form-select" id="nomProjet" th:field="*{nomProjet}">
+						 <option value=""></option>
+						 <option th:each="b:${listProjet}" th:text="${b.nomProjet}" th:value="${b.nomProjet}"></option>
+						</select>
+												
+						
+						</div>
+						<div class="col-md-3" th:object="${unPartenaire}">
+						<div class="input-group">
+						<select class="form-select" id="nomPartenaire" th:field="*{nomPartenaire}">
+						 <option value=""></option>
+						 <option th:each="b:${listPartenaire}" th:text="${b.nomPartenaire}" th:value="${b.nomPartenaire}"></option>
+						</select>
+						
+						</div>
+						</div>
+						<div class="col-md-3">
+						
+						<select class="form-select" id="pointFocal" th:field="*{pointFocal}">
+						 <option value=""></option>
+						 <option th:each="b:${listProjet}" th:text="${b.pointFocal}" th:value="${b.pointFocal}"></option>
+						</select>
+						</div>
+						<div class="col-md-3">
+						
+						<button type="submit" class="btn btn-primary" >Valider</button>
+						</div>
+						
+						
+						
+						</div>
+						</form>
+						
+						
+ 			 
+					<input type="hidden" name="listProjet" id="listProjet" th:value="${listProjet}"/>
+					<br></br>
+					<!-- <form th:action="@{/sauvegarderChoixPartenaire}" method="post" > -->
+					<input type="hidden" name="nomProjet" th:value="${nomProjet}"/>
+					<input type="hidden" name="idProjet" th:value="${idProjet}"/>
+					<input type="hidden" name="nomPartenaire" th:value="${nomPartenaire}"/>
+					<input type="hidden" name="pointFocal" th:value="${pointFocal}"/>
+						
+					<div class="table-responsive" th:if="${listPartenaire}">
+						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:12px; font-family:Times">
+						<thead th:if="${projetName!=null}">	
+							<tr >
+							
+							<th:block  th:if="${projetName1}!=null" th:each="l:${projetName1}">
+							<th:block  th:each="h:${l.type}">
+							<td ><input type = "radio"  name="radioProjet" class="radioProjet" th:style="'height:20px; width:20px;transform:none; background:' + ${h.couleur} +''"  checked/><span th:text="${h.nomType}"></span><br/></td>
+							</th:block>
+							</th:block>
+							<th:block  th:each="l:${listRegion}">						
+							<td th:text="${l.nomRegion}" style="text-align:center; background:lightcyan">
+							<input type="hidden" id="idRegion" name="idRegion"  th:value="${l.idRegion}"/>
+							</td>
+							
+							</th:block>
+							</tr>
+						</thead>
+							
+						<tbody  th:if="${projetName}!=null" id="bodyForm">
+						
+							<tr  th:each="p:${listPartenaire}" valign="middle" >
+							<td th:text="${p.nomPartenaire}" style="background:lightcyan">
+							<input  type="hidden" id="idPartenaire" name="idPartenaire"  th:value="${p.idPartenaire}" />
+							</td>	
+								 <td th:each="l:${listRegion}" style="text-align:center; padding:20px" th:with="test=1">
+									<th:block th:each="pr:${projetName}" >
+									<th:block th:each="t:${pr.projet}">
+									<th:block th:each="o:${pr.region}">
+									<th:block th:each="j:${pr.partenaire}">
+									<th:block  th:each="pj:${projetName1}">
+							<th:block  th:each="h:${pj.type}">
+									<input th:if=" (${p.idPartenaire}+'-'+${l.idRegion}) eq (${j.idPartenaire}+'-'+${o.idRegion})" class="radioProjet" type="radio" th:name="${p.idPartenaire}+'-'+${l.idRegion}" id="radioButton1" th:value="${p.idPartenaire}+'-'+${l.idRegion}" th:style="'height:20px; width:20px;transform:none; background:' + ${h.couleur} +''"  checked/>								
+							</th:block>
+								</th:block>
+								
+								</th:block>
+								</th:block>
+								</th:block>
+								</th:block>					
 				
-		<a id="infosProjetClass" type="button" ><span class="circle" th:if="${p.statut=='En cours'}" th:text="${p.statut}" ></span></a>
-		<a id="infosProjetClass" type="button"><span class="circlePlanification" th:if="${p.statut=='En plan'}" th:text="${p.statut}" ></span></a>
-			<a id="infosProjetClass" type="button"><span class="circleCloture" th:if="${p.statut=='Clôturé'}" th:text="${p.statut}" ></span></a>
-		<h5 style="font-family:cursive; margin-left:120px; margin-top:-70px" th:text="${p.nomProjet}"></h5>
-		
-		
-		<label style="margin-left:135px">Point focal : </label>&nbsp;<span th:text="${p.pointFocal}"></span>
-		<br/>
-		
-		<div th:each="t:${p.type}">
-		<label style="margin-left:135px">Type : </label>&nbsp;<span th:text="${t.nomType}"></span>
-		</div>
-		<br></br>
-		<br></br>
-		
-
-<!-- Fenetre modal détails du projet -->
-<!-- <div class="modal fade" id="infosProjet" role="dialog" >
-  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document" >
-    <div class="modal-content" >
+								</td> 								
+								
+							
+							</tr>	
+										
+						</tbody>
+						
+						<thead th:if="${partenaireName}!=null">	
+							<tr >
+							
+							
+							<td></td>
+							
+							<th:block  th:each="l:${listRegion}">						
+							<td th:text="${l.nomRegion}" style="text-align:center; background:lightcyan">
+							<input type="hidden" id="idRegion" name="idRegion"  th:value="${l.idRegion}"/>
+							</td>
+							
+							</th:block>
+							</tr>
+						</thead>
+						<tbody  th:if="${partenaireName}!=null" id="bodyForm">
+						
+							<tr  th:each="p:${listProjet}" valign="middle" >
+							<td th:text="${p.nomProjet}" style="background:lightcyan">
+							<input  type="hidden" id="idProjet" name="idProjet"  th:value="${p.idProjet}" />
+							</td>	
+								 <td th:each="l:${listRegion}" style="text-align:center; padding:20px" th:with="test=1">
+									<th:block th:each="pr:${partenaireName}" >
+									<th:block th:each="t:${pr.projet}">
+									<th:block th:each="o:${pr.region}">
+									<th:block th:each="j:${pr.partenaire}">
+									<th:block  th:each="h:${t.type}">
+									<input th:if=" (${p.idProjet}+'-'+${l.idRegion}) eq (${t.idProjet}+'-'+${o.idRegion})" class="radioProjet" type="radio" th:name="${p.idProjet}+'-'+${l.idRegion}" id="radioButton1" th:value="${p.idProjet}+'-'+${l.idRegion}" th:style="'height:20px; width:20px;transform:none; background:' + ${h.couleur} +''"  checked/>								
+							</th:block>
+								</th:block>
+								
+								
+								</th:block>
+								</th:block>
+								</th:block>					
+				
+																
+				
+								</td> 								
+								
+							
+							</tr>	
+										
+						</tbody>
+						<thead th:if="${pointFocalName}!=null">	
+							<tr >
+							
+							
+							<td>Point focal</td>
+							
+							<th:block  th:each="l:${listRegion}">						
+							<td th:text="${l.nomRegion}" style="text-align:center; background:lightcyan">
+							<input type="hidden" id="idRegion" name="idRegion"  th:value="${l.idRegion}"/>
+							</td>
+							
+							</th:block>
+							</tr>
+						</thead>
+						<tbody  th:if="${pointFocalName}!=null" id="bodyForm">
+						
+							<tr  th:each="p:${listProjet}" valign="middle" >
+							<td th:text="${p.nomProjet}" style="background:lightcyan">
+							<input  type="hidden" id="idProjet" name="idProjet"  th:value="${p.idProjet}" />
+							</td>	
+								 <td th:each="l:${listRegion}" style="text-align:center; padding:20px" th:with="test=1">
+									<th:block th:each="pr:${pointFocalName}" >
+									<th:block th:each="o:${pr.region}">
+									<th:block th:each="t:${pr.type}">
+									<th:block th:each="j:${pr.partenaire}">
+									<input th:if=" (${p.idProjet}+'-'+${l.idRegion}) eq (${pr.idProjet}+'-'+${o.idRegion})" class="radioProjet" type="radio" th:name="${p.idProjet}+'-'+${l.idRegion}" id="radioButton1" th:value="${p.idProjet}+'-'+${l.idRegion}" th:style="'height:20px; width:20px;transform:none; background:' + ${t.couleur} +''"  checked/>								
+							
+								<input  type="hidden" id="idType" name="idType"  th:value="${t.nomType}" />
+								</th:block>
+								</th:block>
+								</th:block>
+								</th:block>
+																
+				
+								</td> 								
+								
+							
+							</tr>	
+										
+						</tbody>
+						</table>
+						
+						 </div>
+						 <br/>
+				
+	<!-- </form>	 -->				 
+						   <br></br>
+<!-- 
+  Fenetre modal choix du type
+<div class="modal fade" id="choixPartenaire" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" style="font-family:Fantasy">Informations sur le projet</h5>
+        <h5 class="modal-title">Choisir un type</h5>
         
       </div>
-      <div class="modal-body" id="modal-body" >
-    	 <table style="border:none">
-    	 	<tbody>
-    	 		<tr>
-    	 			<th style="width:30%">Nom du projet</th>
-    	 			<td id="nomProjet"></td>	
-    	 		</tr>
-    	 		<tr>
-    	 			<th>Responsable</th>
-    	 			<td id="responsable"></td>	
-    	 		</tr>
-    	 		
-    	 		<tr>
-    	 			<th>Description</th>
-    	 			<td id="description"></td>	
-    	 		</tr>
-    	 		<tr>
-    	 			<th>Bailleur</th>
-    	 			<td id="nomPartenaire"></td>	
-    	 		</tr>
-    	 		<tr>
-    	 			<th>Localisation</th>
-    	 			<td id="libelleLocalisation"></td>	
-    	 		</tr>
-    	 		<tr>
-    	 			<th>Type</th>
-    	 			<td id="type"></td>	
-    	 		</tr>
-    	 		<tr>
-    	 			<th>Début du projet</th>
-    	 			<td id=dateDebut></td>	
-    	 		</tr>
-    	 		<tr>
-    	 			<th>Fin du projet</th>
-    	 			<td id="dateFin"></td>	
-    	 		</tr>
-    	 		<tr>
-    	 			<th>Statut</th>
-    	 			<td id="statut"></td>	
-    	 		</tr>
-    	 	</tbody>
-    	 </table>
+      <div class="modal-body" id="modal-body">
+    	 
+		 <div th:each="t:${listType}">
+						 <input class="modalType" name="radioButtonModal" id="radioButtonModal" type = radio th:style="'height:20px; width:20px;transform:none; transition: box-shadow 0.3s ease; background:' + ${t.couleur} +''"/><span th:text="${t.nomType}"></span><br/>
+						 </div>
+		 <input type = "radio"  name="radioButtonModal" id="radioButtonAucun" style="height:20px; width:20px;"/>&nbsp;&nbsp;<span>Aucun</span><br/>
       </div>
- 
+     
+      
       <div class="modal-footer">
        
-        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Fermer</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:href="@{/choixPartenaire}">Fermer</button>
+        <a type="button" id="buttonValider" class="btn btn-primary" >Valider</a>
          
       </div>
     </div>
   </div>
 </div>
+
 <script th:inline="javascript">
-function showInfosModal(idProjet, nomProjet, responsable, nomPartenaire, libelleLocalisation, description, type, dateDebut, dateFin, statut){
-	var modal = new bootstrap.Modal(document.getElementById('infosProjet'), {
+
+
+function getIdRadioButtonSelected(idButtonRadioSelected, nomPart, libLocalisation){
+	
+	var modal = new bootstrap.Modal(document.getElementById('choixPartenaire'), {
 		  keyboard: false
 		})
+	if(document.getElementById('idButtonRadioSel'))
+		document.getElementById('idButtonRadioSel').remove();
+	if(document.getElementById('nomPart'))
+		document.getElementById('nomPart').remove();
+	if(document.getElementById('libLocalisation'))
+		document.getElementById('libLocalisation').remove();
 	
-			  
-			  document.getElementById('nomProjet').innerHTML= nomProjet;
-			  document.getElementById('responsable').innerHTML= responsable;
-			  document.getElementById('description').innerHTML= description;
-			  document.getElementById('nomPartenaire').innerHTML= nomPartenaire;
-			  document.getElementById('libelleLocalisation').innerHTML= libelleLocalisation;
-			  document.getElementById('type').innerHTML= type;
-			  document.getElementById('dateDebut').innerHTML= dateDebut;
-			  document.getElementById('dateFin').innerHTML= dateFin;
-			  document.getElementById('statut').innerHTML= statut;
-		  
-			  modal.show();
+	var data = "<input type='hidden' id='idButtonRadioSel' />"
+	var dataPartenaire = "<input type='hidden' id='nomPart' value='"+nomPart+"' />"
+	var dataLocalisation = "<input type='hidden' id='libLocalisation' value='"+libLocalisation+"' />"
+	document.getElementById('modal-body').innerHTML+=data;
+	
+	document.getElementById('modal-body').innerHTML+=dataPartenaire;
+	document.getElementById('modal-body').innerHTML+=dataLocalisation;
+	modal.show();
+	document.getElementById('idButtonRadioSel').value=idButtonRadioSelected;
+	
+	
+	document.getElementById('buttonValider').addEventListener('click', function(){
+		modal.hide();
+		
+		var idR=document.getElementById('idButtonRadioSel').value;
+		if(document.getElementById('nomDuPartenaire'))
+			document.getElementById('nomDuPartenaire').remove();
+		if(document.getElementById('libelleDeLaLocalisation'))
+			document.getElementById('libelleDeLaLocalisation').remove();
+		
+		var nomParte = document.getElementById('nomPart').value;
+		var libLoc = document.getElementById('libLocalisation').value;
+		
+		var dataNomPartenaire = "<input type='hidden' name='nomDuPartenaire' id='nomDuPartenaire' value='"+nomParte+"' />"
+		
+		var dataLibelleLocalisation = "<input type='hidden' name='nomRegion' id='libelleDeLaLocalisation' value='"+libLoc+"' />"
+		
+		document.getElementById('bodyForm').innerHTML+=dataNomPartenaire;
+		document.getElementById('bodyForm').innerHTML+=dataLibelleLocalisation;
+		
+		if(document.getElementById('radioButtonRouge').checked){
+			document.getElementById(idR).checked = true;
+			document.getElementById(idR).style.accentColor = "red";
+			document.getElementById(idR).value = "rouge";
+			document.getElementById('radioButtonSelected').value = "rouge";
+			
+		}
+		if(document.getElementById('radioButtonOrange').checked){
+			document.getElementById(idR).checked = true;
+			document.getElementById(idR).style.accentColor = "orange";
+			document.getElementById(idR).value = "orange";
+			document.getElementById('radioButtonSelected').value = "orange";
+		}
+			
+		if(document.getElementById('radioButtonJaune').checked){
+		
+			document.getElementById(idR).checked = true;
+			document.getElementById(idR).style.accentColor = "yellow";
+			document.getElementById(idR).value = "jaune";
+			document.getElementById('radioButtonSelected').value = "jaune";
+		}
+		if(document.getElementById('radioButtonAucun').checked){
+			document.getElementById(idR).checked = false;
+			
+		}
+		
+	})	  
 	
 }
-    
-  </script> -->
-  </div>
-		
-		</div>
+
+</script> -->
+
+
+
+						
+						 <!-- Légende<br/>
+						 <div th:each="t:${listType}">
+						 <input class="typeClass" type = radio th:style="'height:20px; width:20px;transform:none; background:' + ${t.couleur} +''"  checked/><span th:text="${t.nomType}"></span><br/>
+						 </div> -->
+	<!-- Fenetre modal succes-->
+
+   <form th:action="@{choixPartenaire(nomProjet=${nomProjet}, idProjet=${idProjet})}" method="post">
+   
+<div class="modal fade" id="myModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-modifier">
+      <h6>Partenaire enregistré</h6>
+    	 
+    	 <div style="text-align:right">
+    	
+        <button type="submit" id="button" class="btn btn-info" >Fermer</button>
+         </div>
       </div>
+    </div>
   </div>
+</div>
+
+</form>	
+	<script th:inline="javascript" th:if="${flag} eq '1'">
+	var modal = new bootstrap.Modal(document.getElementById('myModal'), {
+		  keyboard: false
+		})
+	modal.show();
+</script>	
+
+<!-- Fenetre modal aucune modification-->
+
+   <form th:action="@{choixPartenaire(nomProjet=${nomProjet}, idProjet=${idProjet})}" method="post">
+   
+<div class="modal fade" id="modalAucunChangement" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-aucun-cahnegement">
+      <h6 style="text-align:center">Aucune modification n'a été apportée</h6>
+    	 &ensp;
+    	 <div style="text-align:center">
+    	
+        <button type="submit" id="button" class="btn btn-info" >Fermer</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>	
+	<script th:inline="javascript" th:if="${flag} eq '2'">
+	var modal = new bootstrap.Modal(document.getElementById('modalAucunChangement'), {
+		  keyboard: false
+		})
+	modal.show();
+</script>		 	 
+   </div>
+</div>
+</div>
 
 </body>
 </html>

@@ -13,6 +13,8 @@ import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
 import com.carto.sn.entities.ProjetGroupByNomProjet;
 import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
+import com.carto.sn.entities.ProjetPartenaireRegion;
+import com.carto.sn.entities.ProjetsEtRegions;
 import com.carto.sn.entities.Region;
 import com.carto.sn.entities.Type;
 import com.carto.sn.entities.Utilisateur;
@@ -55,5 +57,14 @@ public interface ICarto {
 	public List<Departement> tousLesDepartements();
 	public List<Pays> tousLesPays();
 	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomType);
+	public Projet findByNomProjet(String nomProjet);
+	public Partenaire findByNomPartenaire(String nomPartenaire);
+	public List<Projet> findByPoinFocal(String pointFocal);
+	public List <ProjetPartenaireRegion> findByIdProjet(Long idProjet);
+	public List <ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire);
+	public List <ProjetPartenaireRegion> findByIdRegion(Long idRegion);
+	
+	public List<Type> findByNomType(String nomType);
+	public List<Partenaire> findByNomPartenaireList(String nomPartenaire);
 	
 }

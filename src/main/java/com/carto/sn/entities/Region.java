@@ -3,6 +3,7 @@ package com.carto.sn.entities;
 import java.util.Collection;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,7 +40,8 @@ public class Region {
 	
 	@ManyToMany(mappedBy = "region")
 	Set <Projet> projet;
-	
+	@OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
+	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
 	public Region(String nomRegion) {
 		super();
 		this.nomRegion = nomRegion;

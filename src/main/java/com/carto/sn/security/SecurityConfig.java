@@ -48,28 +48,34 @@ public class SecurityConfig {
         		.clearAuthentication(true).logoutRequestMatcher((RequestMatcher)new AntPathRequestMatcher("/logout"))
         		.logoutSuccessUrl("/login?logout")
         		.permitAll());
-        httpSecurity.anonymous((anonymous) ->
-			anonymous.disable());
-        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
-        		.requestMatchers("https://maxcdn.bootstrapcdn.com/**" ))
-        		.permitAll());
-        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
-        		.requestMatchers("/img/**")).permitAll());
-        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
-        		.requestMatchers("https://nominatim.openstreetmap.org/**")).permitAll());
-        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
-        		.requestMatchers("http://{s}.tile.openstreetmap.org/**")).permitAll());
-        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
-        		.requestMatchers("https://{s}.tile.openstreetmap.org/**")).permitAll());
-        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
-        		.requestMatchers("/user/**" )).hasRole("USER"));
-        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
-        		.requestMatchers("/admin/**" )).hasRole("ADMIN"));
-        httpSecurity.authorizeHttpRequests(authorizeRequests -> (authorizeRequests
-        		.anyRequest()).authenticated()).csrf(AbstractHttpConfigurer::disable);
         httpSecurity
-        .exceptionHandling(Customizer.withDefaults());
+        .csrf(AbstractHttpConfigurer::disable)
+        .exceptionHandling(Customizer.withDefaults())
+        .anonymous((anonymous) ->
+			anonymous.disable());
+        httpSecurity
+        .authorizeHttpRequests(auth -> auth
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("https://maxcdn.bootstrapcdn.com/**" ))
+        		.permitAll()
+       
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("/img/**"))
+        		.permitAll()
+       
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("https://nominatim.openstreetmap.org/**"))
+        		.permitAll()
         
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("http://{s}.tile.openstreetmap.org/**"))
+        		.permitAll()
+       
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("https://{s}.tile.openstreetmap.org/**"))
+				.permitAll()
+       
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("/user/**" )).hasRole("USER")
+       
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("/admin/**" )).hasRole("ADMIN")
+        
+        		.anyRequest().authenticated());
+      
         return httpSecurity.build();
     }
  

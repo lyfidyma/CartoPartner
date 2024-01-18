@@ -18,6 +18,7 @@ import com.carto.sn.dao.DepartementRepository;
 import com.carto.sn.dao.PartenaireRepository;
 import com.carto.sn.dao.PaysRepository;
 import com.carto.sn.dao.ProfilRepository;
+import com.carto.sn.dao.ProjetPartenaireRegionRepository;
 import com.carto.sn.dao.ProjetRepository;
 import com.carto.sn.dao.RegionRepository;
 import com.carto.sn.dao.TypeRepository;
@@ -29,6 +30,7 @@ import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
 import com.carto.sn.entities.ProjetGroupByNomProjet;
 import com.carto.sn.entities.ProjetGroupByNomProjetTypeLocalisation;
+import com.carto.sn.entities.ProjetPartenaireRegion;
 import com.carto.sn.entities.Region;
 import com.carto.sn.entities.Type;
 import com.carto.sn.entities.Utilisateur;
@@ -47,14 +49,15 @@ public class CartoImpl implements ICarto{
 	private PartenaireRepository partenaireRepository;
 	@Autowired
 	private ProjetRepository projetRepository;
-	@Autowired
-	private StorageService storageService;
+	
 	@Autowired
 	private ProfilRepository profilRepository;
 	@Autowired
 	private UtilisateurRepository utilisateurRepository;
 	@Autowired
 	private TypeRepository typeRepository;
+	@Autowired
+	private ProjetPartenaireRegionRepository pprRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
@@ -296,29 +299,82 @@ public class CartoImpl implements ICarto{
 	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomType)  {
 		
 		Projet proj = projetRepository.findByNomProjet(nomProjet);
-		if(nomType!=null) {
 		Type typeProjet = typeRepository.findByNomType(nomType);
-		Set<Type> sType = Stream.of(typeProjet)
-                .collect(Collectors.toCollection(HashSet::new));
-		proj.getType().add(typeProjet);
-		}
 		Partenaire part = partenaireRepository.findByNomPartenaire(nomDuPartenaire);
-		Set<Partenaire> sPartenaire = Stream.of(part)
-                .collect(Collectors.toCollection(HashSet::new));
-		
 		Region reg = regionRepository.findByNomRegion(nomRegion);
-		Set<Region> sRegion = Stream.of(reg)
-                .collect(Collectors.toCollection(HashSet::new));
 		
+		if(nomType!=null) {
+			/*
+			 * Set<Type> sType = Stream.of(typeProjet)
+			 * .collect(Collectors.toCollection(HashSet::new));
+			 */
+			proj.getType().add(typeProjet);
+		}
 		
+		/*
+		 * Set<Partenaire> sPartenaire = Stream.of(part)
+		 * .collect(Collectors.toCollection(HashSet::new));
+		 * 
+		 * 
+		 * Set<Region> sRegion = Stream.of(reg)
+		 * .collect(Collectors.toCollection(HashSet::new));
+		 */
 		
 		proj.getPartenaire().add(part);
 		proj.getRegion().add(reg);
 		projetRepository.save(proj);
 		
+		if(pprRepository.findProjetPartenaireRegion(proj.getIdProjet(), part.getIdPartenaire(), reg.getIdRegion()).isEmpty()) {
+		ProjetPartenaireRegion ppr = pprRepository. save(new ProjetPartenaireRegion(proj, part, reg));
+		}
 		return proj;
 	}
 
+	@Override
+	public Projet findByNomProjet(String nomProjet) {
+		return projetRepository.findByNomProjet(nomProjet);
+	}
+
+	@Override
+	public Partenaire findByNomPartenaire(String nomPartenaire) {
+		return partenaireRepository.findByNomPartenaire(nomPartenaire);
+	}
+
+	@Override
+	public List <Projet> findByPoinFocal(String pointFocal) {
+		return projetRepository.findByPointFocal(pointFocal);
+	}
+
+	@Override
+	public List<ProjetPartenaireRegion> findByIdProjet(Long idProjet) {
+		return pprRepository.findByIdProjet(idProjet);
+	}
+
+	@Override
+	public List<ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire) {
+		return pprRepository.findByIdProjet(idPartenaire);
+	}
+
+	@Override
+	public List<ProjetPartenaireRegion> findByIdRegion(Long idRegion) {
+		return pprRepository.findByIdProjet(idRegion);
+	}
+
+	@Override
+	public List<Type> findByNomType(String nomType) {
+		return typeRepository.findByNomTypeList(nomType);
+	}
+
+	@Override
+	public List<Partenaire> findByNomPartenaireList(String nomPartenaire) {
+		return partenaireRepository.findByNomPartenaireList(nomPartenaire);
+	}
+
+	
+
+
+
+	
 	
 
 }

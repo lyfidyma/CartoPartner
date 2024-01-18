@@ -67,7 +67,7 @@
 			document.getElementById('rowCount').value=rowCount;
 		}
 		
-	function submitForm(tableID){
+	/* function submitForm(tableID){
 		
 		var table = document.getElementById(tableID);
 
@@ -98,7 +98,7 @@
 	
 		document.getElementById('formulaire').submit();
 		
-	}
+	} */
 	</SCRIPT>
 </head>
 <body >
@@ -110,7 +110,7 @@
 				
   
 
-<form  th:action="@{/lierPartenaire}" method="post" th:object="${unProjet}" id="formulaire">
+<form  th:action="@{lierPartenaire}" method="post" th:object="${unProjet}" id="formulaire">
 <div class="input-group"  th:object="${unProjet}" style="width:80%;">
 						<select class="form-select" id="nomProjet" th:field="*{nomProjet}">
 						 <option th:each="b:${listProjet}" th:text="${b.nomProjet}" th:value="${b.nomProjet}"></option>
@@ -146,15 +146,15 @@
 			 
 			</TD>
 			
-			<TD style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">
-			<INPUT type="text" list="list-partenaire" class="form-control" name="nomDuPartenaire"/>
+			<TD th:object="${unPartenaire}" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">
+			<INPUT type="text" list="list-partenaire" class="form-control" th:field="*{nomPartenaire}"/>
 			<datalist id="list-partenaire">
 							   <option th:each="c:${listPartenaire}" th:value="${c.nomPartenaire}" th:text="${c.nomPartenaire}"></option>
 							   </datalist>
 			</TD>
 			
-			<TD style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">
-				<INPUT type="text" list="list-region" class="form-control" name="nomRegion"/>
+			<TD th:object="${uneRegion}" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">
+				<INPUT type="text" list="list-region" class="form-control" th:field="*{nomRegion}"/>
 			<datalist id="list-region">
 							   <option th:each="c:${listRegion}" th:value="${c.nomRegion}" th:text="${c.nomRegion}"></option>
 							   </datalist>
@@ -164,14 +164,67 @@
  						 
   		</div>	
   		<input type="hidden" id="rowCount" name="rowCount">	
+  		
   		<br/>
-						 <button onclick="submitForm('datatable')" class="btn btn-success" style="margin-left:450px">Enregistrer</button>
+						 <button type="submit" class="btn btn-success" style="margin-left:450px">Enregistrer</button>
   			</form>		
+  			
+  			
+   <!-- Fenetre modal aucune modification-->
+
+   
+<div class="modal fade" id="modalAucunChangement" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-aucun-changement">
+      <h6 style="text-align:center">Aucune modification n'a été apportée</h6>
+    	 &ensp;
+    	 <div style="text-align:center">
+    	
+       <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Fermer</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:inline="javascript" th:if="${flag} eq 'Erreur'">
+	var modal = new bootstrap.Modal(document.getElementById('modalAucunChangement'), {
+		  keyboard: false
+		})
+	modal.show();
+</script> 
+  <!-- Fenetre modal aucune modification-->
+
+   
+<div class="modal fade" id="modalSucces" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-succes">
+      <h6 style="text-align:center">Partenaire enregistré</h6>
+    	 &ensp;
+    	 <div style="text-align:center">
+    	
+       <button type="submit" class="btn btn-info">Fermer</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script th:inline="javascript" th:if="${flag} eq 'Succes'">
+	var modal = new bootstrap.Modal(document.getElementById('modalSucces'), {
+		  keyboard: false
+		})
+	modal.show();
+</script> 			
    </div>
    
+	
+   
+   
 </div>
-
-
+	
 
 
 

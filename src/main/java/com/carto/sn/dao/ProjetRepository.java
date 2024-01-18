@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.carto.sn.entities.Projet;
+import com.carto.sn.entities.ProjetsEtRegions;
 
+@Repository
 public interface ProjetRepository extends JpaRepository<Projet, Long>{
 	
 	/*
@@ -26,6 +29,9 @@ public interface ProjetRepository extends JpaRepository<Projet, Long>{
 	
 	Projet findByNomProjet(String nomProjet);
 	
-
+	@Query("select p from Projet p where p.pointFocal =?1 group by p.pointFocal")
+	List <Projet> findByPointFocal(String pointFocal);
+	
+	
 
 }

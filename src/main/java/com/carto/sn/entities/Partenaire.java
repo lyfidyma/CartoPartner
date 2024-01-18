@@ -3,11 +3,13 @@ package com.carto.sn.entities;
 import java.util.Collection;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +32,9 @@ public class Partenaire {
 	
 	@ManyToMany(mappedBy="partenaire")
 	Set <Projet> projet;
+	
+	@OneToMany(mappedBy = "partenaire", cascade = CascadeType.ALL)
+	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
 	public Partenaire(String nomPartenaire, String adresse) {
 		super();
 		this.nomPartenaire = nomPartenaire;

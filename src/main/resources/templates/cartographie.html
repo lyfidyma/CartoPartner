@@ -5,6 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Cartographie</title>
+
+<script th:inline="javascript">
+              function getCartoDataTypeAndPartenaire(){
+            	  document.getELementById('formulaire').submit();
+              }
+              </script>
 <style>
 
 body {
@@ -102,20 +108,31 @@ span{
             <div id="sidebar" class="collapse collapse-horizontal show border-end">
                 <div id="sidebar-nav" style="width:200px;" >
                
-                    <b><p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>Filtrer par :</span> </p></b>
-                    <form th:action="@{cartographieDetails}" method="post" id="formulaire">
-                    <input type="checkbox"   name="type" id="type" value="type" style="width:20px;height:20px">&nbsp;<span>Type</span>
-                   
-                   <br/>
-
-                    <input type="checkbox"  name="region" id="region" value="region" style="width:20px;height:20px">&nbsp;<span>Région</span>
-                     
-                    <br/>
+                    <p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>Filtrer par :</span> </p>
+                    <a type="button" class="btn btn-secondary" th:href="@{cartographie}" >Tous les projets</a>
                     
-                    <input type="checkbox"  name="departement" id="departement" value="departement" style="width:20px;height:20px">&nbsp;<span>Département</span>
+                    <form th:action="@{cartographieDetails}" method="post" id="formulaire">
+                                       <br/>
+                    <span>Type</span>
+                   
+                   <select class="form-select" id="nomType" name="nomType">
+                    <option value=""> </option>
+						 <option th:each="t:${listType}" th:text="${t.nomType}" th:value="${t.nomType}"></option>
+						
+						</select>
+						<input type="submit" class="btn btn-secondary">
+						 </form>
+					<br/>
+					<form th:action="@{cartographiePartenaire}" method="post" id="formulaire">
+                   <span>Partenaire</span>
+                   <select class="form-select" id="nomPartenaire" name="nomPartenaire">
+                   <option value=""> </option>
+						 <option th:each="b:${listPartenaire}" th:text="${b.nomPartenaire}" th:value="${b.nomPartenaire}"></option>
+						</select><input type="submit" class="btn btn-secondary">
                </form>
+               
                <p></p>
-              <a type="button" class="btn btn-secondary" th:href="@{cartographie}" >Tous les projets</a>
+              
                <script th:inline="javascript">
 			/*<![CDATA[*/		
 	

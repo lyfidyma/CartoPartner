@@ -139,8 +139,8 @@
 		<div th:each="t:${p.type}">
 		<label style="margin-left:390px">Type : </label>&nbsp;<span th:text="${t.nomType}" ></span>
 		<br/>
-		<!-- <a th:href="@{/choixPartenaire(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="margin-left:390px" >Choisir partenaire</a> -->
-		<a th:href="@{/projetPartenaireRegion(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="margin-left:390px" >Choisir partenaire</a>
+		 <a th:href="@{/displayChoixPartenaire(nomProjet=${p.nomProjet}, idProjet=${p.idProjet}, pageAAfficher=ChoixPartenaire, nomPartenaire='', pointFocal='')}" style="margin-left:390px" >Choisir partenaire</a>
+		<!-- <a th:href="@{/projetPartenaireRegion(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="margin-left:390px" >Choisir partenaire</a> -->
 		<br></br>
 		<br></br>
 		<hr/>
