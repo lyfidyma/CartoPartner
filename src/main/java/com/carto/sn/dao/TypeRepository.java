@@ -12,8 +12,4 @@ public interface TypeRepository extends JpaRepository<Type, Long>{
 	
 	Type findByNomType(String nomType);
 
-
-	@Query("select p from Type p where p.nomType =?1")
-	List <Type> findByNomTypeList(String nomType);
-
 }

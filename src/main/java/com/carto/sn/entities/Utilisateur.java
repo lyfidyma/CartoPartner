@@ -1,22 +1,23 @@
 package com.carto.sn.entities;
 
+import java.util.Collection;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Utilisateur {
@@ -33,6 +34,10 @@ public class Utilisateur {
 	private String password;
 	@ManyToMany(fetch = FetchType.EAGER)
     private Set<Profil> profil;
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Projet> projet;
+	
 	public Utilisateur(String nomUtilisateur, String prenomUtilisateur, String login, String password) {
 		super();
 		this.nomUtilisateur = nomUtilisateur;
@@ -49,6 +54,53 @@ public class Utilisateur {
 		this.password = password;
 		this.profil = profil;
 	}
+	public Long getIdUtilisateur() {
+		return idUtilisateur;
+	}
+	public void setIdUtilisateur(Long idUtilisateur) {
+		this.idUtilisateur = idUtilisateur;
+	}
+	public String getNomUtilisateur() {
+		return nomUtilisateur;
+	}
+	public void setNomUtilisateur(String nomUtilisateur) {
+		this.nomUtilisateur = nomUtilisateur;
+	}
+	public String getPrenomUtilisateur() {
+		return prenomUtilisateur;
+	}
+	public void setPrenomUtilisateur(String prenomUtilisateur) {
+		this.prenomUtilisateur = prenomUtilisateur;
+	}
+	public String getLogin() {
+		return login;
+	}
+	public void setLogin(String login) {
+		this.login = login;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public Set<Profil> getProfil() {
+		return profil;
+	}
+	public void setProfil(Set<Profil> profil) {
+		this.profil = profil;
+	}
+	public Set<Projet> getProjet() {
+		return projet;
+	}
+	public void setProjet(Set<Projet> projet) {
+		this.projet = projet;
+	}
+
+	
+	
+	
+	
 	
 	
 

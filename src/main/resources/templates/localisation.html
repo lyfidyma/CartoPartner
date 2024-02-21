@@ -29,52 +29,68 @@ table td:hover{
 		<div class = "container">
 		<h5>Localisation</h5>
 		<hr/>
-		<div style="margin: auto; background:#FFFF; width:50%; border-radius:10px; border: 2px solid #FFFFFF; 
-		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
-		<div class="col-md-8" style="margin: auto;">
-		<br/>
-		<form th:action="@{/sauvegarderLocalisation}" method="post"  th:object="${uneRegion}"> 
 		
-		<div class="form-floating  mb-3"  th:object="${unDepartement}">		
+		
+		<form th:action="@{/sauvegarderLocalisation}" method="post"  th:object="${uneRegion}"> 
+		<div class="row" >
+		<div class="col-md-3" >
+		<div class="form-floating"  th:object="${uneCommune}">		
+			<input type="text" class = "form-control"  th:field="*{nomCommune}" id="nomCommune" placeholder="Commune"/>	
+			<label>Commune<span style="color:red">&nbsp;*</span></label>
+		</div>
+		</div>
+		
+		<div class="col-md-3" >
+		<div class="form-floating "  th:object="${unDepartement}">		
 			<input type="text" class = "form-control"  th:field="*{nomDepartement}" id="nomDepartement" placeholder="Département"/>	
 			<label>Département<span style="color:red">&nbsp;*</span></label>
-				
-			</div>
-		
-		<div class="form-floating  mb-3">		
+		</div>
+		</div>
+		<div class="col-md-2" >
+		<div class="form-floating ">		
 			<input type="text" class = "form-control" th:field="*{nomRegion}" id="nomRegion" placeholder="Région"/>	
 			<label>Région<span style="color:red">&nbsp;*</span></label>
 			<span th:if="${#fields.hasErrors('nomRegion')}" th:errors="*{nomRegion}" th:errorclass="error"></span>
 			<span style="color:red">[[${messageDoublon}]]</span>
 			</div>
-			
-			<div class="form-floating  mb-3"  th:object="${unPays}">		
-			<input type="text" class = "form-control"  th:field="*{nomPays}" id="nomPays" placeholder="Pays"/>	
-			<label>Pays<span style="color:red">&nbsp;*</span></label>
-				
 			</div>
 			
-			<button type="submit" class="btn btn-success"  style="margin-left:150px">Enregistrer</button>
+			<div class="col-md-2" >
+			<div class="form-floating"  th:object="${unPays}">		
+			<input type="text" class = "form-control"  th:field="*{nomPays}" id="nomPays" placeholder="Pays"/>	
+			<label>Pays<span style="color:red">&nbsp;*</span></label>
+			</div>	
+			</div>
+			<div class="col-md-2" >
+			<button type="submit" class="btn btn-success"  style="margin-top:10px">Enregistrer</button>
+			</div>
 			<br></br>
+			</div>
 		</form>
-		</div>
-		</div>
+		
+		
 		<br></br>
 		
 		<div class="col-md-6" style="margin:auto">
 			<div class="table-responsive" >
 						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px; font-family:Arial;  ">
-							
+							<thead>
+								<tr>
+									<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">Commune</td>
+									<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">Département</td>
+									<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">Région</td>
+									<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);">Pays</td>
+									<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);"></td>
+								</tr>
+							</thead>
 						<tbody>
-							<tr th:each="l:${listDepartement}">
-							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.nomDepartement}"></span>
-							</td>
-							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.region.nomRegion}"></span>
-							</td>
-							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.region.pays.nomPays}"></span>
-							</td>
+							<tr th:each="l:${listCommune}">
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" th:text="${l.nomCommune}"></td>
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" th:text="${l.departement.nomDepartement}"></td>
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" th:text="${l.departement.region.nomRegion}"></td>
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" th:text="${l.departement.region.pays.nomPays}"></td>
 							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
-							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${l.idDepartement}]], [[${l.nomDepartement}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${l.idCommune}]], [[${l.nomCommune}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
 							</td>
 							</tr>				
 						</tbody>
@@ -84,13 +100,13 @@ table td:hover{
 		
       </div>
       
-         <form th:action="@{supprimerLocalisation}" method="post">
+         <form th:action="@{supprimerCommune}" method="post">
    <!-- Fenetre modal supprimer -->
-<div class="modal fade" id="supLocalisation" role="dialog">
+<div class="modal fade" id="supCommune" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
     <div class="modal-content">
       <div class="modal-body" id="modal-body-supprimer">
-      <h6>Voulez-vous supprimer <span id="libLoc"></span> ?</h6>
+      <h6>Voulez-vous supprimer la commune de <span id="nomCom"></span> ?</h6>
     	 
     	 <div style="text-align:right">
     	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/localisation}">Non</button>
@@ -100,13 +116,13 @@ table td:hover{
     </div>
   </div>
   <script>
-function showModalSupprimer(idLocalisation, libLocalisation){
-	var modal = new bootstrap.Modal(document.getElementById('supLocalisation'), {
+function showModalSupprimer(idCommune, nomCommune){
+	var modal = new bootstrap.Modal(document.getElementById('supCommune'), {
 		  keyboard: false
 		})
-	var data= "<input type='hidden' name='idLocalisation' value='"+idLocalisation+"' />"
+	var data= "<input type='hidden' name='idCommune' value='"+idCommune+"' />"
 	document.getElementById('modal-body-supprimer').innerHTML+=data;
-	document.getElementById('libLoc').innerHTML=libLocalisation;
+	document.getElementById('nomCom').innerHTML=nomCommune;
 	modal.show();
 }
 

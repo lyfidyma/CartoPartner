@@ -96,25 +96,56 @@
      transform:scale(1.1);
      cursor:pointer;
      transition: all 0.5s linear;
-   }   
+   } 
+.btn {
+  text-decoration: none;
+  border: 1px solid Tomato;
+  color: Tomato;
+  padding: 10px 20px;
+  border-radius: 25px;
+  position: relative;
+  transition: all 1s;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: Tomato;
+  transition: all 1s;
+  z-index: -1;
+  transform: translateX(-100%);
+}
+
+.btn:hover::before {
+  transform: translateX(0);
+}
+.btn:hover {
+  color: #fff;
+}  
 </style>
 </head>
 <body>
   <div layout:fragment="content">
-  
-      <div class = "container">
-      <br/>
-      <div class="row">
+  <br/>
+  <div class="row">
       <div class="col-md-11">
-       <h5>Projets</h5>
+       
         </div>
          <div class="col-md-1">
-  		<a class="btn btn-outline-danger" th:href="@{/nouveauProjet}" style="color:black">Ajouter</a>
+  		<a class="btn btn-sm" th:href="@{/nouveauProjet}" style="color:black">Ajouter</a>
   		 </div>
-  		 &ensp;
+  		
   		 
-  		 <hr/>
+  	
   </div>
+      <div class = "container">
+     <br/>
+      
   <div>
 	<h4 th:if="${listProjet.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouveauProjet}">Ajouter un projet</a> </h4>
 	</div>
@@ -127,24 +158,29 @@
 		&ensp;
 		
 		<img class = "image" th:if="${p.dataImage.length==0} " src="../static/img/background.jpeg}"  th:src="@{/img/background.jpeg}" width="250" height="150" alt="" style=" border-radius:4%;"
-		th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.pointFocal}]], [[${p.duree}]], [[${p.statut}]])"/>
+		th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.pointFocal}]], [[${p.dateDebut}]], [[${p.dateFin}]], [[${p.statut}]])"/>
 		<img class = "image" th:if="${p.dataImage.length>0}" th:src="@{'data:image/jpeg;base64,'+${p.generateBase64Image()}}" width="250" height="150" alt="" style="border-radius:4%;"
-		th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.pointFocal}]], [[${p.duree}]], [[${p.statut}]])"/>
+		th:onclick="showInfosModal([[${p.idProjet}]], [[${p.nomProjet}]], [[${p.pointFocal}]], [[${p.dateDebut}]], [[${p.dateFin}]], [[${p.statut}]])"/>
 		
 		<br></br>
 		<h5 style="font-family:cursive; margin-left:390px; margin-top:-170px" th:text="${p.nomProjet}"></h5>
 		
-		<label style="margin-left:390px">Point focal : </label>&nbsp;<span th:text="${p.pointFocal}"></span>
+		<label style="margin-left:390px">Agent de projet : </label>&nbsp;<span th:text="${p.pointFocal}"></span>
 		<br/>
 		<div th:each="t:${p.type}">
-		<label style="margin-left:390px">Type : </label>&nbsp;<span th:text="${t.nomType}" ></span>
-		<br/>
-		 <a th:href="@{/displayChoixPartenaire(nomProjet=${p.nomProjet}, idProjet=${p.idProjet}, pageAAfficher=ChoixPartenaire, nomPartenaire='', pointFocal='')}" style="margin-left:390px" >Choisir partenaire</a>
-		<!-- <a th:href="@{/projetPartenaireRegion(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="margin-left:390px" >Choisir partenaire</a> -->
+		<label th:style="'margin-left:390px; color:' + ${t.couleur} +''">Type : </label>&nbsp;<span th:style="'color:' + ${t.couleur} +''"th:text="${t.nomType}" ></span>
+		</div>
+		
+		 <a th:if="${p.statut} eq 'En cours' or ${p.statut} eq 'En plan' " th:href="@{/displayChoixPartenaire(nomProjet=${p.nomProjet}, idProjet=${p.idProjet}, pageAAfficher=ChoixPartenaire, nomPartenaire='', pointFocal='', nomType='')}" style="margin-left:390px; text-decoration:none" >Choisir partenaire</a>
+		  <a th:if="${p.statut} eq 'Clôturé'" style="margin-left:390px; text-decoration:none" >Choisir partenaire</a>
+		
+		 &ensp;<a th:href="@{/detailsProjet(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="text-decoration:none">Détails</a>
+		 &ensp;<a th:href="@{/cartographie(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="text-decoration:none">Voir sur la carte</a>
+		
 		<br></br>
 		<br></br>
 		<hr/>
-		</div>
+		
 		
 		</div>
 		
@@ -181,8 +217,12 @@
     	 			<td id="type"></td>	
     	 		</tr> -->
     	 		<tr>
-    	 			<th>Durée du projet</th>
-    	 			<td id="duree"></td>	
+    	 			<th>Date de début</th>
+    	 			<td id="dateDebut"></td>	
+    	 		</tr>
+    	 		<tr>
+    	 			<th>Date de fin</th>
+    	 			<td id="dateFin"></td>	
     	 		</tr>
     	 		
     	 		<tr>
@@ -202,7 +242,7 @@
   </div>
 </div>
 <script th:inline="javascript">
-function showInfosModal(idProjet, nomProjet, pointFocal, duree, statut){
+function showInfosModal(idProjet, nomProjet, pointFocal, dateDebut, dateFin, statut){
 	var modal = new bootstrap.Modal(document.getElementById('infosProjet'), {
 		  keyboard: false
 		})
@@ -211,7 +251,8 @@ function showInfosModal(idProjet, nomProjet, pointFocal, duree, statut){
 			  document.getElementById('nomProjet').innerHTML= nomProjet;
 			  document.getElementById('pointFocal').innerHTML= pointFocal;
 			 
-			  document.getElementById('duree').innerHTML= duree;
+			  document.getElementById('dateDebut').innerHTML= dateDebut;
+			  document.getElementById('dateFin').innerHTML= dateFin;
 			  document.getElementById('statut').innerHTML= statut;
 		  
 			  modal.show();

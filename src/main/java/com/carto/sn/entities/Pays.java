@@ -12,8 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Pays {
@@ -23,8 +21,30 @@ public class Pays {
 	private Long idPays;
 	@NotBlank(message="Renseigner le nom du pays")
 	private String nomPays;
+	
+	
 	public Pays(String nomPays) {
 		super();
+		this.nomPays = nomPays;
+	}
+
+
+	public Long getIdPays() {
+		return idPays;
+	}
+
+
+	public void setIdPays(Long idPays) {
+		this.idPays = idPays;
+	}
+
+
+	public String getNomPays() {
+		return nomPays;
+	}
+
+
+	public void setNomPays(String nomPays) {
 		this.nomPays = nomPays;
 	}
 	

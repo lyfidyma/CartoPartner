@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import okhttp3.OkHttpClient;
@@ -11,9 +13,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 @Service
+@CacheConfig(cacheNames="geocode")
 public class GeocodingService {
 	private final OkHttpClient httpClient = new OkHttpClient();
-
+	@Cacheable
     public JSONObject search(String regionGeocod, String paysGeocod) throws IOException {
     	
         Request request = new Request.Builder()

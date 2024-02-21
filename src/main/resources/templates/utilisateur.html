@@ -48,6 +48,7 @@ table td:hover{
 							</td>
 							</th:block>
 							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
+							<a type="button" title="Ajouter un projet" th:onclick="showModalAjouterProjet([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="fas fa-exchange-alt" style="color:blue; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
 							<a type="button" title="Editer" th:onclick="showModalModifier([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
 							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
 							</td>
@@ -95,6 +96,16 @@ function showModalModifier(idUtilisateur, nomUtilisateur, prenomUtilisateur){
 	document.getElementById('prenomEtNomUserMod').innerHTML = prenomUtilisateur+' '+nomUtilisateur;
 	modal.show();
 }
+
+function showModalAjouterProjet(idUtilisateur, nomUtilisateur, prenomUtilisateur){
+	var modal = new bootstrap.Modal(document.getElementById('ajoutProjetUtilisateur'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idUtilisateur' value='"+idUtilisateur+"' />"
+	document.getElementById('modal-body-ajoutProjet').innerHTML+=data;
+	document.getElementById('prenomEtNomUser').innerHTML = prenomUtilisateur+' '+nomUtilisateur;
+	modal.show();
+}
 </script>
 
 </div>
@@ -111,6 +122,28 @@ function showModalModifier(idUtilisateur, nomUtilisateur, prenomUtilisateur){
       
       <div class="modal-body" id="modal-body-modifier">
       <h6>Voulez-vous modifier l'utilisateur <span id="prenomEtNomUserMod"></span> ? </h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/utilisateur}">Non</button>
+        <button type="submit" id="button" class="btn btn-warning" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>
+
+<!-- Fenetre modal Ajouter un projet à l'utilisateur -->
+
+   <form th:action="@{getDonneesProjetAAjouterAUtilisateur}" method="post">
+   
+<div class="modal fade" id="ajoutProjetUtilisateur" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-ajoutProjet">
+      <h6>Voulez-vous ajouter un projet à  <span id="prenomEtNomUser"></span> ? </h6>
     	 
     	 <div style="text-align:right">
     	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{/utilisateur}">Non</button>

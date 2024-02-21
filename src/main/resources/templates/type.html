@@ -62,7 +62,7 @@ table td:hover{
 							<tr th:each="l:${listType}">
 							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.nomType}"></span>
 							</td>
-							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${l.couleur}"></span>
+							<td th:style="'box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5); background:' + ${l.couleur} +''" >
 							</td>
 							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
 							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${l.idType}]], [[${l.nomType}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>

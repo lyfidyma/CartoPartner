@@ -5,20 +5,27 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.carto.sn.entities.Categorie;
+import com.carto.sn.entities.Commune;
 import com.carto.sn.entities.Departement;
 import com.carto.sn.entities.Partenaire;
+import com.carto.sn.entities.PartenaireLocal;
 import com.carto.sn.entities.Pays;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
@@ -26,6 +33,7 @@ import com.carto.sn.entities.ProjetPartenaireRegion;
 import com.carto.sn.entities.Region;
 import com.carto.sn.entities.Type;
 import com.carto.sn.entities.Utilisateur;
+import com.carto.sn.entities.Village;
 import com.carto.sn.service.GeocodingService;
 import com.carto.sn.service.ICarto;
 
@@ -41,29 +49,93 @@ public class CartoController {
     private GeocodingService geocodingService;
 
 	@RequestMapping("/index")
-	public String index(@ModelAttribute("uneRegion") Region uneRegion, 
+	public String index(@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("unType") Type unType,
 			@ModelAttribute("unPartenaire") Partenaire unPartenaire, 
 			@ModelAttribute("unProjet") Projet unProjet, Model model, String nomProjet, Long idProjet) {
-		
+		List<Projet> listProjetPoinFocal = iCarto.groupByPointFocal();
 		List <Projet> listProjet= iCarto.tousLesProjets();
+		
 		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List <Region> listRegion = iCarto.toutesLesRegions();
 		List <Type> listType = iCarto.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listType", listType);
-		//model.addAttribute("listGroupByProjet", listGroupByProjet);
 		
 		
+		model.addAttribute("listProjetPoinFocal", listProjetPoinFocal);
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listRegion", listRegion);
 		if(nomProjet!=null)
 			model.addAttribute("nomProjet", nomProjet);
-		/*
-		 * if(idProjet==null)
-		 * idProjet=iCarto.findOneIdByProjetName(nomProjet).get(0).getIdProjet();
-		 */
 		
 		model.addAttribute("idProjet", idProjet);
+		
+		List <ProjetPartenaireRegion> listPpr = iCarto.tousLesProjetsPartenairesRegions();
+		
+		  model.addAttribute("listProjet", listProjet);
+		  model.addAttribute("listPartenaire", listPartenaire);
+		  model.addAttribute("listRegion", listRegion);
+		  model.addAttribute("listType", listType);
+		  JSONObject location;
+		 List <String> listLat = new ArrayList<>();
+		 List <String> listLong = new ArrayList<>();
+		 List <String> listName = new ArrayList<>();
+		 Set <String> listPart = new HashSet<>();
+		// HashMap <String, List<String>> listTypeRegion = new HashMap<String, List<String>>();
+		// List<String> uneListeType =  new ArrayList<>();
+		 Set <Commune> listProjetsEtRegions = new HashSet<>();
+		 //Set <Type> listProjetsEtType = null;
+		 HashSet<String> listNombreRegions=new HashSet<String>();  
+		 Set <Projet>listNombreProjets=new HashSet<>();
+		 
+		
+			 
+			  for(int i=0; i<listPpr.size(); i++) {
+				
+				  listProjetsEtRegions.add(listPpr.get(i).getCommune());
+				  
+				  for(Commune r:listProjetsEtRegions) {
+					  
+				  try {
+					listNombreRegions.add(r.getNomCommune());
+					location = geocodingService.search(r.getNomCommune(), r.getDepartement().getRegion().getPays().getNomPays());
+					listLat.add(location.getString("lat"));
+					listLong.add(location.getString("lon"));
+					listName.add(r.getNomCommune());
+					listNombreProjets.addAll(r.getDepartement().getRegion().getProjet());
+					
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				  }
+				  
+			  }
+			
+			  Set<Partenaire> partDesProjets=new HashSet<Partenaire>();
+			  for(Projet pro:listNombreProjets) {
+				  
+				  partDesProjets.addAll(pro.getPartenaire());
+			  }
+			  
+			  for(Partenaire p:partDesProjets) {
+				  listPart.add(p.getNomPartenaire());
+			  }
+			  
+			  List<String> listDesProjets=new ArrayList<>();
+					  for(Projet p:listNombreProjets) {
+						  listDesProjets.add(p.getNomProjet());
+					  }
+			  model.addAttribute("listDesProjets", listDesProjets);
+			  model.addAttribute("nombreProjets", listDesProjets.size());
+			  model.addAttribute("nombreRegions", listNombreRegions.size());
+			  model.addAttribute("listName",listName);
+			  model.addAttribute("listLat",listLat);
+			  model.addAttribute("listLong",listLong);
+			  model.addAttribute("listPart", listPart);
+			  model.addAttribute("listPartSize",partDesProjets.size());
+			  model.addAttribute("nomDuType",listType.size() );
+	  
+		
 		return "index";
 	}
 	
@@ -84,10 +156,14 @@ public class CartoController {
 	
 	@RequestMapping("nouveauProjet")
 	public String nouveauProjet(@ModelAttribute("unProjet") Projet unProjet, @ModelAttribute("unPartenaire") Partenaire unPartenaire,
-			@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("unType") Type unType, Model model) {
+			@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("unType") Type unType,
+			@ModelAttribute("uneCategorie") Categorie uneCategorie, Model model) {
 		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List <Region> listLocalisation = iCarto.toutesLesRegions();
 		List <Type> listType = iCarto.tousLesTypes();
+		List <Categorie> listCategorie = iCarto.toutesLesCategories();
+		
+		model.addAttribute("listCategorie", listCategorie);
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listLocalisation", listLocalisation);
 		model.addAttribute("listType", listType);
@@ -99,6 +175,8 @@ public class CartoController {
 	public String partenaire(Model model) {
 		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List <Region> listLocalisation = iCarto.toutesLesRegions();
+		List<PartenaireLocal> listPartenaireLocal = iCarto.tousLesPartenairesLocaux();
+		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listLocalisation", listLocalisation);
 		return "partenaire";
@@ -106,43 +184,87 @@ public class CartoController {
 	
 	@RequestMapping("displayChoixPartenaire")
 	public String choixPartenaire(@ModelAttribute("uneRegion") Region uneRegion, 
-			@ModelAttribute("unPartenaire") Partenaire unPartenaire, 
+			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("unType") Type unType, 
 			@ModelAttribute("unProjet") Projet unProjet, Model model, 
-			String nomProjet, Long idProjet, String nomPartenaire, String pointFocal, String pageAAfficher, String flag) {
-		
-		
-		Projet projetName1=null;
-		Partenaire partenaireName1=null;
-		List <ProjetPartenaireRegion> projetName=null;
-		List <ProjetPartenaireRegion> partenaireName=null;
-		List <Projet> pointFocalName=null;
+			@RequestParam(defaultValue = "") String nomProjet, @RequestParam(defaultValue = "") Long idProjet, @RequestParam(defaultValue = "") String nomPartenaire,
+			@RequestParam(defaultValue = "") String pointFocal, @RequestParam(defaultValue = "") String nomType, String pageAAfficher, String flag) {
+		//List <ProjetPartenaireRegion> listPpr = iCarto.tousLesProjetsPartenairesRegions();
+		List <Projet> listProjet= iCarto.tousLesProjets();
+		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List <Region> listRegion = iCarto.toutesLesRegions();
+		List<Projet> listProjetPoinFocal = iCarto.groupByPointFocal();
 			
 		if(nomProjet.isEmpty()==false ) {
+			List <ProjetPartenaireRegion> projetName=null;
+			Projet projetName1=null;
 			projetName1 = iCarto.findByNomProjet(nomProjet);
 			projetName=iCarto.findByIdProjet(projetName1.getIdProjet());
 			model.addAttribute("projetName1", projetName1);
 			model.addAttribute("projetName", projetName);
 		}
 	
+		if(pageAAfficher.equals("pageIndex")) {
 		
 		if(nomPartenaire.isEmpty()==false) {
+			Partenaire partenaireName1;
+			Set<Partenaire> partenaireProjet = new HashSet<Partenaire>();
+			Set<Projet> projetsDunPartenaire = new HashSet<Projet>();
+			Set <ProjetPartenaireRegion> partenaireName = new HashSet<ProjetPartenaireRegion>();
+			
+			//Set <Projet> projetPourType=new HashSet<Projet>();
 			partenaireName1 = iCarto.findByNomPartenaire(nomPartenaire);
-			partenaireName=iCarto.findByIdPartenaire(partenaireName1.getIdPartenaire());
+			for(int i=0; i<listProjet.size(); i++) {
+				partenaireProjet=(listProjet.get(i).getPartenaire());
+				for(Partenaire p:partenaireProjet) {
+					if(partenaireName1.getNomPartenaire() == p.getNomPartenaire()) {
+						projetsDunPartenaire.addAll(p.getProjet());
+						for(Projet pr:projetsDunPartenaire) {
+							partenaireName.addAll(iCarto.findByIdProjet(pr.getIdProjet()));
+						}
+					}
+						
+						
+					}
+				}
+			
+			//model.addAttribute("projetPourType", projetPourType);
+			model.addAttribute("partenaireName1", partenaireName1);
 			model.addAttribute("partenaireName", partenaireName);
 		}
 		
 		if(pointFocal.isEmpty()==false) {
-			pointFocalName = iCarto.findByPoinFocal(pointFocal);
+			List <Projet> pointFocalName=null;
+			pointFocalName = iCarto.findByPointFocal(pointFocal);
 			model.addAttribute("pointFocalName", pointFocalName);
 		}
 		
-		List <Projet> listProjet= iCarto.tousLesProjets();
-		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
-		List <Region> listRegion = iCarto.toutesLesRegions();
+		if(nomType.isEmpty()==false) {
+			Type typeName1 = null;
+			Set <Type> projetType=null;
+			Set <ProjetPartenaireRegion> typeName=new HashSet<ProjetPartenaireRegion>();
+			typeName1=iCarto.findByNomType(nomType);
+			
+			for(int i=0; i<listProjet.size(); i++) {
+				
+				projetType= listProjet.get(i).getType();
+			
+				for(Type typ:projetType) {
+					if(typeName1.getNomType()==typ.getNomType()) {
+						typeName.addAll(iCarto.findByIdProjet(listProjet.get(i).getIdProjet()));
+						
+					}
+				}	
+				}
+			
+				model.addAttribute("typeName", typeName);
+				model.addAttribute("typeName1", typeName1);			
+		}
+		}	
+		
 		List <Type> listType = iCarto.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listType", listType);
-		//model.addAttribute("listGroupByProjet", listGroupByProjet);
+		model.addAttribute("listProjetPoinFocal", listProjetPoinFocal);
 		
 		
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -169,17 +291,23 @@ public class CartoController {
 	
 	@RequestMapping("localisation")
 	public String localisation(@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("unDepartement") Departement unDepartement, 
-			@ModelAttribute("unPays") Pays unPays, Model model) {
+			@ModelAttribute("uneCommune") Commune uneCommune, @ModelAttribute("unVillage") Village unVillage, @ModelAttribute("unPays") Pays unPays, Model model) {
+		List<Commune> listCommune = iCarto.toutesLesCommunes();
 		List <Departement> listDepartement = iCarto.tousLesDepartements();
+		List <Village> listVillage = iCarto.tousLesVillages();
+		
+		model.addAttribute("listVillage", listVillage);
+		model.addAttribute("listCommune", listCommune);
 		model.addAttribute("listDepartement",listDepartement);
 		return "localisation";
 	}
 	
 	@RequestMapping("cartographie")
-	public String  cartographie(Model model, Long idProjet, String type, String departement, String region, RedirectAttributes ra) {
+	public String  cartographie(@ModelAttribute("unProjet") Projet unProjet, @ModelAttribute("unType") Type unType, @ModelAttribute("unPartenaire") Partenaire unPartenaire,
+			Model model, Long idProjet, String type, String departement, String region, RedirectAttributes ra) {
 		
-		  
-		 List <Projet> listProjet = iCarto.tousLesProjets();
+		  List <ProjetPartenaireRegion> listPpr = iCarto.tousLesProjetsPartenairesRegions();
+		  List <Projet> listProjet = iCarto.tousLesProjets();
 		  List <Partenaire> listPartenaire = iCarto.tousLesPartenaires(); 
 		  List <Region>  listRegion = iCarto.toutesLesRegions();
 		  List <Type> listType = iCarto.tousLesTypes();
@@ -187,120 +315,187 @@ public class CartoController {
 		  model.addAttribute("listProjet", listProjet);
 		  model.addAttribute("listPartenaire", listPartenaire);
 		  model.addAttribute("listRegion", listRegion);
-		 model.addAttribute("listType", listType);
+		  model.addAttribute("listType", listType);
 		  JSONObject location;
 		 List <String> listLat = new ArrayList<>();
 		 List <String> listLong = new ArrayList<>();
 		 List <String> listName = new ArrayList<>();
-		 List <String> listPart = new ArrayList<>();
-		 HashMap <String, List<String>> listTypeRegion = new HashMap<String, List<String>>();
-		 List<String> uneListeType =  new ArrayList<>();
-		 Set <Region> listProjetsEtRegions = null;
-		 Set <Type> listProjetsEtType = null;
+		 Set <String> listPart = new HashSet<>();
+		 Set <String> listPartSize = new HashSet<>();
+		// HashMap <String, List<String>> listTypeRegion = new HashMap<String, List<String>>();
+		// List<String> uneListeType =  new ArrayList<>();
+		 Set <Commune> listProjetsEtRegions = new HashSet<>();
+		 //Set <Type> listProjetsEtType = null;
 		 HashSet<String> listNombreRegions=new HashSet<String>();  
+		 Set <Projet>listNombreProjets=new HashSet<>();
 		 
 		  if(idProjet==null) {
-			  
-			  for(int i=0; i<listProjet.size(); i++) {
+			  HashMap<String, Set<String>> hmap = new HashMap<String, Set<String>>();
+			  HashMap<String, Set<String>> hmapProjet = new HashMap<String, Set<String>>();
+			  HashMap<String, Set<String>> hmapType = new HashMap<String, Set<String>>();
+			  Set<String> listDesProjets = new HashSet<>();
+			  Set<String> listDesProjetsSize = new HashSet<>();
+			  Set<String> listTypeParRegion = new HashSet<String>();
+			  Set<Type> listCouleur = new HashSet<Type>();
+			  for(int i=0; i<listPpr.size(); i++) {
+				 
+				  listProjetsEtRegions.add(listPpr.get(i).getCommune());
+				  listDesProjets.add(listPpr.get(i).getProjet().getNomProjet());
 					
-					  Long id = listProjet.get(i).getIdProjet(); 
-					  Set <Region> reg1 =  iCarto.projetParId(id).get().getRegion(); 
-					  Set <Type> typ1 =  iCarto.projetParId(id).get().getType();
-					 
-					  
-						  
+					listDesProjetsSize.add(listPpr.get(i).getProjet().getNomProjet());
+					listPart.add(listPpr.get(i).getPartenaire().getNomPartenaire());
+				
+					listPartSize.add(listPpr.get(i).getPartenaire().getNomPartenaire());
+					 						
+							 listCouleur.addAll(listPpr.get(i).getProjet().getType());
+							 for(Type t : listCouleur) {
+								 listTypeParRegion.add(t.getCouleur());
+							 }
+							 for(Map.Entry<String, Set<String>> entry : hmap.entrySet()){
+								 if(entry.getKey() == listPpr.get(i).getCommune().getNomCommune()) {
+									 listPart.addAll(entry.getValue());
+									 }
+							 }
+							 
+							 for(Map.Entry<String, Set<String>> entry : hmapProjet.entrySet()){
+								 if(entry.getKey() == listPpr.get(i).getCommune().getNomCommune()) {
+									 listDesProjets.addAll(entry.getValue());
+									 }
+							 }
+							 for(Map.Entry<String, Set<String>> entry : hmapType.entrySet()){
+								 if(entry.getKey() == listPpr.get(i).getCommune().getNomCommune()) {
+									 listTypeParRegion.addAll(entry.getValue());
+									 }
+							 }
+							 hmap.put(listPpr.get(i).getCommune().getNomCommune(), listPart);
+							 hmapProjet.put(listPpr.get(i).getCommune().getNomCommune(), listDesProjets);
+							 hmapType.put(listPpr.get(i).getCommune().getNomCommune(), listTypeParRegion);
 						
-				  listProjetsEtRegions = listProjet.get(i).getRegion();
-				  listProjetsEtType = listProjet.get(i).getType();
-				  for(Region r :listProjetsEtRegions) {
+					
+					 listDesProjets = new HashSet<>();
+					 listTypeParRegion = new HashSet<>();
+					 listPart = new HashSet<>();
+			  }
+				  for(Commune r:listProjetsEtRegions) {
+					  
 				  try {
-					listNombreRegions.add(r.getNomRegion());
-					location = geocodingService.search(r.getNomRegion(), r.getPays().getNomPays());
+					listNombreRegions.add(r.getNomCommune());
+					location = geocodingService.search(r.getNomCommune(), r.getDepartement().getRegion().getPays().getNomPays());
 					listLat.add(location.getString("lat"));
 					listLong.add(location.getString("lon"));
-					listName.add(r.getNomRegion());
-					
+					listName.add(r.getNomCommune());
+					listNombreProjets.addAll(r.getDepartement().getRegion().getProjet());
+				 				
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 				  }
 				  
-			  }
-			
-			  model.addAttribute("listTypeRegion", listTypeRegion);
-			  model.addAttribute("nombreProjets", listProjet.size());
+					  
+			  model.addAttribute("listTypeParRegion", hmapType);
+			  model.addAttribute("listDesProjets", hmapProjet);
+			  model.addAttribute("nombreProjets", "tous les projets, "+listDesProjetsSize.size());
 			  model.addAttribute("nombreRegions", listNombreRegions.size());
 			  model.addAttribute("listName",listName);
 			  model.addAttribute("listLat",listLat);
 			  model.addAttribute("listLong",listLong);
-			  
+			  model.addAttribute("listPart", hmap);
+			  model.addAttribute("listPartSize",listPartSize.size());
+			  model.addAttribute("nomDuType",listType.size() );	 
 			  
 		  }
 		  
 		  if(idProjet!=null) {
-			 
-			 Set <Region> dep = iCarto.projetParId(idProjet).get().getRegion();
+			  HashMap<String, Set<String>> hmap = new HashMap<String, Set<String>>(); 
+			  HashMap<String, Set<String>> hmapProjet = new HashMap<String, Set<String>>();
+			  HashMap<String, Set<String>> hmapType = new HashMap<String, Set<String>>();
+			  Set<String> listTypeParRegion = new HashSet<String>();
+			  String nomDuType = null;
+			  String codeCouleur = null;
+			  Set <Commune> com = new HashSet<>();
+			  Set<String> listDesProjets = new HashSet<>();
+			  Set<String> listDesProjetsSize = new HashSet<>();
+			
+			 List <ProjetPartenaireRegion> proj = iCarto.findByIdProjet(idProjet);
 			 Set <Type> typ = iCarto.projetParId(idProjet).get().getType();
-			 Set <Partenaire> part = iCarto.projetParId(idProjet).get().getPartenaire();
-			 String listTypeParRegion=null;
-			 String nomDuType=null;
 			 for(Type t:typ) {
-				 listTypeParRegion = t.getCouleur();
+				 listTypeParRegion.add(t.getCouleur());
 				 nomDuType = t.getNomType();
+				 codeCouleur = t.getCouleur();			 
+			}	
+			 		
+			 for(ProjetPartenaireRegion p:proj) {
+				 com.add(p.getCommune());
+				 listPart.add(p.getPartenaire().getNomPartenaire());
+				 listPartSize.add(p.getPartenaire().getNomPartenaire());
+				 listDesProjets.add(p.getProjet().getNomProjet());
+				 listDesProjetsSize.add(p.getProjet().getNomProjet());
+				 for(Map.Entry<String, Set<String>> entry : hmap.entrySet()){
+					 if(entry.getKey().equals(p.getCommune().getNomCommune())) {
+						 listPart.addAll(entry.getValue());
+					 }
+				 }
+				 for(Map.Entry<String, Set<String>> entry : hmapProjet.entrySet()){
+					 if(entry.getKey().equals(p.getCommune().getNomCommune())) {
+						 	listDesProjets.addAll(entry.getValue());
+						 }
+				 }
+				
+				 hmapProjet.put(p.getCommune().getNomCommune(), listDesProjets);
+				 hmapType.put(p.getCommune().getNomCommune(), listTypeParRegion);
+				 hmap.put(p.getCommune().getNomCommune(), listPart);
+				 listPart = new HashSet<>();
+				 listDesProjets = new HashSet<>();	 
 			 }
-			 model.addAttribute("listTypeParRegion", listTypeParRegion);
-			 model.addAttribute("nomDuType", nomDuType);
-			 for(Partenaire p:part) {
-				 listPart.add(p.getNomPartenaire());
-			 }
-			 model.addAttribute("listPart", listPart);
-			 for(Region r:dep) {
+			
+			 for(Commune r:com) {
 				 try {
-					 	listNombreRegions.add(r.getNomRegion());
-						location = geocodingService.search(r.getNomRegion(), r.getPays().getNomPays());
+					 	listNombreRegions.add(r.getNomCommune());
+						location = geocodingService.search(r.getNomCommune(), r.getDepartement().getRegion().getPays().getNomPays());
 						listLat.add(location.getString("lat"));
 						listLong.add(location.getString("lon"));
-						listName.add(r.getNomRegion());
-						
+						listName.add(r.getNomCommune());
 						
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
+				
 				  }
+			 	 
+			      model.addAttribute("listTypeParRegion", hmapType);
+			 	  model.addAttribute("nomDuType", nomDuType);
+			 	  model.addAttribute("listPart", hmap);
+			 	  model.addAttribute("listPartSize", listPartSize.size());
 			 	  model.addAttribute("nombreRegions", listNombreRegions.size());
-			 	  model.addAttribute("nombreProjets","1");
+			 	  model.addAttribute("listDesProjets",hmapProjet);
+			 	  model.addAttribute("listLong",listLong);
 				  model.addAttribute("listName",listName);
 				  model.addAttribute("listLat",listLat);
 				  model.addAttribute("listLong",listLong);
-			 
-			
-			 
-			 
-			  
-		  }
-				/*
-				 * try { location = geocodingService.search(regionGeocod, paysGeocod);
-				 * 
-				 * model.addAttribute("locationLat", location.getString("lat"));
-				 * model.addAttribute("locationLon", location.getString("lon"));
-				 * 
-				 * 
-				 * } catch (IOException e) { e.printStackTrace(); }
-				 */
+				  model.addAttribute("codeCouleur", codeCouleur);
+				  model.addAttribute("nombreProjets", iCarto.projetParId(idProjet).get().getNomProjet());
 		  
-		 
+		  }
+				
 		  
 		return "cartographie";
 	}
 	
-	@RequestMapping("cartographieDetails")
-	public String  cartographieDetails(Model model, String nomType, RedirectAttributes ra) {
-		
+	@RequestMapping("cartographieType")
+	public String  cartographieType(@ModelAttribute("unProjet") Projet unProjet, @ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("unType") Type unType, Model model, String nomType, RedirectAttributes ra) {
+		  
+		  HashMap<String, Set<String>> hmap = new HashMap<String, Set<String>>(); 
+		  HashMap<String, Set<String>> hmapProjet = new HashMap<String, Set<String>>();
+		  HashMap<String, Set<String>> hmapType = new HashMap<String, Set<String>>();
 		 // List <ProjetGroupByNomProjet> listProjet = iCarto.groupByNomProjet(); 
-		 List <Projet> listProjet = iCarto.tousLesProjets();
+		  Set<String> listDesProjets = new HashSet<>();
+		  Set<String> listDesProjetsSize = new HashSet<>();
+		  Set<String> listTypeParRegion = new HashSet<String>();
+		  List <Projet> listProjet = iCarto.tousLesProjets();
 		  List <Partenaire> listPartenaire = iCarto.tousLesPartenaires(); 
 		  List <Region>  listRegion = iCarto.toutesLesRegions();
 		  List <Type> listType = iCarto.tousLesTypes();
+		 
 		  model.addAttribute("listProjet", listProjet);
 		  model.addAttribute("listPartenaire", listPartenaire);
 		  model.addAttribute("listRegion", listRegion);
@@ -309,46 +504,99 @@ public class CartoController {
 		 List <String> listLat = new ArrayList<>();
 		 List <String> listLong = new ArrayList<>();
 		 List <Long> listId = new ArrayList<>();
-		 if(nomType!=null) {
-		List<Type> tp=iCarto.findByNomType(nomType);
-		Set <Projet> pp=null;
-			for(Type t:tp) {
-				pp=t.getProjet();
+		 List <String> listName = new ArrayList<>();
+		 String codeCouleur = null;
+		 if(nomType!=null) {		
+				Set <Type> projetType = null;
+				Set <ProjetPartenaireRegion> typeName = new HashSet<ProjetPartenaireRegion>();
 				
-			}
-			Set<Region> re=null;
-			for(Projet p:pp) {
-				re=p.getRegion();
-			}
-		
-				for(Region r:re) {
-				  
-				  try {
-					location = geocodingService.search(r.getNomRegion(), r.getPays().getNomPays());
-					listLat.add(location.getString("lat"));
-					listLong.add(location.getString("lon"));
-					listId.add(location.getLong("osm_id"));
+				  Type tp = iCarto.findByNomType(nomType); 
+				  listTypeParRegion.add(tp.getCouleur());
+				  codeCouleur = tp.getCouleur();			 
+				
+
+					for(int i=0; i<listProjet.size(); i++) {
+						
+						projetType= listProjet.get(i).getType();
 					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				
-			  
-			  model.addAttribute("listId",listId);
-			  model.addAttribute("listLat",listLat);
-			  model.addAttribute("listLong",listLong);
-			  
-		  }
-	}
+						for(Type typ:projetType) {
+							if(tp.getNomType()==typ.getNomType()) {
+								typeName.addAll(iCarto.findByIdProjet(listProjet.get(i).getIdProjet()));
+							}
+						}	
+					}
+				Set <String> listPart = new HashSet<>();
+				Set <String> listPartSize = new HashSet<>();
+				  //Set <Projet> lesProjets = new HashSet<>();
+				 
+				  for(ProjetPartenaireRegion ppr:typeName) 
+				  {
+				  
+				  try { 
+					  location = geocodingService.search(ppr.getRegion().getNomRegion(),ppr.getRegion().getPays().getNomPays()); 
+					  listLat.add(location.getString("lat"));
+					  listLong.add(location.getString("lon"));
+					  listId.add(location.getLong("osm_id"));
+					  listName.add(ppr.getCommune().getNomCommune());
+					  
+					  listDesProjets.add(ppr.getProjet().getNomProjet());
+					  listDesProjetsSize.add(ppr.getProjet().getNomProjet());
+					  listPart.add(ppr.getPartenaire().getNomPartenaire());
+						 listPartSize.add(ppr.getPartenaire().getNomPartenaire());
+						 for(Map.Entry<String, Set<String>> entry : hmap.entrySet()){
+							 if(entry.getKey().equals(ppr.getCommune().getNomCommune())) {
+								 listPart.addAll(entry.getValue());
+							 }
+						 }
+						 
+						 for(Map.Entry<String, Set<String>> entry : hmapProjet.entrySet()){
+							 if(entry.getKey().equals(ppr.getCommune().getNomCommune())) {
+								 	listDesProjets.addAll(entry.getValue());
+								 }
+						 }
+						 hmapProjet.put(ppr.getCommune().getNomCommune(), listDesProjets);
+						 hmapType.put(ppr.getCommune().getNomCommune(), listTypeParRegion);
+						 hmap.put(ppr.getCommune().getNomCommune(), listPart);
+						 listPart = new HashSet<>();
+						 listDesProjets = new HashSet<>();	 
+				  
+				  } catch (IOException e) { 
+					  	e.printStackTrace(); 
+				  	}
+				   
+						 
+					 
+					 
+				  }
+				  
+				//  List <String> prot = new ArrayList<>();
+				  //for(Projet p:lesProjets)
+					//  prot.add(p.getNomProjet());
+				  
+				  model.addAttribute("listId",listId); 
+				  model.addAttribute("listLat",listLat);
+				  model.addAttribute("listLong",listLong);
+				  model.addAttribute("listName",listName);
+				  model.addAttribute("listTypeParRegion", hmapType);
+				  model.addAttribute("nomDuType", nomType);
+				  model.addAttribute("codeCouleur", codeCouleur);
+				  model.addAttribute("listPart", hmap);
+				  model.addAttribute("listPartSize", listPartSize);
+				  model.addAttribute("nombreProjets", listDesProjetsSize.size());
+				  model.addAttribute("listDesProjets", hmapProjet);
+					}
 		 
 		  
 		return "cartographie";
 	}
 	
 	@RequestMapping("cartographiePartenaire")
-	public String  cartographiePartenaire(Model model, String partenaire, RedirectAttributes ra) {
+	public String  cartographiePartenaire(@ModelAttribute("unProjet") Projet unProjet, @ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("unType") Type unType, 
+			Model model, String nomPartenaire, RedirectAttributes ra) {
 		
-		 // List <ProjetGroupByNomProjet> listProjet = iCarto.groupByNomProjet(); 
+		  HashMap<String, Set<String>> hmap = new HashMap<String, Set<String>>(); 
+		  HashMap<String, Set<String>> hmapProjet = new HashMap<String, Set<String>>();
+		  HashMap<String, Set<String>> hmapType = new HashMap<String, Set<String>>();
 		 List <Projet> listProjet = iCarto.tousLesProjets();
 		  List <Partenaire> listPartenaire = iCarto.tousLesPartenaires(); 
 		  List <Region>  listRegion = iCarto.toutesLesRegions();
@@ -361,32 +609,95 @@ public class CartoController {
 		 List <String> listLat = new ArrayList<>();
 		 List <String> listLong = new ArrayList<>();
 		 List <Long> listId = new ArrayList<>();
-		  if(partenaire!=null) {
+		 List <String> listName = new ArrayList<>();
+		 Set <String> listPart = new HashSet<>();
+		Set <String> listPartSize = new HashSet<>();
+		Set <String> listDesProjets = new HashSet<>();
+		Set <String> listDesProjetsSize = new HashSet<>();
+		 Set<Type> listCouleur = new HashSet<Type>();
+		Set <Type> nomType = new HashSet<>();
+		Set<String> listTypeParRegion = new HashSet<>();
+		  Set <Projet> lesProjets = new HashSet<>();
+		
+		  if(nomPartenaire!=null) {
+			  Set <Partenaire> projetType=null;
+				Set <ProjetPartenaireRegion> typeName=new HashSet<ProjetPartenaireRegion>();
+			 Partenaire parte = iCarto.findByNomPartenaire(nomPartenaire);
+			 for(int i=0; i<listProjet.size(); i++) {
+					
+					projetType = listProjet.get(i).getPartenaire();
+				
+					for(Partenaire typ:projetType) {
+						if(parte.getNomPartenaire()==typ.getNomPartenaire()) {
+							typeName.addAll(iCarto.findByIdProjet(listProjet.get(i).getIdProjet()));
+						}
+					}	
+				}
 			 
-			 List<Partenaire> parte = iCarto.findByNomPartenaireList(partenaire);
-			 Set<Projet> proje=null;
-			 for(Partenaire par:parte) {
-			  proje = par.getProjet();
-			 }
-			 Set <Region> regi = null;
-			 for(Projet pro:proje) {
-				 regi=pro.getRegion();
-			 }
 			 
-			  for(Region r:regi) {
+			  for(ProjetPartenaireRegion ppr:typeName) 
+			  {
 				  try {
-					location = geocodingService.search(r.getNomRegion(), r.getPays().getNomPays());
+					location = geocodingService.search(ppr.getRegion().getNomRegion(), ppr.getRegion().getPays().getNomPays());
 					listLat.add(location.getString("lat"));
 					listLong.add(location.getString("lon"));
 					listId.add(location.getLong("osm_id"));
 					
+					listName.add(ppr.getCommune().getNomCommune());
+					
+					 listDesProjets.add(ppr.getProjet().getNomProjet());
+						
+						listDesProjetsSize.add(ppr.getProjet().getNomProjet());
+						listPart.add(ppr.getPartenaire().getNomPartenaire());
+					
+						listPartSize.add(ppr.getPartenaire().getNomPartenaire());
+						 						
+								 listCouleur.addAll(ppr.getProjet().getType());
+								 for(Type t : listCouleur) {
+									 listTypeParRegion.add(t.getCouleur());
+								 }
+								 for(Map.Entry<String, Set<String>> entry : hmap.entrySet()){
+									 if(entry.getKey() == ppr.getCommune().getNomCommune()) {
+										 listPart.addAll(entry.getValue());
+										 }
+								 }
+								 
+								 for(Map.Entry<String, Set<String>> entry : hmapProjet.entrySet()){
+									 if(entry.getKey() == ppr.getCommune().getNomCommune()) {
+										 listDesProjets.addAll(entry.getValue());
+										 }
+								 }
+								 for(Map.Entry<String, Set<String>> entry : hmapType.entrySet()){
+									 if(entry.getKey() == ppr.getCommune().getNomCommune()) {
+										 listTypeParRegion.addAll(entry.getValue());
+										 }
+								 }
+								 hmap.put(ppr.getCommune().getNomCommune(), listPart);
+								 hmapProjet.put(ppr.getCommune().getNomCommune(), listDesProjets);
+								 hmapType.put(ppr.getCommune().getNomCommune(), listTypeParRegion);
+							
+						
+						 listDesProjets = new HashSet<>();
+						 listTypeParRegion = new HashSet<>();
+						 listPart = new HashSet<>();
+					  
+					  
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			  }
+			  
+			 
 			  model.addAttribute("listId",listId);
 			  model.addAttribute("listLat",listLat);
 			  model.addAttribute("listLong",listLong);
+			  model.addAttribute("listName",listName);
+			  model.addAttribute("listPart", hmap);
+			  model.addAttribute("listPartSize", nomPartenaire);
+			  model.addAttribute("nomDuType",listCouleur.size());
+			  model.addAttribute("nombreProjets", listDesProjetsSize.size());
+			  model.addAttribute("listDesProjets", hmapProjet);
+			  model.addAttribute("listTypeParRegion", hmapType);
 			  
 		  }
 		 
@@ -396,7 +707,7 @@ public class CartoController {
 	
 	@RequestMapping("sauvegarderLocalisation")
 	public String sauvegarderLocalisation(@Valid @ModelAttribute("uneRegion") Region uneRegion, BindingResult br,
-			String nomDepartement, String nomRegion, String nomPays, RedirectAttributes ra) {
+			String nomDepartement, String nomRegion, String nomCommune, String nomPays, RedirectAttributes ra) {
 		if(br.hasErrors()) {
 			return "localisation";
 		}
@@ -410,7 +721,7 @@ public class CartoController {
 		List<Departement> listDepartement = iCarto.tousLesDepartements();
 		ra.addFlashAttribute("listDepartement", listDepartement);
 			
-		iCarto.ajoutRegion(nomDepartement, nomRegion, nomPays);
+		iCarto.ajoutRegion(nomDepartement, nomRegion, nomPays, nomCommune);
 		return "redirect:/localisation";
 	}
 	
@@ -442,7 +753,7 @@ public class CartoController {
 			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("uneRegion") Region uneRegion, 
 			Model model, Long idProjet, String nomProjet, String pointFocal, 
 			String description, String nomType, String statut, MultipartFile file,
-			int duree, String temps, RedirectAttributes ra) throws IOException{
+			int dateDebut, int dateFin, String nomCategorie, RedirectAttributes ra) throws IOException{
 		
 		if(nomProjet.isBlank()) {
 			
@@ -471,55 +782,49 @@ public class CartoController {
 					return "nouveauProjet";
 				}
 			}
-			iCarto.ajoutProjet(nomProjet, pointFocal, description, nomType, file, statut, duree, temps);
-			ra.addFlashAttribute("flagEnregistrement", "1");
+			iCarto.ajoutProjet(nomProjet, pointFocal, description, nomType, file, statut, dateDebut, dateFin, nomCategorie);
+			//ra.addFlashAttribute("flagEnregistrement", "1");
 			return "redirect:/nouveauProjet";
 		}
 		else if (idProjet != null) {
-			//iCarto.modifierProjet(idProjet, nomProjet, pointFocal, description, type, file, statut, duree, temps);
-			ra.addFlashAttribute("flagModification", "1");
+			iCarto.modifierProjet(idProjet, nomProjet, pointFocal, description, nomType, file, statut, dateDebut, dateFin, nomCategorie);
+			//ra.addFlashAttribute("flagModification", "1");
 			return "redirect:/listeProjet";
 		}
 		
 		return "redirect:/projet";
 	}
 	
-	@RequestMapping("sauvegarderChoixPartenaire")
-		public String sauvegarderChoixPartenaire(Model model, Long idProjet, String nomProjet, String nomDuPartenaire, 
-				String nomRegion, 
-				@ModelAttribute("unProjet") Projet unProjet, String radioButtonSelected, RedirectAttributes ra) throws IOException{
-		
-			
-			//String pointFocal=iCarto.projetParId(idProjet).get().getPointFocal();
-			//String description= iCarto.projetParId(idProjet).get().getDescription();
-			//int duree = iCarto.projetParId(idProjet).get().getDuree();
-			//String temps = iCarto.projetParId(idProjet).get().getTemps();
-			//String statut=iCarto.projetParId(idProjet).get().getStatut();
-			String type="";
-			//MultipartFile file = new CustomMultipartFile(iCarto.projetParId(idProjet).get().getDataImage());
-		    if(idProjet!=null) {
-			if(radioButtonSelected==null)
-				{
-					model.addAttribute("idProjet", idProjet);
-					model.addAttribute("nomProjet", nomProjet);
-					model.addAttribute("flag", "2");
-					return "choixPartenaire";
-				}
-			if(radioButtonSelected.equals("rouge"))
-				type="Egalité de genre";
-			else if(radioButtonSelected.equals("orange"))
-				type = "Education / Formation professionnelle";
-			else if (radioButtonSelected.equals("jaune"))
-				type = "Gouvernance";
-		    }
-			iCarto.ajoutPartenaireAuProjet(nomProjet, nomDuPartenaire, nomRegion, type);
-		
-		model.addAttribute("idProjet", idProjet);
-		model.addAttribute("nomProjet", nomProjet);
-		model.addAttribute("flag", "1");
-		//return "redirect:/choixPartenaire?nomProjet="+nomProjet+"&idProjet="+idProjet;
-		return "choixPartenaire";
-	}
+	/*
+	 * @RequestMapping("sauvegarderChoixPartenaire") public String
+	 * sauvegarderChoixPartenaire(Model model, Long idProjet, String nomProjet,
+	 * String nomDuPartenaire, String nomRegion,
+	 * 
+	 * @ModelAttribute("unProjet") Projet unProjet, String radioButtonSelected,
+	 * RedirectAttributes ra) throws IOException{
+	 * 
+	 * 
+	 * //String pointFocal=iCarto.projetParId(idProjet).get().getPointFocal();
+	 * //String description= iCarto.projetParId(idProjet).get().getDescription();
+	 * //int duree = iCarto.projetParId(idProjet).get().getDuree(); //String temps =
+	 * iCarto.projetParId(idProjet).get().getTemps(); //String
+	 * statut=iCarto.projetParId(idProjet).get().getStatut(); String type="";
+	 * //MultipartFile file = new
+	 * CustomMultipartFile(iCarto.projetParId(idProjet).get().getDataImage());
+	 * if(idProjet!=null) { if(radioButtonSelected==null) {
+	 * model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
+	 * nomProjet); model.addAttribute("flag", "2"); return "choixPartenaire"; }
+	 * if(radioButtonSelected.equals("rouge")) type="Egalité de genre"; else
+	 * if(radioButtonSelected.equals("orange")) type =
+	 * "Education / Formation professionnelle"; else if
+	 * (radioButtonSelected.equals("jaune")) type = "Gouvernance"; }
+	 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomDuPartenaire, nomRegion, type);
+	 * 
+	 * model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
+	 * nomProjet); model.addAttribute("flag", "1"); //return
+	 * "redirect:/choixPartenaire?nomProjet="+nomProjet+"&idProjet="+idProjet;
+	 * return "choixPartenaire"; }
+	 */
 	
 	@RequestMapping("supprimerPartenaire")
 	public String supprimerPartenaire(Long idPartenaire) {
@@ -537,6 +842,7 @@ public class CartoController {
 	}
 	
 	@RequestMapping("nouveauProfil")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String nouveauProfil(@ModelAttribute("unProfil") Profil unProfil, Model model) {
 		List <Profil> listProfil = iCarto.tousLesProfils();
 		model.addAttribute("listProfil", listProfil);
@@ -544,6 +850,7 @@ public class CartoController {
 	}
 	
 	@RequestMapping("sauvegarderProfil")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String sauvegarderProfil(@Valid @ModelAttribute("unProfil") Profil unProfil, BindingResult br, Model model, 
 			String nomProfil, RedirectAttributes ra) {
 		
@@ -567,6 +874,7 @@ public class CartoController {
 	}
 	
 	@RequestMapping("utilisateur")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String utilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, Model model) {
 		List <Utilisateur> listUtilisateur = iCarto.tousLesUtilisateurs();
 		model.addAttribute("listUtilisateur", listUtilisateur);
@@ -574,6 +882,7 @@ public class CartoController {
 	}
 	
 	@RequestMapping("nouvelUtilisateur")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String nouvelUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, 
 			@ModelAttribute("unProfil") Profil unProfil, Model model) {
 		List <Profil> listProfil = iCarto.tousLesProfils();
@@ -582,6 +891,7 @@ public class CartoController {
 	}
 	
 	@RequestMapping("sauvegarderUtilisateur")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String sauvegarderUtilisateur(@Valid @ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, BindingResult br,
 			@ModelAttribute("unProfil") Profil unProfil, Model model, Long idUtilisateur, String nomUtilisateur, 
 			String prenomUtilisateur, String login, String password, String nomProfil,
@@ -608,12 +918,14 @@ public class CartoController {
 }
 	
 	@RequestMapping("supprimerUtilisateur")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String supprimerUtilisateur(Long idUtilisateur) {
 		iCarto.supprimerUtilisateur(idUtilisateur);
 		return "redirect:/utilisateur";
 	}
 	
 	@RequestMapping("getDonneesUtilisateurAModifier")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String getDonneesUtilisateurAModifier(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, 
 			@ModelAttribute("unProfil") Profil unProfil, Model model, Long idUtilisateur) {
 		
@@ -632,7 +944,14 @@ public class CartoController {
 		return "redirect:/localisation";
 	}
 	
+	@RequestMapping("supprimerCommune")
+	public String supprimerCommune(Long idCommune) {
+		iCarto.supprimerCommune(idCommune);
+		return "redirect:/localisation";
+	}
+	
 	@RequestMapping("parametres")
+	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String parametres() {
 		return "parametres";
 	}
@@ -663,19 +982,31 @@ public class CartoController {
 	
 	@RequestMapping("getDonneesProjetAModifier")
 	public String getDonneesProjetAModifier(@ModelAttribute("unProjet") Projet unProjet, 
-			@ModelAttribute("unPartenaire") Partenaire unPartenaire,
-			@ModelAttribute("uneRegion") Region uneRegion, Model model, Long idProjet) {
+			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("unType") Type unType,
+			@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("uneCategorie") Categorie uneCategorie,
+			Model model, Long idProjet) {
 		
 		unProjet = iCarto.projetParId(idProjet).get();
-	//	unPartenaire = iCarto.findPartenaireById(unProjet.getPartenaire());
-		//uneLocalisation = iCarto.findLocalisationById(unProjet.getLocalisation().getIdLocalisation()).get();
+		Set<Type> type = unProjet.getType();
+		for(Type t : type) {
+			unType	=	iCarto.findByIdType(t.getIdType());
+		}
 		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
-		//List <Localisation> listLocalisation = iCarto.toutesLesLocalisations();
+		List<Type> listType = iCarto.tousLesTypes();
+		Set<Categorie> categorie = unProjet.getCategorie();
+		
+		for(Categorie cat: categorie) {
+			uneCategorie = iCarto.findByIdCategorie(cat.getIdCategorie());
+			
+		}
+		
+		List<Categorie> listCategorie = iCarto.toutesLesCategories();
 		model.addAttribute("unProjet", unProjet);
-		model.addAttribute("unPartenaire", unPartenaire);
-		model.addAttribute("uneRegion", uneRegion);
+		model.addAttribute("unType", unType);
 		model.addAttribute("listPartenaire", listPartenaire);
-	//	model.addAttribute("listRegion", listRegion);
+		model.addAttribute("listType", listType);
+		model.addAttribute("listCategorie", listCategorie);
+		model.addAttribute("uneCategorie", uneCategorie);
 		
 		return "nouveauProjet";
 	}
@@ -701,28 +1032,35 @@ public class CartoController {
 		return "redirect:/type";
 	}
 	
-	@RequestMapping("projetPartenaireRegion")
+	@RequestMapping("liaisonPartenaireProjet")
 	public String projetPartenaireRegion( @ModelAttribute ("unProjet") Projet unProjet, 
-			@ModelAttribute ("unPartenaire") Partenaire unPartenaire, @ModelAttribute ("uneRegion") Region uneRegion,
-			 Model model) {
+			@ModelAttribute ("unPartenaire") Partenaire unPartenaire, @ModelAttribute ("uneRegion") Region uneRegion, 
+			@ModelAttribute ("unDepartement") Departement unDepartement, @ModelAttribute ("uneCommune") Commune uneCommune,
+			@ModelAttribute ("unVillage") Village unVillage	, @ModelAttribute ("unPartenaireLocal") PartenaireLocal unPartenaireLocal, Model model) {
 		List<Projet> listProjet = iCarto.tousLesProjets();
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
+		List<Departement> listDepartement = iCarto.tousLesDepartements();
+		List<PartenaireLocal> listPartenaireLocal = iCarto.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listRegion", listRegion);
+		model.addAttribute("listDepartement", listDepartement);
+		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
 		
 		
 		
-		return "projetPartenaireRegion";
+		return "liaisonPartenaireProjet";
 	}
 	
 	@RequestMapping("lierPartenaire")
 	public String projetPartenaireRegion( @ModelAttribute ("unProjet") Projet unProjet, 
 			@ModelAttribute ("unPartenaire") Partenaire unPartenaire, @ModelAttribute ("uneRegion") Region uneRegion,
-			String nomProjet, Long idProjet, String[] nomRegion,  String[] nomPartenaire, String rowCount, 
-			String type, Model model, RedirectAttributes ra) {
-		
+			@ModelAttribute ("unVillage") Village unVillage,
+			@ModelAttribute ("unDepartement") Departement unDepartement, @ModelAttribute ("uneCommune") Commune uneCommune,
+			@ModelAttribute ("unPartenaireLocal") PartenaireLocal unPartenaireLocal,
+			String nomProjet, Long idProjet, String nomRegion[],  String nomPartenaire, String nomDepartement[], String nomCommune[],
+			String nomVillage[], String latitude[], String longitude[], String nomPartenaireLocal[], Model model, RedirectAttributes ra) {
 		
 		List<Projet> listProjet = iCarto.tousLesProjets();
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
@@ -731,36 +1069,419 @@ public class CartoController {
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listRegion", listRegion);
 		
-		if(rowCount.isBlank()==true) {
-			if(nomPartenaire.length==0 || nomRegion.length==0 ) {
-				model.addAttribute("flag", "Erreur");
-				
-				 return "projetPartenaireRegion";
+		if(nomCommune==null) {
+			model.addAttribute("messageErreur", "Renseigner la commune");
+			return "liaisonPartenaireProjet";
+		}		
+		
+		  if(nomCommune.length>=1){ 
+			  if(nomPartenaireLocal.length==0) {
 				 
-			}else {
-				iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[0], nomRegion[0], type);
-			}
-		}else if(rowCount.isBlank()== false) {
-			int rowCountInt = Integer.parseInt(rowCount);
-			
-			for(int i=0; i < rowCountInt; i++)
-				iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[i], nomRegion[i], type);
-			
-		}
+					  for(int i=0; i < nomCommune.length; i++) { 
+						  if(nomVillage.length==0) {
+							  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+								  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+								  for(int b=0; b<nomDepartement.length; b++) {
+									  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+										  for(int c=0; c<nomRegion.length; c++) {
+										  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+											  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
+														nomCommune[i], null, null, null, null);		
+											  
+										  }
+										  }
+										  
+									  }
+									  
+								  }
+								  
+							  }
+							  
+	
+							 
+						  }else {
+							  if(latitude.length==0 || longitude.length==0) {
+								  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+									  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+									  for(int b=0; b<nomDepartement.length; b++) {
+										  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+											  for(int c=0; c<nomRegion.length; c++) {
+											  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
+															nomCommune[i], nomVillage[i], null, null, null);		
+												  
+											  }
+											  }
+											  
+										  }
+										  
+									  }
+									  
+								  }
+								  
+	
+								 
+							  }else {
+								  
+								  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+									  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+									  for(int b=0; b<nomDepartement.length; b++) {
+										  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+											  for(int c=0; c<nomRegion.length; c++) {
+											  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
+															nomCommune[i], nomVillage[i], latitude[i], longitude[i], null);	
+												  
+											  }
+											  }
+											  
+										  }
+										  
+									  }
+									  
+								  }
+								  
+								  
+							  }
+						  }
+				  }
+					  
+				  }else  {
+					  
+					  for(int i=0; i < nomCommune.length; i++) { 
+						  for(int j=0; j < nomPartenaireLocal.length; j++) {
+						  if(nomVillage.length==0) {
+							  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+								  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+								  for(int b=0; b<nomDepartement.length; b++) {
+									  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+										  for(int c=0; c<nomRegion.length; c++) {
+										  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+											  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
+														nomCommune[i], null, null, null, nomPartenaireLocal[j]);	
+											  
+										  }
+										  }
+										  
+									  }
+									  
+								  }
+								  
+							  }
+							  
+						  }else {
+							  if(latitude.length==0 || longitude.length==0) {
+								  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+									  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+									  for(int b=0; b<nomDepartement.length; b++) {
+										  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+											  for(int c=0; c<nomRegion.length; c++) {
+											  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
+															nomCommune[i], nomVillage[i], null, null, nomPartenaireLocal[j]);	
+												  
+											  }
+											  }
+											  
+										  }
+										  
+									  }
+									  
+								  }
+								  
+							  }else {
+								  
+								  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+									  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+									  for(int b=0; b<nomDepartement.length; b++) {
+										  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+											  for(int c=0; c<nomRegion.length; c++) {
+											  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
+															nomCommune[i], nomVillage[i], latitude[i], longitude[i],nomPartenaireLocal[j]);	
+											  }
+											  }
+											  
+										  }
+										  
+									  }
+									  
+								  }
+								  
+							  }
+						  }
+				  }
+					  
+				  }
+				  }			  
+		  }
+
+model.addAttribute("idProjet", idProjet);
+model.addAttribute("nomProjet", nomProjet);
+model.addAttribute("flag", "Succes");	
+model.addAttribute("pageAAfficher", "choixPartenaire");
+return "choixPartenaire";
 		
-		
-		
-		model.addAttribute("idProjet", idProjet);
-		model.addAttribute("nomProjet", nomProjet);
-		model.addAttribute("flag", "Succes");
-		model.addAttribute("pageAAfficher", "choixPartenaire");
-		
-		//return "redirect:/choixPartenaire?nomProjet="+nomProjet+"&idProjet="+idProjet;
-		
-		
-		return "choixPartenaire";
+		/*
+		 * if(nomCommune.length==1 && (nomPartenaireLocal.length==1)) {
+		 * if(nomVillage.length==0) {
+		 * 
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[0], null, null, null, nomPartenaireLocal[0]);
+		 * model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
+		 * nomProjet); model.addAttribute("flag", "Succes");
+		 * model.addAttribute("pageAAfficher", "choixPartenaire");
+		 * 
+		 * return "choixPartenaire"; }else { if(latitude.length==0 ||
+		 * longitude.length==0) { iCarto.ajoutPartenaireAuProjet(nomProjet,
+		 * nomPartenaire, nomRegion, nomDepartement, nomCommune[0], nomVillage[0],null,
+		 * null, nomPartenaireLocal[0]); model.addAttribute("idProjet", idProjet);
+		 * model.addAttribute("nomProjet", nomProjet); model.addAttribute("flag",
+		 * "Succes"); model.addAttribute("pageAAfficher", "choixPartenaire");
+		 * 
+		 * return "choixPartenaire";
+		 * 
+		 * } }
+		 * 
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[0], nomVillage[0],latitude[0], longitude[0],
+		 * nomPartenaireLocal[0]);
+		 * 
+		 * }
+		 * 
+		 * if(nomCommune.length==1 && nomPartenaireLocal.length>1){
+		 * if(nomVillage.length==0) { for(int i=0; i < nomPartenaireLocal.length; i++) {
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[0], null,null, null, nomPartenaireLocal[i]);
+		 * 
+		 * } model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
+		 * nomProjet); model.addAttribute("flag", "Succes");
+		 * model.addAttribute("pageAAfficher", "choixPartenaire"); return
+		 * "choixPartenaire"; }else { if(latitude.length==0 || longitude.length==0) {
+		 * for(int i=0; i < nomPartenaireLocal.length; i++) {
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[0], nomVillage[0],null, null,
+		 * nomPartenaireLocal[i]);
+		 * 
+		 * } model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
+		 * nomProjet); model.addAttribute("flag", "Succes");
+		 * model.addAttribute("pageAAfficher", "choixPartenaire"); return
+		 * "choixPartenaire"; } }
+		 * 
+		 * for(int i=0; i < nomPartenaireLocal.length; i++) {
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[0], nomVillage[0],latitude[0], longitude[0],
+		 * nomPartenaireLocal[i]);
+		 * 
+		 * }
+		 * 
+		 * }
+		 * 
+		 * 
+		 * if(nomCommune.length>1 && nomPartenaireLocal.length==1){
+		 * System.out.println(nomVillage.length);
+		 * 
+		 * for(int i=0; i < nomCommune.length; i++) { if(nomVillage[i].isEmpty()) {
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[i], null, null, null, nomPartenaireLocal[0]);
+		 * }else { if(latitude[i].isEmpty() || longitude[i].isEmpty()) {
+		 * 
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[i], nomVillage[i], null, null,
+		 * nomPartenaireLocal[0]);
+		 * 
+		 * } }
+		 * 
+		 * } model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
+		 * nomProjet); model.addAttribute("flag", "Succes");
+		 * model.addAttribute("pageAAfficher", "choixPartenaire");
+		 * System.out.println("ok2"); return "choixPartenaire";
+		 * 
+		 * 
+		 * 
+		 * for(int i=0; i < nomCommune.length; i++) {
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[i], nomVillage[i],latitude[i], longitude[i],
+		 * nomPartenaireLocal[0]); } System.out.println("ok3"); }
+		 * 
+		 * 
+		 * if(nomCommune.length>1 && nomPartenaireLocal.length>1){
+		 * if(nomVillage.length==0) { for(int i=0; i < nomCommune.length; i++) { for(int
+		 * j=0; j < nomPartenaireLocal.length; j++) {
+		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
+		 * nomDepartement, nomCommune[i], null, null, null, nomPartenaireLocal[j]); } }
+		 * model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
+		 * nomProjet); model.addAttribute("flag", "Succes");
+		 * model.addAttribute("pageAAfficher", "choixPartenaire"); return
+		 * "choixPartenaire"; }else { if(latitude.length==0 || longitude.length==0) {
+		 * for(int i=0; i < nomCommune.length; i++) { for(int j=0; j <
+		 * nomPartenaireLocal.length; j++) { iCarto.ajoutPartenaireAuProjet(nomProjet,
+		 * nomPartenaire, nomRegion, nomDepartement, nomCommune[i], nomVillage[i], null,
+		 * null, nomPartenaireLocal[j]); } } model.addAttribute("idProjet", idProjet);
+		 * model.addAttribute("nomProjet", nomProjet); model.addAttribute("flag",
+		 * "Succes"); model.addAttribute("pageAAfficher", "choixPartenaire"); return
+		 * "choixPartenaire"; }
+		 * 
+		 * }
+		 * 
+		 * for(int i=0; i < nomCommune.length; i++) { for(int j=0; j <
+		 * nomPartenaireLocal.length; j++) { iCarto.ajoutPartenaireAuProjet(nomProjet,
+		 * nomPartenaire, nomRegion, nomDepartement, nomCommune[i],
+		 * nomVillage[i],latitude[i], longitude[i], nomPartenaireLocal[j]); } }
+		 * 
+		 * }
+		 * 
+		 * 
+		 * 
+		 * model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
+		 * nomProjet); model.addAttribute("flag", "Succes");
+		 * model.addAttribute("pageAAfficher", "choixPartenaire"); return
+		 * "choixPartenaire";
+		 */
 	}
 	
+	@RequestMapping("categorie")
+	public String categorie(@ModelAttribute("uneCategorie") Categorie uneCategorie, Model model) {
+		List <Categorie> listCategorie = iCarto.toutesLesCategories();
+		model.addAttribute("listCategorie", listCategorie);
+		return "categorie";
+	}
 	
+	@RequestMapping("sauvegarderCategorie")
+	public String sauvegarderCategorie(@Valid @ModelAttribute("uneCategorie") Categorie uneCategorie, BindingResult br,
+			Model model, String nomCategorie) {
+		List <Categorie> listCategorie = iCarto.toutesLesCategories();
+		
+		if(br.hasErrors()) {
+			model.addAttribute("listCategorie", listCategorie);
+			return "categorie";
+		}
+		if(iCarto.findByNomCategorie(nomCategorie)!=null) {
+			model.addAttribute("messageDoublon", "Cette catégorie existe");
+			return "categorie";
+		}
+		iCarto.ajoutCategorie(nomCategorie);
+		return "redirect:/categorie";
+	}
 	
+	@RequestMapping("/getDepartement")
+	@ResponseBody
+	public Set <Departement> getDepartement( String nomRegion) {
+		
+		if(iCarto.findDepartementByNomRegion(nomRegion)== null) {
+			return null;
+		}
+		// Map<String, Object> object = new HashMap<>();
+			 List<Departement> listDep = iCarto.findDepartementByNomRegion(nomRegion);
+			// for(Departement d:listDep)
+				//object.put(d.getNomDepartement(), d.getRegion().getNomRegion());
+			// System.out.println(listDep);
+			 Set<Departement> listDepSet=new HashSet<>(listDep);
+			 
+			 return listDepSet;
+		
+		
+	}
+	
+	@RequestMapping("/getCommune")
+	@ResponseBody
+	public Object getCommune( String nomDepartement) {
+		
+		if(iCarto.findCommuneByNomDepartement(nomDepartement)== null) {
+			return null;
+		}
+			 List<Commune> listCom = iCarto.findCommuneByNomDepartement(nomDepartement);
+			
+			
+			 return listCom;
+		
+		
+	}
+	@RequestMapping("/getVillage")
+	@ResponseBody
+	public Object getVillage( String nomCommune) {
+		
+		if(iCarto.findVillageByNomCommune(nomCommune)== null) {
+			return null;
+		}
+			 List<Village> listVil = iCarto.findVillageByNomCommune(nomCommune);
+			
+			
+			 return listVil;
+		
+		
+	}
+	
+	@RequestMapping("lierPartenaireLocalAPartenaire")
+	public String lierPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire, Model model) {
+		
+		List <Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List <Region> listLocalisation = iCarto.toutesLesRegions();
+		List<PartenaireLocal> listPartenaireLocal = iCarto.tousLesPartenairesLocaux();
+		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
+		model.addAttribute("listPartenaire", listPartenaire);
+		model.addAttribute("listLocalisation", listLocalisation);
+		
+		if(nomPartenaireLocal.isEmpty()) {
+			model.addAttribute("messageErreur", "Le partenaire communautaire n'est pas renseigné");
+			return "partenaire";
+		}
+		
+		if(iCarto.findPartenaireById(idPartenaire)!=null) {
+			Partenaire part = iCarto.findPartenaireByIdPartenaire(idPartenaire);
+			if(part.getPartenaireLocal()!=null) {
+				Set<PartenaireLocal> paLo = part.getPartenaireLocal();
+				for(PartenaireLocal pc : paLo) {
+					if(pc.getNomPartenaireLocal().equals(nomPartenaireLocal)) {
+						model.addAttribute("messageErreur", part.getNomPartenaire()+ " est déjà lié à "+nomPartenaireLocal);
+						return "partenaire";
+					}
+				}
+			}
+		}
+		
+		iCarto.ajoutPartenaireLocalAPartenaire(nomPartenaireLocal, idPartenaire);	
+			
+			return "redirect:/partenaire";
+		
+	}
+	
+	@RequestMapping("getDonneesProjetAAjouterAUtilisateur")
+	public String getDonneesProjetAAjouterAUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, 
+			@ModelAttribute("unProjet") Projet unProjet, Model model, Long idUtilisateur) {
+		
+		unUtilisateur = iCarto.findUtilisateurById(idUtilisateur).get();
+		model.addAttribute("unUtilisateur", unUtilisateur);
+		List <Projet> listProjet = iCarto.tousLesProjets();
+		model.addAttribute("listProjet",listProjet);
+		//model.addAttribute("flagProfil", iCarto.findUtilisateurById(idUtilisateur).get().getProfil());
+		
+		return "projetUtilisateur";
+	}
+	
+	@RequestMapping("/sauvegarderProjetUtilisateur")
+	public String sauvegarderProjetUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, 
+			@ModelAttribute("unProjet") Projet unProjet, Model model, Long idUtilisateur, String nomProjet) {
+		unUtilisateur = iCarto.findUtilisateurById(idUtilisateur).get();
+		List <Projet> listProjet = iCarto.tousLesProjets();
+		
+		iCarto.ajoutProjetAUtilisateur(idUtilisateur, nomProjet);
+		model.addAttribute("unUtilisateur", unUtilisateur);
+		model.addAttribute("listProjet",listProjet);
+		return "projetUtilisateur";
+	}
+	
+	@RequestMapping("/detailsProjet")
+	public String detailsProjet(@ModelAttribute("unProjet") Projet unProjet, Model model, Long idProjet, String nomProjet) {
+		
+		Projet projet = iCarto.trouverProjetParIdProjet(idProjet);
+		model.addAttribute("unProjet",projet);
+		return "detailsProjet";
+	}
+	
+	@RequestMapping("cloturerProjet")
+	public String cloturerProjet(Long idProjet) {
+		iCarto.cloturerProjet(idProjet);
+		return "redirect:/detailsProjet?idProjet="+idProjet;
+	}
 }

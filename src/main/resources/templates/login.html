@@ -13,17 +13,18 @@
     <body >
      
      <div class="container">
-      <span style="font-size:50px; margin-left:500px; color:#1F618D; font-family:fantasy">Cartographie des parties prenantes</span>
+     
+     <img src="../static/img/cartographiePartenaires.jpg}"  th:src="@{/img/cartographiePartenaires.jpg}" width="30%" height="30%" alt="" style="margin-left:68%"/>
      <div class="row">
     
      <div class="col-md-8">
-     
-      <img src="../static/img/cartoLoginImg.jpg}"  th:src="@{/img/cartoLoginImg.jpg}" width="300px" height="500px" alt="" style="margin-left:400px"/>
+     <br></br>
+      <img src="../static/img/cartoLoginImg.jpg}"  th:src="@{/img/cartoLoginImg.jpg}" width="30%" height="80%" alt="" style="margin-left:60%"/>
     </div>
-    <div class="connexion col-md-4" style="margin-top:100px;border-radius:1%; border-width:1px;background:linear-gradient(to top,    #5DADE2   ,   #AF7AC5 ,   #F5B041   )">
+    <div class="connexion col-md-4" style="margin-top:2%;border-radius:1%; border-width:1px;background:linear-gradient(to top,    #5DADE2   ,   #AF7AC5 ,   #F5B041   )">
     
    
-    <div style="margin-top:80px">
+    <div style="margin-top:10%">
         <span th:if="${param.error}" class= "alert text-danger" >
         Identifiant ou mot de passe invalide
         </span>
@@ -31,25 +32,26 @@
              
         </span>
         <form th:action="@{/login}" method="post">
-		<span style="margin-left:50px"> &nbsp;Login</span>   
-		       <div class="input-group" style="width:80%; margin-left:50px">
+		<span style="margin-left:12%"> &nbsp;Login</span>   
+		       <div class="input-group" style="width:80%; margin-left:12%">
              <span class="input-group-text"><i class="fa fa-user" aria-hidden="true"></i></span><input type="text" name="username" class="form-control" id="username" placeholder="login"/>      
           </div>
           <p></p>           
-            <span  style="margin-left:50px"> &nbsp;Mot de passe</span>
+            <span  style="margin-left:12%"> &nbsp;Mot de passe</span>
             
-              <div class="input-group" style="width:80%; margin-left:50px">
+              <div class="input-group" style="width:80%; margin-left:12%">
               
              <span class="input-group-text"><i class="fa fa-lock" aria-hidden="true"></i></span><input type="password" name="password" class="form-control" id="password" placeholder="mot de passe"/> 
              <!-- <span class="input-group-text"><i class="fa fa-eye-slash" aria-hidden="true"></i></span> -->
              </div>       
             <br/>  
-           <div style="margin-left:90px"> 
-            <input type="checkbox" name="passwordVisibility" id="passwordVisibility" style="height:17px;" onclick="showPassword()"><span> &nbsp;&nbsp;Afficher le mot de passe</span>
+           <div style="margin-left:20%"> 
+            <input type="checkbox" name="passwordVisibility" id="passwordVisibility" style="height:17px;" onclick="showPassword()"><label for="passwordVisibility"> &nbsp;&nbsp;Afficher le mot de passe</label>
             </div>
             <br></br>
-            <button type="submit" class="form-control btn btn-primary " style="width:50%; margin-left:100px">Connexion </button>
-         </form>  
+            <button type="submit" class="form-control btn btn-primary " style="width:50%; margin-left:25%">Connexion </button>
+         </form>
+         <br></br>  
          </div> 
          </div> 
 		</div>

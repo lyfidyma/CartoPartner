@@ -12,29 +12,47 @@
               }
               </script>
 <style>
-
+.rotate {
+    -moz-transition: all .5s linear;
+    -webkit-transition: all .5s linear;
+    transition: all .5s linear;
+}
+.rotate.down {
+    -moz-transform:rotate(180deg);
+    -webkit-transform:rotate(180deg);
+    transform:rotate(180deg);
+}
 body {
     overflow-x: hidden;
+    overflow-y:hidden;
+}
+.rounded:hover{
+    background:#E0EFF6;
+    color:blue;
+    
 }
 
 #sidebar-wrapper {
-    min-height: 100vh;
-   
+    min-height: 90vh;
     margin-left: 0;
     -webkit-transition: margin .25s ease-out;
     -moz-transition: margin .25s ease-out;
     -o-transition: margin .25s ease-out;
     transition: margin .25s ease-out;
-    
+    border:1px solid purple;
+    border-radius:10px
 }
 
 
 #sidebar-wrapper .list-group {
-    width: 12rem;
+    width: 9rem;
+    
+    background:white;
 }
 
 #page-content-wrapper {
     min-width: 100vw;
+   
 }
 
 #wrapper.toggled #sidebar-wrapper {
@@ -44,6 +62,7 @@ body {
 @media (min-width: 768px) {
     #sidebar-wrapper {
         margin-left: 0;
+       
     }
 
     #page-content-wrapper {
@@ -72,65 +91,135 @@ span{
 <script src="https://unpkg.com/@geoapify/leaflet-address-search-plugin@^1/dist/L.Control.GeoapifyAddressSearch.min.js"></script>
     
 </head>
-<body>
-<div layout:fragment="content">
-<br/>
+<body style="background:white">
 
+<div layout:fragment="content">
+ 
 <input type="hidden" id="projet" th:value="${listProjet}"/>
 
-
-<div class="d-flex" id="wrapper">
+<br/>
+<div class="d-flex" id="wrapper" >
     <!-- Sidebar -->
-    <div class="bg-light border-right vh-100" id="sidebar-wrapper">
-       
-        <div class="list-group list-group-flush overflow-auto h-100">
- 
-         <div class="row" >
-       
-		<div th:if="${listProjet}" th:each="p:${listProjet}">
-		
-		<a th:href="@{cartographie(idProjet=${p.idProjet})}"><img class = "image" th:if="${p.dataImage.length==0} " src="../static/img/background.jpeg}"  th:src="@{/img/background.jpeg}" width="150" height="100" alt="test" style=" border-radius:4%; border:1px solid gray; border: 2px solid #FFFFFF; 
-		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);"/></a>
-		<a th:href="@{cartographie(idProjet=${p.idProjet})}"><img class = "image" th:if="${p.dataImage.length>0}" th:src="@{'data:image/jpeg;base64,'+${p.generateBase64Image()}}" width="150" height="100" alt="" style="border-radius:4%;border:1px solid gray; border: 2px solid #FFFFFF; 
-		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);"/></a>
-		<br></br>
-		
-		</div>
-		 
-		</div>
+    <div id="sidebar-wrapper">
+        <p></p>
+        <div class=" overflow-auto v-100" style="width:250px; background:white">
+         
+  &nbsp;&nbsp;<span>Informations :</span> 
+   <br/>
+               &nbsp;&nbsp;&nbsp;&nbsp;<b><span>Projets :&nbsp;</span></b><span th:text="${nombreProjets}"></span> 
+                <br/>             
+                &nbsp;&nbsp;&nbsp;&nbsp;<b><span>Partenaires :&nbsp; </span></b><span th:text="${listPartSize}"></span>
+                <br/>
+                &nbsp;&nbsp;&nbsp;&nbsp;<b><span>Type :&nbsp; </span></b><span th:style="'color:' + ${codeCouleur} +''" th:text="${nomDuType}"></span>
+               <hr color="purple" />
+                    <p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>&nbsp;&nbsp;Filtrer par :</span> </p>
+                    <form th:action="@{cartographie}" method="post" id="formulaireTous">
+                     <div style="text-align:center"> <a type="button" class="btn btn-outline-secondary btn-sm" onclick="submitTous()" >Tous les projets</a></div>
+                     </form>
+                      <p></p>
+                     <form th:action="@{cartographie}" method="post" id="formulaireProjet" th:object="${unProjet}">            
+                    &nbsp;&nbsp;<span>Projet</span>
+                   <div class="col-md-11" style="margin:auto">
+                   <select class="form-select form-select-sm" id="idProjet" th:field="*{idProjet}" onchange="submitProjet()">
+                    <option value="" hidden> </option>
+						 <option th:each="t:${listProjet}" th:text="${t.nomProjet}" th:value="${t.idProjet}"></option>
+						</select>
+						</div>
+						 </form>
+						 <p></p>
+						 
+                    <form th:action="@{cartographieType}" method="post" id="formulaireType" th:object="${unType}">
+                    &nbsp;&nbsp;<span>Type</span>
+                    <div class="col-md-11" style="margin:auto">
+                   <select class="form-select form-select-sm" id="nomType" th:field="*{nomType}" onchange="submitType()">
+                    <option value="" hidden> </option>
+						 <option th:each="t:${listType}" th:text="${t.nomType}" th:value="${t.nomType}"></option>
+						
+						</select>
+						</div>
+						 </form>
+					 <p></p>
+					<form th:action="@{cartographiePartenaire}" method="post" id="formulairePart" th:object="${unPartenaire}">
+                  &nbsp;&nbsp; <span>Partenaire</span>
+                   <div class="col-md-11" style="margin:auto">
+                   <select class="form-select form-select-sm" id="nomPartenaire" th:field="*{nomPartenaire}" onchange="submitPartenaire()">
+                   <option value="" hidden> </option>
+						 <option th:each="b:${listPartenaire}" th:text="${b.nomPartenaire}" th:value="${b.nomPartenaire}"></option>
+						</select>
+						</div>
+               </form>
+               <br/>
+         <hr color="purple"/>
   </div>
   
   
 </div>
-	<div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div class="col-auto px-0">
-            <div id="sidebar" class="collapse collapse-horizontal show border-end">
-                <div id="sidebar-nav" style="width:200px;" >
+	<div class="container-fluid" style="position:relative">
+    <div class="row flex-nowrap" >
+        <div class="col-auto px-2"  >
+            <div id="sidebar" class="collapse collapse-horizontal " >
+                <div id="sidebar-nav " style="width:340px; height:680px;overflow-y:scroll; overflow-x:hidden;" >
                
-                    <p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>Filtrer par :</span> </p>
-                    <a type="button" class="btn btn-secondary" th:href="@{cartographie}" >Tous les projets</a>
-                    
-                    <form th:action="@{cartographieDetails}" method="post" id="formulaire">
-                                       <br/>
-                    <span>Type</span>
-                   
-                   <select class="form-select" id="nomType" name="nomType">
-                    <option value=""> </option>
-						 <option th:each="t:${listType}" th:text="${t.nomType}" th:value="${t.nomType}"></option>
-						
-						</select>
-						<input type="submit" class="btn btn-secondary">
-						 </form>
-					<br/>
-					<form th:action="@{cartographiePartenaire}" method="post" id="formulaire">
-                   <span>Partenaire</span>
-                   <select class="form-select" id="nomPartenaire" name="nomPartenaire">
-                   <option value=""> </option>
-						 <option th:each="b:${listPartenaire}" th:text="${b.nomPartenaire}" th:value="${b.nomPartenaire}"></option>
-						</select><input type="submit" class="btn btn-secondary">
-               </form>
+              <!-- <p data-bs-parent="#sidebar"><i class="bi bi-film"></i></p> -->
+              
+       
+		<div class="list-group list-group-flush"  th:if="${listProjet}" th:each="p:${listProjet}">
+		
+		<div class="rounded" th:if="${p.dataImage.length==0} " style=" width:310px;height:110px; border: 2px solid #FFFF; 
+		box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.33);" >
+		
+		<div class="row" >
+		<div class="col-md-5" >
+		<a th:href="@{cartographie(idProjet=${p.idProjet})}"><img class = "image"  src="../static/img/background.jpeg}"  th:src="@{/img/background.jpeg}" width="120" height="105px" alt="" style=" border-radius:4%; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);"/></a>
+		</div>
+		<div class="col-md-7">
+		<span th:text="${p.nomProjet}"></span>
+		</div>
+		</div>
+		
+		</div>
+		<div class="rounded" th:if="${p.dataImage.length>0}" style="width:310px;height:110px; border: 2px solid #FFFF; 
+		box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.33);">
+		
+		<div class="row" >
+		<div class="col-md-5" >
+		
+		<a th:href="@{cartographie(idProjet=${p.idProjet})}"><img class = "image"  th:src="@{'data:image/jpeg;base64,'+${p.generateBase64Image()}}" width="120" height="105px" alt="" style="border-radius:4%;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);"/></a>
+		</div>
+		<div class="col-md-7">
+		<span th:text="${p.nomProjet}"></span>
+		</div>
+		
+		
+		</div>
+		</div>
+		<p></p>
+		
+		
+		 
+		</div>
+                 <script th:inline="javascript">
+                function submitPartenaire(){
+                	document.getElementById('formulairePart').submit();
+                }
+                
+                function submitType(){
+                	document.getElementById('formulaireType').submit();
+                }
+                
+                function submitTous(){
+                	document.getElementById('formulaireTous').submit();
+                }
+                
+                function submitProjet(){
+                	document.getElementById('formulaireProjet').submit();
+                }
+                </script>
+                
                
+                
                <p></p>
               
                <script th:inline="javascript">
@@ -138,117 +227,113 @@ span{
 	
 		/*]]>*/
 		</script>
-                <hr/>
                 
-                &nbsp;&nbsp;<b><label>Projets &nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;</label></b><span th:text="${nombreProjets}"></span> 
-                <br/>
-               &nbsp;&nbsp;<b><label>Régions :  &nbsp; &nbsp;&nbsp; </label></b><span th:text="${nombreRegions}"></span> 
-               <hr/>
-               
-                &nbsp;&nbsp;<b><label>Partenaires :&nbsp; </label></b><span th:text="${listPart}"></span>
-                <br/>
-                &nbsp;&nbsp;<b><label>Type :&nbsp; </label></b><span th:text="${nomDuType}"></span>
-                <hr/>
+                
+                
                 </div>
             </div>
         </div>
-        <main class="col ps-md-1">
        
-            <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse"  class="border rounded-3 p-1 text-decoration-none"  ><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-           
-            <div class="page-header pt-3">
+        <main class="col ps-md-1" >
+       <div style="position:absolute;z-index:2;">
+            &nbsp;&nbsp;<a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" ><i class="fa fa-chevron-right rotate" aria-hidden="true"></i></a>
+            </div> 
+            <script> 
+          $(".rotate").click(function () {
+    $(this).toggleClass("down");
+})
+</script>
+                    <div class="custom-map" id="map" style="position:absolute;z-index:1; width: 100%; height: 100%;overflow-y:hidden; overflow-x:hidden;"></div>
                
-            </div>
-            
-            <hr>
-            <div class="row">
-                <div class="col-12">
-                    <div id="map" style="width: 112%; height: 87vh; margin-top:-50px;"></div>
-                </div>
-            </div>
+           
         </main>
+        
     </div>
 </div>
- 
+ <input type="hidden" id="couleur" th:value="${listTypeParRegion}">
 
 
 <script th:inline="javascript">
 /*<![CDATA[*/
+var listDesProjets = /*[[${listDesProjets}]]*/ 'default';
 var listLat = /*[[${listLat}]]*/ 'default';
 var listLong = /*[[${listLong}]]*/ 'default';
 var listName = /*[[${listName}]]*/ 'default';
 var listTypeParRegion = /*[[${listTypeParRegion}]]*/ 'default';
 var locationLat = /*[[${locationLat}]]*/ 'default';
 var locationLon = /*[[${locationLon}]]*/ 'default';
-var listTypeRegion = /*[[${listTypeRegion}]]*/ 'default';
 var nomDuType = /*[[${nomDuType}]]*/ 'default';
 var listPart = /*[[${listPart}]]*/ 'default';
+var listPartSize = /*[[${listPartSize}]]*/ 'default';
 let locations={};
 let listLocations=[];
+let couleurProjet={};
+let listCouleur=[];
 
 if(locationLat==null || locationLon==null){
 	 let mapOptions = {
-		    center:[14.695, -17.4463],
-		    zoom:10
+		    center:[13.762, -13.629],
+		    zoom:7,
+		    zoomControl: false
 		}
-
+	 
 		let mapList = new L.map('map' , mapOptions);
 
 		let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
 		mapList.addLayer(layer);
-		
-	for (let i in listLat){
-	
-	 locations = 
-	    {
-	        "id": i,
-	        "lat":  listLat[i],
-	        "long": listLong[i],
-	        
-	        
-	    }
-	 listLocations.push(locations);
-	
-	 if(listTypeParRegion!=null){
-			var circle = L.circle([listLat[i], listLong[i]],{
-				color:'white',
-				fillColor:listTypeParRegion,
-				fillOpacity:0.8,
-				radius:2500
-				}).addTo(mapList);
-			}
-	 var mapIcon = L.icon({
-		 iconUrl:'map-marker.svg',
-		 iconSize:[64, 74],
-		 iconAnchor:[32, 74],
-		 popupAnchor:[0, -50],
-	 });
-	 
-	 
-	
-	}	
-	
-	
+		L.control.zoom({
+		    position: 'topright'
+		}).addTo(mapList);
 	let popupOption = {
-	    "closeButton":false
+	    "closeButton":false,    
 	}
 	
+var n = 0;
+	 for (let i in listLat){
+		
+							Object.entries(listTypeParRegion).forEach(([lTypeKey, lTypeValue]) =>{
+							
+													 if(listName[i] == lTypeKey){
+														 
+														for(value in lTypeValue){
+															
+														 locations = 
+														    {
+														        "id": i,
+														        "lat":  listLat[i]-(n/30),
+														        "long": listLong[i],
+																"partenaire":listPart[lTypeKey],
+														        "couleur": lTypeValue[value],
+														        "projet": listDesProjets[lTypeKey],
+														    } 
+														 listLocations.push(locations);
+														 n++;
+														}
+												 }									
+							})
+						
+		}		
+	
 	listLocations.forEach(element => {
-	    new L.Marker([element.lat,element.long], {draggable: true, opacity:0.7, title:"Cartographie des partenaires"}).addTo(mapList)
-	    
+	    new L.Marker([element.lat,element.long], {icon: L.divIcon({
+			 html:
+				 '<svg xmlns="http://www.w3.org/2000/svg" height="24" width="24" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M172.3 501.7C27 291 0 269.4 0 192 0 86 86 0 192 0s192 86 192 192c0 77.4-27 99-172.3 309.7-9.5 13.8-29.9 13.8-39.5 0zM192 272c44.2 0 80-35.8 80-80s-35.8-80-80-80-80 35.8-80 80 35.8 80 80 80z" fill="'+element.couleur+'"/></svg>',
+		  className: "",
+		  iconSize: [25, 41],
+		  iconAnchor: [12, 41],
+		  popupAnchor: [1, -34],
+		})
+		}).addTo(mapList)
 	    .on("mouseover",event =>{
-	        event.target.bindPopup('<div class="card"> <span>'+listPart+'</span></div>',popupOption).openPopup();
-	    })
+	    	
+	        	event.target.bindPopup('<div> <span><span><b>Projet(s) :</b></span><br><ul><li style="color:'+element.couleur+'">'+element.projet.join('<br>')+'</li></ul><span><b>Partenaire(s) :</b></span><br><ul><li>'+element.partenaire.join('<br>')+'</li></ul></span></div>',popupOption).openPopup();
+	    	
+	    	})
 	    .on("mouseout", event => {
 	        event.target.closePopup();
-	    })
-	   
+	    })   
 	}); 
-	
-	
-	
 		
-	
 }else{
 var map = L.map('map').setView([locationLat, locationLon], 8);
 

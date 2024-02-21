@@ -5,10 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <title>Choisir un partenaire</title>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel = "stylesheet" href = "https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/@geoapify/leaflet-address-search-plugin@^1/dist/L.Control.GeoapifyAddressSearch.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+<script src="https://unpkg.com/@geoapify/leaflet-address-search-plugin@^1/dist/L.Control.GeoapifyAddressSearch.min.js"></script>
 <style>
-
-
 .radioProjet {
 	appearance:none;
  	border-radius:50px;
@@ -43,64 +45,179 @@ document.addEventListener("DOMContentLoaded", function(event){
  <link rel="stylesheet" type="text/css"
 	href="../static/css/bootstrap.min.css"
 	th:href="@{/css/bootstrap.min.css}"/>
+	
+
+	
 </head>
 <body >
 <div layout:fragment="content">
 <div class = "container">
 <br/>
-      <div class="row">
-      <div class="col-md-11">
-       <h5>Accueil</h5>
-       </div>
-  		 <div class="col-md-1" style="text-align:right">
-     		 <a th:href="@{/excelExport}" class="btn btn-success" style="border: 1px solid green; background-color: white; color: green;">
- 			<i class="fas fa-file-excel"></i></a>
- 			 </div>
-  		 <hr/>
-   
-  <br/>					<div th:if="${listProjet}">
- 						 
-  						
+      
+       
+ 				
+  						<div th:if="${listProjet}">
+ 						
   						<form  th:action="@{/displayChoixPartenaire}" method="post" th:object="${unProjet}">
   						<input type="hidden" name="pageAAfficher" value="pageIndex"/>
   						<div class="row">
-  						<div class="col-md-3">
-						
+  						
+  						<div class="col-md-3"><span>Projet</span>
 						<select class="form-select" id="nomProjet" th:field="*{nomProjet}">
-						 <option value=""></option>
+						 <option value="">Choisir</option>
 						 <option th:each="b:${listProjet}" th:text="${b.nomProjet}" th:value="${b.nomProjet}"></option>
 						</select>
 												
 						
 						</div>
+						
 						<div class="col-md-3" th:object="${unPartenaire}">
-						<div class="input-group">
+						<span>Partenaire</span>
+						
 						<select class="form-select" id="nomPartenaire" th:field="*{nomPartenaire}">
-						 <option value=""></option>
+						  <option value="">Choisir</option>
 						 <option th:each="b:${listPartenaire}" th:text="${b.nomPartenaire}" th:value="${b.nomPartenaire}"></option>
 						</select>
 						
-						</div>
-						</div>
-						<div class="col-md-3">
 						
+						</div>
+						
+						<div class="col-md-3">
+						<span>Point focal</span>
 						<select class="form-select" id="pointFocal" th:field="*{pointFocal}">
-						 <option value=""></option>
-						 <option th:each="b:${listProjet}" th:text="${b.pointFocal}" th:value="${b.pointFocal}"></option>
+						 <option value="">Choisir</option>
+						 <option th:each="p:${listProjetPoinFocal}" th:text="${p.pointFocal}" th:value="${p.pointFocal}"></option>
 						</select>
 						</div>
-						<div class="col-md-3">
 						
-						<button type="submit" class="btn btn-primary" >Valider</button>
+						
+						<div class="col-md-3" th:object="${unType}">
+						<span>Type</span>
+						<select class="form-select" id="nomType" th:field="*{nomType}">
+						 <option value="">Choisir</option>
+						 <option th:each="b:${listType}" th:text="${b.nomType}" th:value="${b.nomType}"></option>
+						</select>
 						</div>
+						</div>
+						<br/>
+						<div class="col-md" style="text-align:center">
 						
-						
-						
+						<button type="submit" class="btn btn-primary btn-sm">	Valider</button>
 						</div>
 						</form>
+						<br/>
+						<div class="container" th:if="(${projetName}==null) and (${partenaireName}==null) and (${pointFocalName}==null) and (${typeName}==null) ">
+						 <div class="custom-map" id="map" style="width:1000px; height: 500px; border-radius:200px; margin:auto"></div>
+						<div class="custom-nav" style="margin-top:-195px; font-family:cursive;">
+								<nav class="navbar navbar-expand-md " style="border-radius: 10px 0 0 10px; width:15%; height:30px; background:#F5B041" >
+  			 					&nbsp;&nbsp;&nbsp;&nbsp;<label>Projets :&nbsp;</label><span th:text="${nombreProjets}"></span>
+  			 					</nav>
+  			 					<br/>
+  			 					<nav class="navbar navbar-expand-md " style="border-radius: 10px 0 0 10px; width:15%;height:30px; background:#F5B041" >
+  			 					&nbsp;&nbsp;&nbsp;&nbsp;<label>Partenaires :&nbsp; </label><span th:text="${listPartSize}"></span>
+  			 					</nav>
+  			 					<br/>
+  			 					<nav class="navbar navbar-expand-md " style="border-radius: 10px 0 0 10px; width:20%;height:30px; background:#F5B041" >
+  			 					&nbsp;&nbsp;&nbsp;&nbsp;<label>Type :&nbsp; </label><span th:text="${nomDuType}"></span>
+  			 					</nav>
+  			 					<br/>
+  			 					<nav class="navbar navbar-expand-md " style="border-radius: 10px 0 0 10px; width:25%;height:30px; background:#F5B041" >
+  			 					&nbsp;&nbsp;&nbsp;&nbsp;<label>Communes :&nbsp; </label><span th:text="${nombreRegions}"></span>
+  			 					</nav>
+  	 
+           
 						
+						</div>
+ 			  </div>
+ 			   
+<script th:inline="javascript">
+/*<![CDATA[*/
+var listDesProjets = /*[[${listDesProjets}]]*/ 'default';
+var listLat = /*[[${listLat}]]*/ 'default';
+var listLong = /*[[${listLong}]]*/ 'default';
+var listName = /*[[${listName}]]*/ 'default';
+var listTypeParRegion = /*[[${listTypeParRegion}]]*/ 'default';
+var locationLat = /*[[${locationLat}]]*/ 'default';
+var locationLon = /*[[${locationLon}]]*/ 'default';
+var nomDuType = /*[[${nomDuType}]]*/ 'default';
+var listPart = /*[[${listPart}]]*/ 'default';
+let locations={};
+let locations1={};
+let listLocations=[];
+
+	 let mapOptions = {
+		    center:[14.6497, -16.2337],
+		    zoom:7
+		}
+
+		let mapList = new L.map('map' , mapOptions);
+
+		let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+		mapList.addLayer(layer);
+		
+		if(listDesProjets instanceof Array){
+			listDesProjets = listDesProjets.join('<br>');	
+		}
+		if(listPart instanceof Array){
+			listPart = listPart.join('<br>');
+		}
+		
+	for (let i in listLat){
+		if(listPart instanceof Array){
+	 locations = 
+	    {
+	        "id": i,
+	        "lat":  listLat[i],
+	        "long": listLong[i],
+	        "partenaire": listPart[i],
+	        
+	    }
+		}else{
+			locations = 
+		    {
+		        "id": i,
+		        "lat":  listLat[i],
+		        "long": listLong[i],
+		        "partenaire": listPart,
+		        
+		    }
+			
+		}
+	 listLocations.push(locations);
+
+	}	
+		 
+	var couleur="#2874A6" ;
+		 
+	let popupOption = {
+	    "closeButton":false,
+	    
+	}
+	
+	
+	listLocations.forEach(element => {
+	    new L.Marker([element.lat,element.long], {icon: L.divIcon({
+			 html:
+				 '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M172.3 501.7C27 291 0 269.4 0 192 0 86 86 0 192 0s192 86 192 192c0 77.4-27 99-172.3 309.7-9.5 13.8-29.9 13.8-39.5 0zM192 272c44.2 0 80-35.8 80-80s-35.8-80-80-80-80 35.8-80 80 35.8 80 80 80z" fill="'+couleur+'"/></svg>',
+		  className: "",
+		  iconSize: [30, 42],
+		  iconAnchor: [15, 42],
+		  popupAnchor: [1, -34],
+		})
+		}).addTo(mapList)
+	    .on("mouseover",event =>{
+	        event.target.bindPopup('<div> <span><span><b>Projet(s) :</b></span><br><ul><li>'+listDesProjets+'</li></ul><span><b>Partenaire(s) :</b></span><br><ul><li>'+element.partenaire+'</li></ul></span></div>',popupOption).openPopup();
+	    })
+	    .on("mouseout", event => {
+	        event.target.closePopup();
+	    })   
+	}); 
+	
+
+
+/*]]>*/
+</script>
 						
- 			 
 					<input type="hidden" name="listProjet" id="listProjet" th:value="${listProjet}"/>
 					<br></br>
 					<!-- <form th:action="@{/sauvegarderChoixPartenaire}" method="post" > -->
@@ -108,9 +225,13 @@ document.addEventListener("DOMContentLoaded", function(event){
 					<input type="hidden" name="idProjet" th:value="${idProjet}"/>
 					<input type="hidden" name="nomPartenaire" th:value="${nomPartenaire}"/>
 					<input type="hidden" name="pointFocal" th:value="${pointFocal}"/>
+					<input type="hidden" name="nomType" th:value="${nomType}"/>
 						
 					<div class="table-responsive" th:if="${listPartenaire}">
 						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:12px; font-family:Times">
+						
+	<!------------------------- Section pour Projet------------------------------------------- -->
+	
 						<thead th:if="${projetName!=null}">	
 							<tr >
 							
@@ -156,11 +277,11 @@ document.addEventListener("DOMContentLoaded", function(event){
 							</tr>	
 										
 						</tbody>
-						
+	<!------------------------- Section pour Partenaire------------------------------------------- -->
+			
 						<thead th:if="${partenaireName}!=null">	
 							<tr >
-							
-							
+				
 							<td></td>
 							
 							<th:block  th:each="l:${listRegion}">						
@@ -177,29 +298,28 @@ document.addEventListener("DOMContentLoaded", function(event){
 							<td th:text="${p.nomProjet}" style="background:lightcyan">
 							<input  type="hidden" id="idProjet" name="idProjet"  th:value="${p.idProjet}" />
 							</td>	
-								 <td th:each="l:${listRegion}" style="text-align:center; padding:20px" th:with="test=1">
+								 <td th:each="l:${listRegion}" style="text-align:center; padding:20px">
 									<th:block th:each="pr:${partenaireName}" >
 									<th:block th:each="t:${pr.projet}">
 									<th:block th:each="o:${pr.region}">
-									<th:block th:each="j:${pr.partenaire}">
 									<th:block  th:each="h:${t.type}">
 									<input th:if=" (${p.idProjet}+'-'+${l.idRegion}) eq (${t.idProjet}+'-'+${o.idRegion})" class="radioProjet" type="radio" th:name="${p.idProjet}+'-'+${l.idRegion}" id="radioButton1" th:value="${p.idProjet}+'-'+${l.idRegion}" th:style="'height:20px; width:20px;transform:none; background:' + ${h.couleur} +''"  checked/>								
+									
 							</th:block>
 								</th:block>
-								
-								
 								</th:block>
 								</th:block>
 								</th:block>					
-				
-																
-				
+			
 								</td> 								
 								
 							
 							</tr>	
 										
 						</tbody>
+						
+	<!------------------------- Section pour Point focal------------------------------------------- -->
+	
 						<thead th:if="${pointFocalName}!=null">	
 							<tr >
 							
@@ -224,15 +344,60 @@ document.addEventListener("DOMContentLoaded", function(event){
 									<th:block th:each="pr:${pointFocalName}" >
 									<th:block th:each="o:${pr.region}">
 									<th:block th:each="t:${pr.type}">
-									<th:block th:each="j:${pr.partenaire}">
+									
 									<input th:if=" (${p.idProjet}+'-'+${l.idRegion}) eq (${pr.idProjet}+'-'+${o.idRegion})" class="radioProjet" type="radio" th:name="${p.idProjet}+'-'+${l.idRegion}" id="radioButton1" th:value="${p.idProjet}+'-'+${l.idRegion}" th:style="'height:20px; width:20px;transform:none; background:' + ${t.couleur} +''"  checked/>								
 							
 								<input  type="hidden" id="idType" name="idType"  th:value="${t.nomType}" />
-								</th:block>
+								
 								</th:block>
 								</th:block>
 								</th:block>
 																
+				
+								</td> 								
+								
+							
+							</tr>	
+										
+						</tbody>
+						
+<!------------------------- Section pour type------------------------------------------- -->
+							<thead th:if="${typeName!=null}">	
+							<tr >
+							
+							
+							<td></td>
+							
+							<th:block  th:each="l:${listRegion}">						
+							<td th:text="${l.nomRegion}" style="text-align:center; background:lightcyan">
+							<input type="hidden" id="idRegion" name="idRegion"  th:value="${l.idRegion}"/>
+							</td>
+							
+							</th:block>
+							</tr>
+						</thead>
+							
+						<tbody  th:if="${typeName}!=null" id="bodyForm">
+						
+							<tr  th:each="p:${listProjet}" valign="middle" >
+							<td th:text="${p.nomProjet}" style="background:lightcyan">
+							<input  type="hidden" id="idProjet" name="idProjet"  th:value="${p.idProjet}" />
+							</td>	
+								 <td th:each="l:${listRegion}" style="text-align:center; padding:20px">
+									<th:block th:each="pr:${typeName}" >
+									<th:block th:each="t:${pr.projet}">
+									<th:block th:each="o:${pr.region}">
+									
+									<th:block  th:each="pj:${typeName1}"> 
+									<input th:if=" (${p.idProjet}+'-'+${l.idRegion}) eq (${t.idProjet}+'-'+${o.idRegion})" class="radioProjet" type="radio" th:name="${p.idProjet}+'-'+${l.idRegion}" id="radioButton1" th:value="${p.idProjet}+'-'+${l.idRegion}" th:style="'height:20px; width:20px;transform:none; background:' + ${pj.couleur} +''"  checked/>								
+							
+								</th:block>
+								
+								</th:block>
+								</th:block>
+								</th:block>
+								</th:block>
+								</th:block>					
 				
 								</td> 								
 								
@@ -275,90 +440,7 @@ document.addEventListener("DOMContentLoaded", function(event){
   </div>
 </div>
 
-<script th:inline="javascript">
 
-
-function getIdRadioButtonSelected(idButtonRadioSelected, nomPart, libLocalisation){
-	
-	var modal = new bootstrap.Modal(document.getElementById('choixPartenaire'), {
-		  keyboard: false
-		})
-	if(document.getElementById('idButtonRadioSel'))
-		document.getElementById('idButtonRadioSel').remove();
-	if(document.getElementById('nomPart'))
-		document.getElementById('nomPart').remove();
-	if(document.getElementById('libLocalisation'))
-		document.getElementById('libLocalisation').remove();
-	
-	var data = "<input type='hidden' id='idButtonRadioSel' />"
-	var dataPartenaire = "<input type='hidden' id='nomPart' value='"+nomPart+"' />"
-	var dataLocalisation = "<input type='hidden' id='libLocalisation' value='"+libLocalisation+"' />"
-	document.getElementById('modal-body').innerHTML+=data;
-	
-	document.getElementById('modal-body').innerHTML+=dataPartenaire;
-	document.getElementById('modal-body').innerHTML+=dataLocalisation;
-	modal.show();
-	document.getElementById('idButtonRadioSel').value=idButtonRadioSelected;
-	
-	
-	document.getElementById('buttonValider').addEventListener('click', function(){
-		modal.hide();
-		
-		var idR=document.getElementById('idButtonRadioSel').value;
-		if(document.getElementById('nomDuPartenaire'))
-			document.getElementById('nomDuPartenaire').remove();
-		if(document.getElementById('libelleDeLaLocalisation'))
-			document.getElementById('libelleDeLaLocalisation').remove();
-		
-		var nomParte = document.getElementById('nomPart').value;
-		var libLoc = document.getElementById('libLocalisation').value;
-		
-		var dataNomPartenaire = "<input type='hidden' name='nomDuPartenaire' id='nomDuPartenaire' value='"+nomParte+"' />"
-		
-		var dataLibelleLocalisation = "<input type='hidden' name='nomRegion' id='libelleDeLaLocalisation' value='"+libLoc+"' />"
-		
-		document.getElementById('bodyForm').innerHTML+=dataNomPartenaire;
-		document.getElementById('bodyForm').innerHTML+=dataLibelleLocalisation;
-		
-		if(document.getElementById('radioButtonRouge').checked){
-			document.getElementById(idR).checked = true;
-			document.getElementById(idR).style.accentColor = "red";
-			document.getElementById(idR).value = "rouge";
-			document.getElementById('radioButtonSelected').value = "rouge";
-			
-		}
-		if(document.getElementById('radioButtonOrange').checked){
-			document.getElementById(idR).checked = true;
-			document.getElementById(idR).style.accentColor = "orange";
-			document.getElementById(idR).value = "orange";
-			document.getElementById('radioButtonSelected').value = "orange";
-		}
-			
-		if(document.getElementById('radioButtonJaune').checked){
-		
-			document.getElementById(idR).checked = true;
-			document.getElementById(idR).style.accentColor = "yellow";
-			document.getElementById(idR).value = "jaune";
-			document.getElementById('radioButtonSelected').value = "jaune";
-		}
-		if(document.getElementById('radioButtonAucun').checked){
-			document.getElementById(idR).checked = false;
-			
-		}
-		
-	})	  
-	
-}
-
-</script> -->
-
-
-
-						
-						 <!-- Légende<br/>
-						 <div th:each="t:${listType}">
-						 <input class="typeClass" type = radio th:style="'height:20px; width:20px;transform:none; background:' + ${t.couleur} +''"  checked/><span th:text="${t.nomType}"></span><br/>
-						 </div> -->
 	<!-- Fenetre modal succes-->
 
    <form th:action="@{choixPartenaire(nomProjet=${nomProjet}, idProjet=${idProjet})}" method="post">
@@ -415,8 +497,8 @@ function getIdRadioButtonSelected(idButtonRadioSelected, nomPart, libLocalisatio
 	modal.show();
 </script>		 	 
    </div>
-</div>
-</div>
 
+</div>
+ </div>
 </body>
 </html>

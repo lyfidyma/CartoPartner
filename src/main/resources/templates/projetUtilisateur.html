@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Projets utilisateur</title>
+</head>
+<body>
+<div layout:fragment="content">
+      
+      	
+		<div class = "container">
+		<br/>
+		<h5>Projets-Utilisateur</h5>
+		<hr/>
+		<div style="margin: auto; background:#FFFF; width:60%; border-radius:10px; border: 2px solid #FFFFFF; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+		<div class="col-md-9" style="margin:auto; margin-top:50px"> 
+		<form th:action="@{/sauvegarderProjetUtilisateur}" method="post" th:object="${unUtilisateur}"> 
+		
+			
+			<div th:each="u:${unUtilisateur}" style="text-align:center">
+			<input type="hidden" class = "form-control" name="idUtilisateur" th:value="${u.idUtilisateur}"/>
+			<span>Ajouter un projet à </span> <h6 th:text="${u.nomUtilisateur}"></h6>
+			</div>
+			<div class="form-floating  mb-3" th:object="${unProjet}">	
+			<select class="form-select" th:field="*{nomProjet}" id="nomProjet" >
+				<option th:each="p:${listProjet}" th:text="${p.nomProjet}" th:value="${p.nomProjet}"></option>
+			</select>
+			<label>Projet</label>
+			
+			 </div>
+			 <br/>
+			<div style="text-align:center">
+    	
+        <button type="submit" id="button" class="btn btn-success" >Enregistrer</button>
+         </div>
+			 <br/>
+			</form>
+		
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -43,10 +43,11 @@ input[type='radio']:hover {
      <br></br>
 				
  						 <div class="row">
-  						<div class="col-md-6">
+  						<div class="col-md-5">
   						<form  th:action="@{/displayChoixPartenaire}" method="post" th:object="${unProjet}">
   						 	
 						<div class="input-group">
+						 <span class="input-group-text" id="basic-addon1">Projet :</span>
 						<select class="form-select" id="nomProjet" th:field="*{nomProjet}">
 						 <option th:each="b:${listProjet}" th:text="${b.nomProjet}" th:value="${b.nomProjet}"></option>
 						</select>
@@ -66,7 +67,10 @@ $(document).ready(function(){
 						</div>
 						</form>
 						</div>
-						<div class="col-md-6" style="text-align:right">
+						<div class="col-md-6" style="text-align:center">
+						<a type="button" th:href="@{liaisonPartenaireProjet}" class="btn btn-info">Ajouter partenaire</a>
+     				 </div>
+     		<div class="col-md-1" style="text-align:right">
      		 <a th:href="@{/excelExport}" class="btn btn-success" style="border: 1px solid green; background-color: white; color: green;">
  			<i class="fas fa-file-excel"></i></a>
  			 </div>
@@ -85,7 +89,8 @@ $(document).ready(function(){
 							
 							<th:block  th:each="l:${projetName1}">
 							<th:block  th:each="h:${l.type}">
-							<td ><input type = "radio"  name="radioProjet" class="radioProjet" th:style="'height:20px; width:20px;transform:none; background:' + ${h.couleur} +''"  checked/><span th:text="${h.nomType}"></span><br/></td>
+							<td ><input type = "radio"  name="radioProjet" class="radioProjet" th:style="'height:20px; width:20px;transform:none; background:' + ${h.couleur} +''"  checked/>
+							<span th:text="${h.nomType}"></span></td>
 							</th:block>
 							</th:block>
 							<th:block  th:each="l:${listRegion}">						
@@ -100,9 +105,12 @@ $(document).ready(function(){
 						<tbody  id="bodyForm">
 						
 							<tr  th:each="p:${listPartenaire}" valign="middle" >
+							
 							<td th:text="${p.nomPartenaire}" style="background:lightcyan">
-							<input  type="hidden" id="idPartenaire" name="idPartenaire"  th:value="${p.idPartenaire}" />
+							
+							<!-- <input  type="hidden" id="idPartenaire" name="idPartenaire"  th:value="${p.idPartenaire}" /> -->
 							</td>	
+							
 								 <td th:each="l:${listRegion}" style="text-align:center; padding:20px" th:with="test=1">
 									<th:block th:each="pr:${projetName}" >
 									<th:block th:each="t:${pr.projet}">
@@ -130,7 +138,7 @@ $(document).ready(function(){
 						
 						 </div>
 						 <br/>
-						 <a type="button" th:href="@{projetPartenaireRegion(nomProjet=${nomProjet})}" class="btn btn-info" style="margin-left:600px">Ajouter partenaire</a>
+						 
 	<!-- </form>	 -->				 
 						   <br></br>
 

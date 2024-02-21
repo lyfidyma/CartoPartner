@@ -9,5 +9,8 @@ import com.carto.sn.entities.Utilisateur;
 public interface UtilisateurRepository extends JpaRepository<Utilisateur, Long>{
 	
 	Optional <Utilisateur> findByLogin(String login); 
+	
+	Utilisateur findByNomUtilisateur(String nomUtilisateur);
+	
 
 }

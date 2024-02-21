@@ -1,23 +1,23 @@
 package com.carto.sn.entities;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Departement {
@@ -26,12 +26,14 @@ public class Departement {
 	private Long idDepartement;
 	@NotBlank(message="Renseigner le département")
 	private String nomDepartement;
-	
+	@JsonIgnore
+	@OneToMany(mappedBy="departement")
+	private Collection<Commune> commune;
+	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name="idRegion", updatable = true)
+	@JoinColumn(name="idRegion")
 	private Region region;
-	//@ManyToMany(mappedBy = "departement")
-	//Set <Projet> projet;
+	
 	
 	public Departement(String nomDepartement) {
 		super();
@@ -41,6 +43,38 @@ public class Departement {
 	public Departement(String nomDepartement, Region region) {
 		super();
 		this.nomDepartement = nomDepartement;
+		this.region = region;
+	}
+
+	public Long getIdDepartement() {
+		return idDepartement;
+	}
+
+	public void setIdDepartement(Long idDepartement) {
+		this.idDepartement = idDepartement;
+	}
+
+	public String getNomDepartement() {
+		return nomDepartement;
+	}
+
+	public void setNomDepartement(String nomDepartement) {
+		this.nomDepartement = nomDepartement;
+	}
+
+	public Collection<Commune> getCommune() {
+		return commune;
+	}
+
+	public void setCommune(List<Commune> commune) {
+		this.commune = commune;
+	}
+
+	public Region getRegion() {
+		return region;
+	}
+
+	public void setRegion(Region region) {
 		this.region = region;
 	}
 	

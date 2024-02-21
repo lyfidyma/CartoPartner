@@ -40,14 +40,16 @@ table td:hover{
 							<tr th:each="p:${listProjet}">
 							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.nomProjet}"></span>
 							</td>
-							<!-- <td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.partenaire.nomPartenaire}"></span>
+							<!--<td th:each="u:${p.utilisateur}" style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${u.login}"></span>
 							</td>
-							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.localisation.libelleLocalisation}"></span>
+							 <td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.localisation.libelleLocalisation}"></span>
 							</td> -->
 							
 							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
-							<a type="button" title="Editer" th:onclick="showModalModifier([[${p.idProjet}]], [[${p.nomProjet}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
-							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idProjet}]], [[${p.nomProjet}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							<a th:if="${p.statut} eq 'En cours' or ${p.statut} eq 'En plan'" type="button" title="Editer" th:onclick="showModalModifier([[${p.idProjet}]], [[${p.nomProjet}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							<a th:if="${p.statut} eq 'Clôturé'"  type="button" ><i class="far fa-edit" style="font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+							<a th:if="${p.statut} eq 'En cours' or ${p.statut} eq 'En plan'" type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idProjet}]], [[${p.nomProjet}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							<a th:if="${p.statut} eq 'Clôturé'" type="button"><i class="far fa-trash-alt" style="font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
 							</td>
 							</tr>				
 						</tbody>

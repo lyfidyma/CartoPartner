@@ -1,11 +1,12 @@
 package com.carto.sn.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,6 +20,7 @@ import com.carto.sn.service.UserDetail;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
 	
 	@Autowired
@@ -70,9 +72,9 @@ public class SecurityConfig {
         		.requestMatchers(AntPathRequestMatcher.antMatcher("https://{s}.tile.openstreetmap.org/**"))
 				.permitAll()
        
-        		.requestMatchers(AntPathRequestMatcher.antMatcher("/user/**" )).hasRole("USER")
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("/user/**" )).hasAuthority("USER")
        
-        		.requestMatchers(AntPathRequestMatcher.antMatcher("/admin/**" )).hasRole("ADMIN")
+        		.requestMatchers(AntPathRequestMatcher.antMatcher("/admin/**" )).hasAuthority("ADMIN")
         
         		.anyRequest().authenticated());
       

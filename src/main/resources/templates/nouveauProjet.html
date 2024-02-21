@@ -43,8 +43,8 @@
 			</div>
 			
 			<div class="form-floating  mb-3">	
-			<input type="text" class = "form-control" th:field="*{pointFocal}" id="pointFocal" placeholder="Point focal"/>
-			<label for="pointFocal">Point focal</label>
+			<input type="text" class = "form-control" th:field="*{pointFocal}" id="pointFocal" placeholder="Agent de projet"/>
+			<label for="pointFocal">Agent de projet</label>
 			</div>
 			
 			<!-- <div th:object="${unPartenaire}">
@@ -74,45 +74,59 @@
 			<label for="description">Description</label>
 			</div>
 			
-			<div th:object="${unType}">
-			<div class="form-floating mb-3">
-			<select id="type" th:field="*{nomType}" class="form-control">
+			
+			<div class="form-floating mb-3" th:object="${unType}">
+			<select id="type" th:field="*{nomType}" class="form-select">
 			<option value="" hidden>Sélectionner</option>
 			<option th:each="t:${listType}" th:text="${t.nomType}" th:value="${t.nomType}"></option>
 			</select>
 			<label for="type">Type<span style="color:red">&nbsp;*</span></label>
 			<span style="color:red">[[${messageErreurType}]]</span>
 			</div>
+			
+			<div class="form-floating mb-3" th:object="${uneCategorie}">
+			<select id="categorie" th:field="*{nomCategorie}" class="form-select">
+			<option value="" hidden>Sélectionner</option>
+			<option th:each="t:${listCategorie}" th:text="${t.nomCategorie}" th:value="${t.nomCategorie}"></option>
+			</select>
+			<label for="Catégorie">Catégorie<span style="color:red">&nbsp;*</span></label>
+			
 			</div>
+			
 			
 			<div class="row">
-			<div class=" col-md-2">
-			<label for="duree">Durée<span style="color:red">&nbsp;*</span></label>
-			<select id="duree" th:field="*{duree}" class="form-control">
-			<option value="1" >1</option>
-			<option value="2" >2</option>
-			<option value="3" >3</option>
-			<option value="4" >4</option>
-			<option value="5" >5</option>
+			<div >
+			<label>Durée<span style="color:red">&nbsp;*</span></label>
+			</div>
+			<div class="col-md-3">
+			<label for="dateDebut">De</label>
+			<select id="dateDebut" th:field="*{dateDebut}" class="form-select">
+			<option value="2020" >2020</option>
+			<option value="2021" >2021</option>
+			<option value="2022" >2022</option>
+			<option value="2023" >2023</option>
+			<option value="2024" >2024</option>
 			</select>
-			
 			</div>
 			
+
 			
-			<div class="col-md-4 mb-3">
-			<label for="temps"></label>
-			<select id="temps" th:field="*{temps}" class="form-control">
-			<option value="année" >année</option>
-			<option value="mois" >mois</option>
+			<div class="col-md-3 mb-3">
+			<label for="dateFin">à</label>
+			<select id="dateFin" th:field="*{dateFin}" class="form-select">
+			<option value="2024" >2024</option>
+			<option value="2025" >2025</option>
+			<option value="2026" >2026</option>
+			<option value="2027" >2027</option>
+			<option value="2028" >2028</option>
 			</select>
 			
 			</div>
 			</div>
 			<div class="form-floating mb-3">
-			<select id="statut" th:field="*{statut}" class="form-control">
+			<select id="statut" th:field="*{statut}" class="form-select">
 			<option value="En cours" >En cours</option>
 			<option value="En plan" >En planification</option>
-			<option value="Clôturé" >Clôturé</option>
 			</select>
 			<label for="statut">Statut</label>
 			</div>

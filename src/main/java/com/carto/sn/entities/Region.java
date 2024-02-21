@@ -1,7 +1,10 @@
 package com.carto.sn.entities;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -14,13 +17,9 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Region {
@@ -31,24 +30,29 @@ public class Region {
 	@NotBlank(message="Renseigner le nom de la région")
 	private String nomRegion;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "region")
 	private Collection <Departement> departement;
 	
+	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name="idPays", updatable = true)
+	@JoinColumn(name="idPays")
 	private Pays pays;
-	
+	@JsonIgnore
 	@ManyToMany(mappedBy = "region")
 	Set <Projet> projet;
-	@OneToMany(mappedBy = "region", cascade = CascadeType.ALL)
+	@JsonIgnore
+	@OneToMany(mappedBy = "region")
 	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
+	
+	
 	public Region(String nomRegion) {
 		super();
 		this.nomRegion = nomRegion;
 	}
 
 	public Region(@NotBlank(message = "Renseigner le nom de la région") String nomRegion,
-			Collection<Departement> departement, Pays pays) {
+			List<Departement> departement, Pays pays) {
 		super();
 		this.nomRegion = nomRegion;
 		this.departement = departement;
@@ -59,6 +63,54 @@ public class Region {
 		super();
 		this.nomRegion = nomRegion;
 		this.pays = pays;
+	}
+
+	public Long getIdRegion() {
+		return idRegion;
+	}
+
+	public void setIdRegion(Long idRegion) {
+		this.idRegion = idRegion;
+	}
+
+	public String getNomRegion() {
+		return nomRegion;
+	}
+
+	public void setNomRegion(String nomRegion) {
+		this.nomRegion = nomRegion;
+	}
+
+	public Collection<Departement> getDepartement() {
+		return departement;
+	}
+
+	public void setDepartement(List<Departement> departement) {
+		this.departement = departement;
+	}
+
+	public Pays getPays() {
+		return pays;
+	}
+
+	public void setPays(Pays pays) {
+		this.pays = pays;
+	}
+
+	public Set<Projet> getProjet() {
+		return projet;
+	}
+
+	public void setProjet(Set<Projet> projet) {
+		this.projet = projet;
+	}
+
+	public Set<ProjetPartenaireRegion> getProjetPartenaireRegion() {
+		return projetPartenaireRegion;
+	}
+
+	public void setProjetPartenaireRegion(Set<ProjetPartenaireRegion> projetPartenaireRegion) {
+		this.projetPartenaireRegion = projetPartenaireRegion;
 	}
 	
 }

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" 
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  layout:decorate="~{template}">
+<head>
+<meta charset="UTF-8">
+<title>Catégorie</title>
+</head>
+<body>
+<div layout:fragment="content">
+      
+      	
+		<div class = "container">
+		<br/>
+		<h5>Nouvelle catégorie</h5>
+		<hr/>
+		<div style="margin: auto; background:#FFFF; width:60%; border-radius:10px; border: 2px solid #FFFFFF; 
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+		<div class="col-md-9" style="margin:auto; margin-top:50px"> 
+
+		<!-- <p id="messageSucces" th:if="${messageSucces}" th:text="${messageSucces}" class= "alert alert-success"></p> -->
+		<form th:action="@{/sauvegarderCategorie}" method="post" th:object="${uneCategorie}"> 
+		
+			<input type="hidden" class = "form-control" name="idCategorie" th:value="${idCategorie}"/>
+			
+			<div class="form-floating  mb-3">	
+			<input type="text" class = "form-control" th:field="*{nomCategorie}" id="nomCategorie" placeholder="Nom la catégorie"/>	
+			<label for="nomCategorie">Nom de la catégorie<span style="color:red">&nbsp;*</span></label>
+			<span th:if="${#fields.hasErrors('nomCategorie')}" th:errors="*{nomPartenaire}" th:errorclass="error"></span>
+			<span style="color:red">[[${messageDoublon}]]</span>
+			<br/>
+			<div style="text-align:center">
+    	
+        <button type="submit" id="button" class="btn btn-success" >Enregistrer</button>
+         </div>
+			</div>
+			</form>
+			
+			
+			</div>
+			</div>
+			<br></br>
+								<div class="table-responsive" th:if="${listCategorie}">
+						<table  class="table table-bordered" id="dataTable" style="width:60%; font-size:13px; font-family:Arial; margin:auto; ">
+							
+						<tbody>
+							<tr th:each="p:${listCategorie}">
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" th:text="${p.nomCategorie}"></td>
+							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
+							<a type="button" title="Editer" th:onclick="showModalModifier([[${p.idCategorie}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idCategorie}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							</td>
+							</tr>				
+						</tbody>
+						</table>
+						
+   <form th:action="@{supprimerCategorie}" method="post">
+   <!-- Fenetre modal supprimer -->
+<div class="modal fade" id="supCategorie" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      <!-- <div class="modal-header">
+        <h5 class="modal-title">Partenaire</h5>
+        
+      </div> -->
+      <div class="modal-body" id="modal-body-supprimer">
+      <h6>Voulez-vous supprimer ?</h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{categorie}">Non</button>
+        <button type="submit" id="button" class="btn btn-danger" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+  <script>
+function showModalSupprimer(idCategorie){
+	var modal = new bootstrap.Modal(document.getElementById('supCategorie'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idCategorie' value='"+idCategorie+"' />"
+	document.getElementById('modal-body-supprimer').innerHTML+=data;
+	modal.show();
+}
+
+function showModalModifier(idCategorie){
+	var modal = new bootstrap.Modal(document.getElementById('modCategorie'), {
+		  keyboard: false
+		})
+	var data= "<input type='hidden' name='idCategorie' value='"+idCategorie+"' />"
+	document.getElementById('modal-body-modifier').innerHTML+=data;
+	modal.show();
+}
+</script>
+</div>
+
+</form>
+
+<!-- Fenetre modal modifier -->
+
+   <form th:action="@{getDonneesCategorieAModifier}" method="post">
+   
+<div class="modal fade" id="modCategorie" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body" id="modal-body-modifier">
+      <h6>Voulez-vous modifier ?</h6>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-info" data-bs-dismiss="modal" th:href="@{categorie}">Non</button>
+        <button type="submit" id="button" class="btn btn-warning" >Oui</button>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</form>
+ </div>
+			</div>
+			
+</div>
+</body>
+</html>

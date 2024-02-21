@@ -5,6 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>Paramètres</title>
+<style>
+.col-md-3:hover{
+background:lightgray;
+}
+</style>
 </head>
 <body>
 
@@ -18,15 +23,69 @@
   		 
   		 <hr/>
   		 &ensp;
-  		 <ul style="font-family:Verdana;">
+  		 <div class="row">
+  		  <div class="col-md-1">
+  		 </div>
+  		 <div class="col-md-3" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); height:100px">
+  		 &ensp;<a th:href="@{/listeProjet}" style="text-decoration:none; color:black"><b>Projet</b></a>
+  		 <ul>
+  			<li>Modifier projet</li> 
+  			<li>Supprimer projet</li> 
+  		 </ul>
+  		 </div>
+  		 <div class="col-md-1">
+  		 </div>
+  		 <div class="col-md-3" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); height:100px">
+  		 	 &ensp;<a th:href="@{/utilisateur}" style="text-decoration:none; color:black"><b>Utilisateur</b></a>
+  		 	  <ul>
+	  		 	<li>Ajouter utilisateur</li>
+	  			<li>Modifier utilisateur</li> 
+	  			<li>Supprimer utilisateur</li> 
+  		 	  </ul>
+  		 </div>
+  		 <div class="col-md-1">
+  		 </div>
+  		 <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}" class="col-md-3" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); height:100px">
+  		 	  &ensp;<a th:href="@{/nouveauProfil}" style="text-decoration:none; color:black"><b>Profil</b></a>
+  		 	  <ul>
+	  		 	<li>Ajouter profil</li>
+	  			<li>Supprimer profil</li> 
+  		 	  </ul>
+  		 </div>
+  		  </div>
+  		    <br></br>
+  		   <div class="row">
+  		    <div class="col-md-1">
+  		 </div>
+  		 <div class="col-md-3" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); height:100px">
+  		  &ensp;<a th:href="@{/type}" style="text-decoration:none; color:black"><b>Type</b></a>
+  		  <ul>
+	  		 	<li>Ajouter type</li> 
+	  			<li>Supprimer type</li> 
+  		 	  </ul>
+  		 </div>
+  		 <div class="col-md-1">
+  		 </div>
+  		 <div class="col-md-3" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); height:100px">
+  		 	  &ensp;<a th:href="@{categorie}" style="text-decoration:none; color:black"><b>Catégorie</b></a>
+  		 	  <ul>
+	  		 	<li>Ajouter catégorie</li>
+	  			<li>Supprimer catégorie</li> 
+  		 	  </ul>
+  		 </div>
+  		
+  		  </div>
+  		<!--  <ul style="font-family:Verdana;">
   		 		 <li><a th:href="@{/listeProjet}" style="text-decoration:none">Projets</a></li>
 		  		 &ensp;
  		  		 <li><a th:href="@{/utilisateur}" style="text-decoration:none">Utilisateurs</a></li>
 		  		 &ensp;
 		  		 <li><a th:href="@{/nouveauProfil}" style="text-decoration:none">Profil</a></li>
 		  		 &ensp;
-		  		 <li><a th:href="@{/type}" style="text-decoration:none">Type</a></li>		  	
-  		</ul>
+		  		 <li><a th:href="@{/type}" style="text-decoration:none">Type</a></li>
+		  		 &ensp;
+		  		 <li><a th:href="@{categorie}" style="text-decoration:none">Catégorie</a></li>		  	
+  		</ul> -->
 </div>
 </div>
 </body>

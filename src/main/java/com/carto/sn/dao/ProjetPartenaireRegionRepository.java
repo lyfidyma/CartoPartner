@@ -10,8 +10,8 @@ import com.carto.sn.entities.ProjetPartenaireRegion;
 
 public interface ProjetPartenaireRegionRepository extends JpaRepository<ProjetPartenaireRegion, Long>{
 	
-	@Query("select p from ProjetPartenaireRegion p where p.projet.idProjet=?1 and p.partenaire.idPartenaire=?2 and p.region.idRegion=?3")
-	public  List <ProjetPartenaireRegion> findProjetPartenaireRegion(Long idProjet, Long idPartenaire, Long idRegion);
+	@Query("select p from ProjetPartenaireRegion p where p.projet.idProjet=?1 and p.partenaire.idPartenaire=?2 and p.region.idRegion=?3 and p.commune.idCommune=?4")
+	public  List <ProjetPartenaireRegion> findProjetPartenaireRegion(Long idProjet, Long idPartenaire, Long idRegion, Long idCommune);
 	
 	@Query("select p from ProjetPartenaireRegion p where p.projet.idProjet=?1")
 	public List <ProjetPartenaireRegion> findByIdProjet(Long idProjet);
