@@ -47,7 +47,11 @@ public class CartoController {
 	private ICarto iCarto;
 	@Autowired
     private GeocodingService geocodingService;
-
+	
+	@RequestMapping("test")
+	public String test() {
+		return "testLiaison";
+	}
 	@RequestMapping("/index")
 	public String index(@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("unType") Type unType,
 			@ModelAttribute("unPartenaire") Partenaire unPartenaire, 
@@ -264,9 +268,7 @@ public class CartoController {
 		List <Type> listType = iCarto.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listType", listType);
-		model.addAttribute("listProjetPoinFocal", listProjetPoinFocal);
-		
-		
+		model.addAttribute("listProjetPoinFocal", listProjetPoinFocal);	
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listRegion", listRegion);
 			if(nomProjet!=null)
@@ -533,7 +535,7 @@ public class CartoController {
 				  {
 				  
 				  try { 
-					  location = geocodingService.search(ppr.getRegion().getNomRegion(),ppr.getRegion().getPays().getNomPays()); 
+					  location = geocodingService.search(ppr.getCommune().getNomCommune(), ppr.getRegion().getPays().getNomPays()); 
 					  listLat.add(location.getString("lat"));
 					  listLong.add(location.getString("lon"));
 					  listId.add(location.getLong("osm_id"));
@@ -638,7 +640,7 @@ public class CartoController {
 			  for(ProjetPartenaireRegion ppr:typeName) 
 			  {
 				  try {
-					location = geocodingService.search(ppr.getRegion().getNomRegion(), ppr.getRegion().getPays().getNomPays());
+					location = geocodingService.search(ppr.getCommune().getNomCommune(), ppr.getRegion().getPays().getNomPays());
 					listLat.add(location.getString("lat"));
 					listLong.add(location.getString("lon"));
 					listId.add(location.getLong("osm_id"));
@@ -1475,6 +1477,7 @@ return "choixPartenaire";
 	public String detailsProjet(@ModelAttribute("unProjet") Projet unProjet, Model model, Long idProjet, String nomProjet) {
 		
 		Projet projet = iCarto.trouverProjetParIdProjet(idProjet);
+		model.addAttribute("listProjet", iCarto.tousLesProjets());
 		model.addAttribute("unProjet",projet);
 		return "detailsProjet";
 	}

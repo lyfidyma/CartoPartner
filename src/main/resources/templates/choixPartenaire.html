@@ -5,9 +5,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Accueil</title>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
- 
- 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <style>
 .radioProjet {
 	appearance:none;
@@ -15,12 +13,9 @@
  	border: 2px solid #FFFFFF;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
 }
-
-
 input[type='radio']:hover {
   transform:scale(1.5);
 }
-
 </style>
 
  <link rel="stylesheet" type="text/css"
@@ -31,17 +26,22 @@ input[type='radio']:hover {
 <div layout:fragment="content">
 <div class = "container">
 <br/>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a th:href="@{/projet}" style="text-decoration:none">Projets</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Partenaire</li>
+  </ol>
+</nav>
     <div class="row">
       <div class="col-md-11">
-       <h5>Projets-Partenaires</h5>
+       <h5>Projets - Partenaires</h5>
         </div>
          
   		 &ensp;
   		 
   		 <hr/>
   </div>  
-     <br></br>
-				
+     <br></br>				
  						 <div class="row">
   						<div class="col-md-5">
   						<form  th:action="@{/displayChoixPartenaire}" method="post" th:object="${unProjet}">
@@ -68,7 +68,7 @@ $(document).ready(function(){
 						</form>
 						</div>
 						<div class="col-md-6" style="text-align:center">
-						<a type="button" th:href="@{liaisonPartenaireProjet}" class="btn btn-info">Ajouter partenaire</a>
+						<a type="button" th:href="@{liaisonPartenaireProjet(idProjet=${idProjet}, nomProjet=${nomProjet})}" class="btn btn-info">Ajouter partenaire</a>
      				 </div>
      		<div class="col-md-1" style="text-align:right">
      		 <a th:href="@{/excelExport}" class="btn btn-success" style="border: 1px solid green; background-color: white; color: green;">

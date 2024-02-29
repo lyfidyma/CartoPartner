@@ -46,12 +46,16 @@ table td:hover{
 						<tr>
 						<td>Partenaire de mise en oeuvre</td>
 						<td>Partenaire communautaire</td>
-						<td></td>
+						
 						</tr>
 						</thead>
 						<tbody>
 							<tr th:each="p:${listPartenaire}">
-							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);width:50%" ><span th:text="${p.nomPartenaire}"></span><br/><span th:text="${p.adresse}"></span>
+							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);width:50%" >
+								<a type="button" title="Editer" th:onclick="showModalModifier([[${p.idPartenaire}]])" ><i class="far fa-edit" style="color:green; font-size:15px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;
+								<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idPartenaire}]])"><i class="far fa-trash-alt" style="color:red; font-size:15px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a><br/>
+								<span th:text="${p.nomPartenaire}"></span><br/>
+								<span th:text="${p.adresse}"></span>
 							</td>
 							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);width:40%" ><a type="button" th:onclick="showModalAjoutPartenaireLocal([[${p.idPartenaire}]], [[${p.nomPartenaire}]])"><i style="width:5px; height:5px; cursor:pointer; text-align:right" class="fa fa-plus" aria-hidden="true"></i></a>
 							<th:block th:each="c:${p.partenaireLocal}">
@@ -60,10 +64,7 @@ table td:hover{
 							</ul>
 							</th:block>
 							</td>
-							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
-							<a type="button" title="Editer" th:onclick="showModalModifier([[${p.idPartenaire}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
-							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idPartenaire}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
-							</td>
+							
 							</tr>				
 						</tbody>
 						</table>

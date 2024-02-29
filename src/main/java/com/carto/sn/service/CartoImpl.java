@@ -141,7 +141,8 @@ public class CartoImpl implements ICarto{
 		List<Projet> proj = projetRepository.findAll();
 		List<Projet> projetUtilisateur = new ArrayList<>();
 		
-		if(authentication.getName().equals("admin")) {
+		for(GrantedAuthority grAuth : authentication.getAuthorities()) {
+		if(grAuth.getAuthority().equals("ROLE_ADMIN")) {
 			return proj;
 		}else {
 			for(Projet p:proj) {	
@@ -154,6 +155,8 @@ public class CartoImpl implements ICarto{
 			}
 			return projetUtilisateur;
 		}
+		}
+		return null;
 	}
 
 	@Override

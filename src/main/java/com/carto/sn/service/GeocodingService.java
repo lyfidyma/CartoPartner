@@ -17,12 +17,14 @@ import okhttp3.Response;
 public class GeocodingService {
 	private final OkHttpClient httpClient = new OkHttpClient();
 	@Cacheable
-    public JSONObject search(String regionGeocod, String paysGeocod) throws IOException {
-    	
+    public JSONObject search(String commune, String pays) throws IOException {
+		 
         Request request = new Request.Builder()
-            .url("https://nominatim.openstreetmap.org/search?format=json&city=" + regionGeocod+"&country="+paysGeocod)
+        		
+            .url("https://nominatim.openstreetmap.org/search?format=json&city="+commune+"&country="+pays)
+        		//.url("https://nominatim.openstreetmap.org/search?q="+commune+","+region+","+pays+"&format=json")
             .build();
-
+      
         try (Response response = httpClient.newCall(request).execute()) {
             if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 

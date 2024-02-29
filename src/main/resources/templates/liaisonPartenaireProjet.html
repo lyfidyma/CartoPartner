@@ -12,13 +12,18 @@
 <div class = "container">
 
 <br/>
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb" >
+    <li class="breadcrumb-item"><a th:href="@{/projet}" style="text-decoration:none">Projets</a></li>
+    <li class="breadcrumb-item"><a th:href="@{/displayChoixPartenaire(idProjet=${idProjet}, nomProjet=${nomProjet}, pageAAfficher=ChoixPartenaire, nomPartenaire='', pointFocal='', nomType='')}" style="text-decoration:none">Partenaire</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Liaison partenaire</li>
+  </ol>
+</nav>
     <div class="row">
       <div class="col-md-11">
        <h5>Ajouter partenaire</h5>
-        </div>
-         
+        </div>       
   		 &ensp;
-  		 
   		 <hr/>
   </div>  
     
@@ -28,9 +33,9 @@
      
      <form  th:action="@{lierPartenaire}" method="post" th:object="${unProjet}" id="formulaire">
      <br/>
-     <div class="form-floating mb-3" th:object="${unProjet}">
+     <div class="form-floating mb-3" th:object="${unProjet}" >
      <select class=form-select id="projet" th:field="*{nomProjet}">
-     <option value="" hidden>Sélectionner un projet</option>
+     <option value="" hidden="hidden">Sélectionner un projet</option>
      <option th:each="p:${listProjet}" th:text="${p.nomProjet}" th:value="${p.nomProjet}"></option>
      </select>
       <label>Projet</label>
@@ -38,7 +43,7 @@
     
 	 <div class="form-floating mb-3" th:object="${unPartenaire}">
      <select class=form-select id="partenaire" th:field="*{nomPartenaire}">
-     <option value="" hidden>Choisir un partenaire</option>
+     <option value="" hidden="hidden">Choisir un partenaire</option>
      <option th:each="p:${listPartenaire}" th:text="${p.nomPartenaire}" th:value="${p.nomPartenaire}"></option>
      </select>
      <label>Partenaire de mise en oeuvre</label>
@@ -48,7 +53,7 @@
 	 <div class="col-md-6">
 	 <div class="form-floating" th:object="${uneRegion}">
      <select class=form-select id="region" th:field="*{nomRegion}" onchange="getDepartement()">
-     <option value="" hidden>Région</option>
+     <option value="" hidden="hidden">Région</option>
      <option th:each="p:${listRegion}" th:text="${p.nomRegion}" th:value="${p.nomRegion}"></option>
      </select>
      <label>Région</label>
@@ -57,7 +62,7 @@
      <div class="col-md-6">
      <div class=" form-floating" th:object="${unDepartement}">
      <select class=form-select id="departement" th:field="*{nomDepartement}" onchange="getCommune()">
-     <option value="" hidden>Département</option>
+     <option value="" hidden="hidden">Département</option>
      </select>
       <label>Département</label>
      </div>
@@ -70,11 +75,11 @@
      </div>
     
      <br></br>
-       <h6>Partenaire local</h6>
+       <h6 style="color:blue">Partenaire local</h6>
        <hr/>
        <div class="row">
  		<div class=" input-group">
- 		<a type="button" id="addField"><i style="width:5px; height:5px; cursor:pointer; text-align:right" class="fa fa-plus" aria-hidden="true"></i></a>
+ 		<a type="button" id="addField"><i style="width:5px; height:5px; cursor:pointer; text-align:right; color:green" class="fa fa-plus" aria-hidden="true"></i></a>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<a type="button"  id="deleteField" style="cursor:pointer" ><i style="width:5px; height:5px; cursor:pointer; color:red; text-align:right" class="fa fa-minus" aria-hidden="true"></i></a>
@@ -89,7 +94,7 @@
       <br/>
      </div>
    	<div id="divAjoutPartenaire">
-   		<!--<table id="tableauAjoutPartenaire" style="width:100%;font-size:9px" border="1">
+   		<table id="tableauAjoutPartenaire" style="width:100%;font-size:9px" border="1">
    		<thead>
    			<tr>
    				<th>Projet</th>
@@ -108,15 +113,14 @@
    			
    			</tr>
    		</tbody>
-   			</table>-->
+   			</table>
    	</div>
    	<br/>
      		<div style="text-align:center">
         	<button type="submit" class="btn btn-success" >Enregistrer</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        	<a class="btn btn-outline-secondary" href="#">Ajouter un autre partenaire</a>
+        	<a class="btn btn-outline-secondary" onclick="ajouterPartenaire()">Ajouter un autre partenaire</a>
         	</div>
         	 <br></br>
- 
      </form>
     <div class="modal fade" id="modalCommune" role="dialog" >
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md" role="document">
@@ -138,25 +142,24 @@
       </div>
     </div>
   </div>   
-      <script th:inline="javascript">
+<script th:inline="javascript">
       
      function getCommune(){
-    	 document.getElementById('forCommune').innerHTML=null;
-    	 
+    	 document.getElementById('forCommune').innerHTML = null;
+    	
     	 var modal = new bootstrap.Modal(document.getElementById('modalCommune'), {
    		  keyboard: false
    		})
     	
-    	 var nomDepartement=$("#departement").val();
+    	 var nomDepartement = $("#departement").val();
      	 
     	 $.get("/getCommune", {nomDepartement:nomDepartement}, function (data) {  
 	 		  if(!data){
-	 			 document.getElementById('forCommune').innerHTML+='<label>Aucune commune trouvée</label>';
+	 			 console.log("Aucune donnée trouvée");
 	 		  }else {
-	 			 $.each(data, function (key, value) {
-	 
+	 			 $.each(data, function (key, value) {	
 	 			     document.getElementById('forCommune').innerHTML+= '<label><input type="checkbox" id="checkboxCommune" name="checkboxCommune" value="'+value['nomCommune']+'" style="width:20px; height:20px"/>&nbsp;&nbsp;'+value['nomCommune']+'</label><br/>'; 
-	 			    document.getElementById('idRowCommuneVillage').innerHTML+= '<input type="hidden" id="departement" name="nomDepartement" value="'+nomDepartement+'"/>'; 
+	 			     document.getElementById('idRowCommuneVillage').innerHTML+= '<input type="hidden" id="departement" name="nomDepartement" value="'+nomDepartement+'"/>'; 
 	 			 });
 	 			
 	 		  }
@@ -170,28 +173,21 @@
     	    					
     	    			 		for(var i = 0; i < sbox.length; i++){
     	    			 			if(sbox[i].checked){		    	    					 
-	    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-2" id="divNewRow"><div class="form-floating mb-3"><input type="text" class="form-control"  id="longitude" name="longitude" placeholder="longitude"/><label>longitude</label></div></div><br></br>'); 
-	    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-2" id="divNewRow"><div class="form-floating mb-3"><input type="text" class="form-control"  id="latitude" name="latitude" placeholder="latitude"/><label>latitude</label></div></div><br></br>'); 
-	    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-4" id="divNewRow"><div class="form-floating mb-3"><input type="text" class="form-control"  id="village" name="nomVillage" placeholder="Village"/><label>Village</label></div></div><br></br>'); 
-	    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-4" id="divNewRow"><div class="form-floating mb-3"><input type="text" class="form-control"  id="commune" name="nomCommune" value='+sbox[i].value+' placeholder="Commune"/><label>Commune</label></div></div><br></br>');  
+		    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-2" ><div class="form-floating mb-3"><input type="text" class="form-control"  id="longitude" name="longitude" placeholder="longitude"/><label>longitude</label></div></div><br></br>'); 
+		    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-2" ><div class="form-floating mb-3"><input type="text" class="form-control"  id="latitude" name="latitude" placeholder="latitude"/><label>latitude</label></div></div><br></br>'); 
+		    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-4" ><div class="form-floating mb-3"><input type="text" class="form-control"  id="village" name="nomVillage" placeholder="Village"/><label>Village</label></div></div><br></br>'); 
+		    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-4" ><div class="form-floating mb-3"><input type="text" class="form-control"  id="commune" name="nomCommune" value='+sbox[i].value+' placeholder="Commune"/><label>Commune</label></div></div><br></br>');  
     	    			 			}
     	    			 			
     	    			 	}
-    	    					
+	
     	    			 		document.getElementById('buttonAjouter').removeEventListener('click', onClick);		
-    	    			 		 modal.hide();
+    	    			 		modal.hide();
     	    			}
         				   				 
-				 document.getElementById('buttonAjouter').addEventListener('click', onClick);
-    					 
-    			    		
-    		
+				 document.getElementById('buttonAjouter').addEventListener('click', onClick);  		
     	 });		 
-    	
-    			
-    	 
      }
-     
   
      function getDepartement(){
     	
@@ -205,7 +201,7 @@
     	if(nomRegion!=null){
     	 $.get("/getDepartement", {nomRegion:nomRegion}, function (data) {    		
 	 		  if(!data){
-	 			  
+	 			  console.log("Aucune donnée trouvée");
 	 		  }else {
 	 			  var sel = document.getElementById('departement');
 	 			 $.each(data, function (key, value) {
@@ -239,7 +235,7 @@ document.getElementById('deleteField').addEventListener('click', function() {
 	div.removeChild(child);
 })
 
-function ajouterPartenaire(tableauAjoutPartenaire) {
+function ajouterPartenaire() {
 		
 	var reg = document.getElementsByName('nomRegion');		
 	var dep = document.getElementsByName('nomDepartement');
@@ -248,10 +244,13 @@ function ajouterPartenaire(tableauAjoutPartenaire) {
 	var lat = document.getElementsByName('latitude');
 	var lon = document.getElementsByName('longitude');
 	var partLocal = document.getElementsByName('nomPartenaireLocal');
-	var table = document.getElementById(tableauAjoutPartenaire);
-	alert(reg.length)
-	if(reg.length>1){
-	for(var i =0; i<reg.length; i++){	
+	var table = document.getElementById('tableauAjoutPartenaire');
+	
+	if(reg.length > 1){
+		
+		if(com.length > 0){
+	for(var i = 0; i<reg.length; i++){	
+		
 		var rowCount = table.rows.length;
 		var row = table.insertRow(rowCount);
 			
@@ -290,6 +289,7 @@ function ajouterPartenaire(tableauAjoutPartenaire) {
 		
 		
 }
+		}else{console.log("Aucune commune")}
 		}else{
 			
 			if(partLocal.length>1){

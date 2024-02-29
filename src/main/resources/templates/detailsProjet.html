@@ -5,12 +5,18 @@
 <head>
 <meta charset="UTF-8">
 <title>Informations sur un projet</title>
+<link rel="stylesheet" type="text/css"
+	href="../static/css/bootstrap.min.css"
+	th:href="@{/css/bootstrap.min.css}"/>
 <style>
 .container .nav-item .active{
 	 border-bottom: 3px solid red;
 }
 .container .nav-item:hover{
 	 background:lightgray;
+}
+.container .navbar{
+	 background:linear-gradient(to right, #C372E6,#BB8FCE, #E1C0F0)
 }
 .custom-tooltip {
   --bs-tooltip-bg: var(--bs-primary);
@@ -44,20 +50,18 @@ Recherche
 </div>
 		<div class="tab-pane active rounded" id="p1" style="margin: auto; background:#FFFF; width:60%; border: 2px solid #FFFFFF; 
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
-		<div style="text-align:right">
-		&nbsp;<a th:if="${p.statut} neq 'Clôturé'" type="button"  data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-custom-class="custom-tooltip" data-bs-title="Editer le projet" th:href="@{getDonneesProjetAModifier(idProjet=${p.idProjet})}"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
 		
-		&nbsp;</div>
-
+		<br/>
 		<div class="col-md-10" style="margin: auto; line-height:30px;">
-		<div class="container" >
-		<nav class="navbar " style="border-radius:10px; background:lightgray; display:flex; justify-content: center; align-items: center;" >
+		<div class="container" data-bs-toggle="modal" data-bs-target="#modalProjet" style="cursor:pointer">
+		<nav class="navbar" style="border-radius:10px; display:flex; justify-content: center; align-items: center;" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Cliquez pour voir les autres projets" >
   			 
-  			  <span th:text="${p.nomProjet}"></span>
+  			  <span class="nomDuProjet" style="text-align:center;" th:text="${p.nomProjet}" ></span>
   			 
      
 		</nav>
 		</div>
+		
 		<br/>
 		<table>
 			<tbody>
@@ -135,9 +139,11 @@ Recherche
     </div>
   </div>
   </div>
+  <br/>
   <div style="text-align:right">
-	<a class="btn btn-outline-primary" th:if="${p.statut} neq 'Clôturé'" type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Clôturer le projet" th:onclick="showModalCloturerProjet([[${p.idProjet}]], [[${p.nomProjet}]])">Clôturer</a>						
-	</div>				
+		<a class="btn btn-outline-success" th:if="${p.statut} neq 'Clôturé'" type="button"  data-bs-toggle="tooltip" data-bs-placement="bottom"  data-bs-custom-class="custom-tooltip" data-bs-title="Editer le projet" th:href="@{getDonneesProjetAModifier(idProjet=${p.idProjet})}"><i class="far fa-edit" style="color:green; font-size:15px; "></i>&nbsp;Modifier</a>	
+	    <a class="btn btn-outline-primary" th:if="${p.statut} neq 'Clôturé'" type="button" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Clôturer le projet" th:onclick="showModalCloturerProjet([[${p.idProjet}]], [[${p.nomProjet}]])">Clôturer</a>						
+  </div>				
 			<script>
 const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
 const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
@@ -182,8 +188,30 @@ function showModalCloturerProjet(idProjet, nomProjet){
 
 </form>
 </div>
+<!-- Fenetre modal projet -->
+<div class="modal fade" id="modalProjet" role="dialog" >
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document" >
+    <div class="modal-content" >
+      <div class="modal-header">
+        <h5 class="modal-title" style="font-family:Fantasy">Projet(s)</h5>
+        
+      </div>
+      <div class="modal-body" id="modal-body" >
+    	<ul th:each="l:${listProjet}">
+    		<li th:each="p:${l.type}"><a th:style="'text-decoration:none; color:'+${p.couleur}+''" th:text="${l.nomProjet}" th:href="@{detailsProjet(idProjet=${l.idProjet}, nomProjet=${l.nomProjet})}" ></a></li>
+    	</ul>
+      </div>
+ 
+      <div class="modal-footer">
+       
+        <button type="button" class="btn btn-info" data-bs-dismiss="modal">Fermer</button>
+         
+      </div>
+    </div>
+  </div>
 </div>
 </div>
-
+</div>
+		
 </body>
 </html>
