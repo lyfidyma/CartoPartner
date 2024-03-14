@@ -1,9 +1,10 @@
 package com.carto.sn.entities;
 
-import java.util.Collection;
 import java.util.Set;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,17 +15,17 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Audited
 public class Projet {
 	
 	@Id
@@ -37,6 +38,7 @@ public class Projet {
 	private int dateFin;
 	@Lob
     @Column(length = Integer.MAX_VALUE)
+	@NotAudited
     private byte[] dataImage;
 	private String statut;
 	@JsonIgnore
@@ -49,6 +51,7 @@ public class Projet {
 	
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
+	@NotAudited
 	Set <Type> type; 
 	
 	@JsonIgnore
@@ -58,7 +61,7 @@ public class Projet {
 	@OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
 	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
 	@JsonIgnore
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(mappedBy="projet")
 	private Set <Utilisateur> utilisateur;
 
 	 public String generateBase64Image() {

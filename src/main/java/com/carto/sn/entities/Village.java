@@ -1,6 +1,7 @@
 package com.carto.sn.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.envers.Audited;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -15,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Audited
 public class Village {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

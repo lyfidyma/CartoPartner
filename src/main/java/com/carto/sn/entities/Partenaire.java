@@ -1,7 +1,9 @@
 package com.carto.sn.entities;
 
-import java.util.Collection;
 import java.util.Set;
+
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -15,13 +17,12 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Audited
 public class Partenaire {
 	
 	@Id
@@ -29,6 +30,7 @@ public class Partenaire {
 	private Long idPartenaire;
 	@NotEmpty(message="Renseigner le nom du partenaire")
 	private String nomPartenaire;
+	@NotAudited
 	private String adresse;
 	@JsonIgnore
 	@ManyToMany(mappedBy="partenaire")

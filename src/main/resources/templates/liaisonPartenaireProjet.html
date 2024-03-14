@@ -5,7 +5,15 @@
 <meta charset="UTF-8">
 <title>Ajouter Partenaire</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+<style>
+tr:hover {
+	background-color: coral;
+	cursor:pointer
+	}
+th {
+	background-color: lightgray;
+	}
+</style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -15,8 +23,8 @@
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <ol class="breadcrumb" >
     <li class="breadcrumb-item"><a th:href="@{/projet}" style="text-decoration:none">Projets</a></li>
-    <li class="breadcrumb-item"><a th:href="@{/displayChoixPartenaire(idProjet=${idProjet}, nomProjet=${nomProjet}, pageAAfficher=ChoixPartenaire, nomPartenaire='', pointFocal='', nomType='')}" style="text-decoration:none">Partenaire</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Liaison partenaire</li>
+    <li class="breadcrumb-item"><a th:href="@{/displayChoixPartenaire(nomProjet=${projetPartenaireDTO.nomProjet}, pageAAfficher=ChoixPartenaire, nomPartenaire='', pointFocal='', nomType='', flag='Succes')}" style="text-decoration:none">Partenaires</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Liaison partenaires</li>
   </ol>
 </nav>
     <div class="row">
@@ -31,50 +39,58 @@
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
 		<div class="col-md-10" style="margin:auto; "> 
      
-     <form  th:action="@{lierPartenaire}" method="post" th:object="${unProjet}" id="formulaire">
+     <form  th:action="@{lierPartenaire}" method="post"  id="formulaire" th:object="${projetPartenaireDTO}">
      <br/>
-     <div class="form-floating mb-3" th:object="${unProjet}" >
-     <select class=form-select id="projet" th:field="*{nomProjet}">
+     <div class="mb-3">
+     <input type="text" class=form-control id="projet" th:field="*{nomProjet}" style="background:#045675; color:white" readonly>
+    <!--  <select class=form-select id="projet" th:field="*{nomProjet}">
      <option value="" hidden="hidden">Sélectionner un projet</option>
      <option th:each="p:${listProjet}" th:text="${p.nomProjet}" th:value="${p.nomProjet}"></option>
-     </select>
-      <label>Projet</label>
+     </select> -->
+     
      </div>
-    
-	 <div class="form-floating mb-3" th:object="${unPartenaire}">
-     <select class=form-select id="partenaire" th:field="*{nomPartenaire}">
+   
+	 <div class="form-floating mb-3">
+	 
+     <select class=form-select id="partenaire">
      <option value="" hidden="hidden">Choisir un partenaire</option>
      <option th:each="p:${listPartenaire}" th:text="${p.nomPartenaire}" th:value="${p.nomPartenaire}"></option>
      </select>
      <label>Partenaire de mise en oeuvre</label>
-     </div>
+      </div>
+     
 	
 	 <div class="row">    
 	 <div class="col-md-6">
-	 <div class="form-floating" th:object="${uneRegion}">
-     <select class=form-select id="region" th:field="*{nomRegion}" onchange="getDepartement()">
+	 <div class="form-floating">
+	 
+     <select class=form-select id="region" onchange="getDepartement()">
      <option value="" hidden="hidden">Région</option>
      <option th:each="p:${listRegion}" th:text="${p.nomRegion}" th:value="${p.nomRegion}"></option>
      </select>
      <label>Région</label>
+      
      </div>
      </div>
      <div class="col-md-6">
-     <div class=" form-floating" th:object="${unDepartement}">
-     <select class=form-select id="departement" th:field="*{nomDepartement}" onchange="getCommune()">
+     <div class=" form-floating">
+      
+     <select class=form-select id="departement" onchange="getCommune()">
      <option value="" hidden="hidden">Département</option>
      </select>
-      <label>Département</label>
+     <label>Département</label>
+   
      </div>
-      </div>
+     </div>
      </div>
      <br/>
      <span style="color:red">[[${messageErreur}]]</span>
      <div class="row" id="idRowCommuneVillage">    
-	<!--  Espace réservé à l'affichage de Commune(s) et village(s)-->
+	 <!--  Espace réservé à l'affichage de Commune(s) et village(s)-->
      </div>
     
-     <br></br>
+    <!--  <br></br> -->
+    <br/>
        <h6 style="color:blue">Partenaire local</h6>
        <hr/>
        <div class="row">
@@ -85,16 +101,16 @@
 	<a type="button"  id="deleteField" style="cursor:pointer" ><i style="width:5px; height:5px; cursor:pointer; color:red; text-align:right" class="fa fa-minus" aria-hidden="true"></i></a>
 	</div>
 </div>
-       <div class=" form-floating mb-3" th:object="${unPartenaireLocal}" id="divPartenaireLocal">
-     <input type=text class = "form-control" id="idPartenaireLocal"  list="list-partenaireLocal" th:field="*{nomPartenaireLocal}" placeholder="Partenaire local"/>
+     <div class="form-floating mb-3" id="divPartenaireLocal">
+     <input type=text class = "form-control" id="idPartenaireLocal"  list="list-partenaireLocal" name="nomPartenaireLocal" placeholder="Partenaire local"/>
       <datalist id="list-partenaireLocal">
 	 	<option th:each="p:${listPartenaireLocal}" th:value="${p.nomPartenaireLocal}" th:text="${p.nomPartenaireLocal}"></option>
 		</datalist>
-      <label>Partenaire local</label>
-      <br/>
+      <label id="labelForPartenaireLocal">Partenaire local</label>
+     
      </div>
    	<div id="divAjoutPartenaire">
-   		<table id="tableauAjoutPartenaire" style="width:100%;font-size:9px" border="1">
+   		<table hidden="hidden" id="tableauAjoutPartenaire" style="width:100%;font-size:9px" border="1">
    		<thead>
    			<tr>
    				<th>Projet</th>
@@ -143,23 +159,25 @@
     </div>
   </div>   
 <script th:inline="javascript">
-      
+		
      function getCommune(){
+    	 
     	 document.getElementById('forCommune').innerHTML = null;
     	
     	 var modal = new bootstrap.Modal(document.getElementById('modalCommune'), {
    		  keyboard: false
    		})
-    	
+    	 var partenaire = $("#partenaire").val();
+    	 var nomRegion=$("#region").val();
     	 var nomDepartement = $("#departement").val();
-     	 
+    	 /*  Rappatriement de commune(s) suivant le département */
     	 $.get("/getCommune", {nomDepartement:nomDepartement}, function (data) {  
 	 		  if(!data){
 	 			 console.log("Aucune donnée trouvée");
 	 		  }else {
 	 			 $.each(data, function (key, value) {	
 	 			     document.getElementById('forCommune').innerHTML+= '<label><input type="checkbox" id="checkboxCommune" name="checkboxCommune" value="'+value['nomCommune']+'" style="width:20px; height:20px"/>&nbsp;&nbsp;'+value['nomCommune']+'</label><br/>'; 
-	 			     document.getElementById('idRowCommuneVillage').innerHTML+= '<input type="hidden" id="departement" name="nomDepartement" value="'+nomDepartement+'"/>'; 
+	 			    /*  document.getElementById('idRowCommuneVillage').innerHTML+= '<input type="hidden" id="departement" name="nomDepartement" value="'+nomDepartement+'"/>';  */
 	 			 });
 	 			
 	 		  }
@@ -168,15 +186,20 @@
 	 			document.getElementById('buttonAjouter').removeEventListener('click', function(){	
 	 			modal.hide();
 	 		});
+	 			/*  Ajout de la ou les commune(s) , village(s), latitude(s) et longitude(s) à l'interface*/
 				 const onClick = () => {
     	    					var sbox = Array.from( document.getElementsByName( "checkboxCommune" ) );
     	    					
     	    			 		for(var i = 0; i < sbox.length; i++){
-    	    			 			if(sbox[i].checked){		    	    					 
-		    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-2" ><div class="form-floating mb-3"><input type="text" class="form-control"  id="longitude" name="longitude" placeholder="longitude"/><label>longitude</label></div></div><br></br>'); 
-		    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-2" ><div class="form-floating mb-3"><input type="text" class="form-control"  id="latitude" name="latitude" placeholder="latitude"/><label>latitude</label></div></div><br></br>'); 
-		    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-4" ><div class="form-floating mb-3"><input type="text" class="form-control"  id="village" name="nomVillage" placeholder="Village"/><label>Village</label></div></div><br></br>'); 
-		    	    					 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("afterbegin", '<div class="col-md-4" ><div class="form-floating mb-3"><input type="text" class="form-control"  id="commune" name="nomCommune" value='+sbox[i].value+' placeholder="Commune"/><label>Commune</label></div></div><br></br>');  
+    	    			 			if(sbox[i].checked){		
+    	    			 				 
+    	    			 				 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("beforeend", '<div class="col-md-4" id="idDivForCommune"><div class="form-floating mb-3"><input type="text" class="form-control"  id="commune" name="nomCommune" value='+sbox[i].value+' placeholder="Commune"/><label id="labelForCommune">Commune</label></div></div>');  
+    	    			 				 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("beforeend", '<div class="col-md-4" id="idDivForVillage"><div class="form-floating mb-3"><input type="text" class="form-control"  id="village" name="nomVillage" placeholder="Village"/><label id="labelForVillage">Village</label></div></div>'); 
+    	    			 				 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("beforeend", '<div class="col-md-2" id="idDivForLatitude"><div class="form-floating mb-3"><input type="text" class="form-control"  id="latitude" name="latitude" placeholder="latitude"/><label id="labelForLatitude">latitude</label ></div></div>'); 
+    	    			 				 document.getElementById('idRowCommuneVillage').insertAdjacentHTML("beforeend", '<div class="col-md-2" id="idDivForLongitude"><div class="form-floating mb-3"><input type="text" class="form-control"  id="longitude" name="longitude" placeholder="longitude"/><label id="labelForLongitude">longitude</label></div></div>'); 
+    	    			 				 document.getElementById('idRowCommuneVillage').innerHTML+= '<input style="display:none" id="departement" name="nomDepartement" value="'+nomDepartement+'"/>'; 
+		    	    					 document.getElementById('idRowCommuneVillage').innerHTML+= '<input style="display:none" id="nomRegion" name="nomRegion" value="'+nomRegion+'"/>'; 		    	    					  
+		    	    					 document.getElementById('idRowCommuneVillage').innerHTML+= '<input style="display:none" id="partenaire" name="nomPartenaire" value="'+partenaire+'"/>'; 		    	   
     	    			 			}
     	    			 			
     	    			 	}
@@ -188,16 +211,15 @@
 				 document.getElementById('buttonAjouter').addEventListener('click', onClick);  		
     	 });		 
      }
-  
+     /*  Rappatriement de département(s) suivant la région */
      function getDepartement(){
-    	
+    
     	 var select = document.getElementById('departement');
     	 var length = select.options.length;
     	 for (i = length-1; i >= 1; i--) {
     	   select.options[i] = null;
     	 }
-    	var nomRegion=$("#region").val();
-     	
+    	 var nomRegion=$("#region").val();
     	if(nomRegion!=null){
     	 $.get("/getDepartement", {nomRegion:nomRegion}, function (data) {    		
 	 		  if(!data){
@@ -211,32 +233,27 @@
 	 				sel.add(opt);
 	             });
 	 			 
-	 			document.getElementById('idRowCommuneVillage').innerHTML+= '<input type="hidden" id="nomRegion" name="nomRegion" value="'+nomRegion+'"/>'; 
 	 		  }
 	  }); 
-    	}
-    	
- 		
+    	}		
      }
-    	   
-     </script>
-   <script type="text/javascript">
+ /*  Ajout d'un partenaire local */
 document.getElementById('addField').addEventListener('click', function() {
-			
-	let rowForAdd = '<div class=" form-floating mb-3" id="divPartenaireLocal" name="partenaireLocal"><input type="text" class = "form-control" id="idPartenaireLocal"  list="list-partenaireLocal" name="nomPartenaireLocal" placeholder="Partenaire local"/><datalist id="list-partenaireLocal"><option th:each="p:${listPartenaireLocal}" th:value="${p.nomPartenaireLocal}" th:text="${p.nomPartenaireLocal}"></option></datalist><label>Partenaire local</label></div>';
-	document.getElementById('divPartenaireLocal').insertAdjacentHTML("beforeend", rowForAdd)	;
+	let rowForAdd = '<div class="form-floating mb-3" id="divPartenaireLocal" name="partenaireLocal"><input type="text" class = "form-control" id="idPartenaireLocal"  list="list-partenaireLocal" name="nomPartenaireLocal" placeholder="Partenaire local"/><datalist id="list-partenaireLocal"><option th:each="p:${listPartenaireLocal}" th:value="${p.nomPartenaireLocal}" th:text="${p.nomPartenaireLocal}"></option></datalist><label id="labelForPartenaireLocal">Partenaire local</label></div>';
+	document.getElementById('divPartenaireLocal').insertAdjacentHTML("beforeend", rowForAdd);
 		});
-
+		
+/* Suppression d'un partenaire local */
 document.getElementById('deleteField').addEventListener('click', function() {
 	 var div = document.getElementById('divPartenaireLocal');
 	 var child;
 	 var i = div.childNodes.length - 1;
 	 child = div.childNodes[i--];
-	div.removeChild(child);
+	 div.removeChild(child);
 })
 
+/*  Fonction appelée par le bouton "ajouter un autre partenaire" de la vue "liaisonPartenaireProjet" pour ajouter les éléments au tableau et les afficher */
 function ajouterPartenaire() {
-		
 	var reg = document.getElementsByName('nomRegion');		
 	var dep = document.getElementsByName('nomDepartement');
 	var com = document.getElementsByName('nomCommune');
@@ -245,59 +262,15 @@ function ajouterPartenaire() {
 	var lon = document.getElementsByName('longitude');
 	var partLocal = document.getElementsByName('nomPartenaireLocal');
 	var table = document.getElementById('tableauAjoutPartenaire');
-	
-	if(reg.length > 1){
-		
-		if(com.length > 0){
-	for(var i = 0; i<reg.length; i++){	
-		
-		var rowCount = table.rows.length;
-		var row = table.insertRow(rowCount);
-			
-		var cell1 = row.insertCell(0);
-		cell1.innerHTML = document.getElementById('projet').value;
-	
-		var cell2 = row.insertCell(1);
-		cell2.innerHTML = document.getElementById('partenaire').value;
-		
-		var cell3 = row.insertCell(2);
-		cell3.innerHTML = reg[i].value;
-		
-		var cell4 = row.insertCell(3);
-		cell4.innerHTML = dep[i].value;
-		
-		var cell5 = row.insertCell(4);
-		cell5.innerHTML = com[i].value;
-		
-		var cell6 = row.insertCell(5);
-		cell6.innerHTML = vil[i].value;
-		
-		var cell7 = row.insertCell(6);
-		cell7.innerHTML = lat[i].value;
-		
-		var cell8 = row.insertCell(7);
-		cell8.innerHTML = lon[i].value;
-		if(partLocal.length>1){
-			for(let j in partLocal){	
-				var cell9 = row.insertCell(8);
-				cell9.innerHTML = partLocal[j].value;
-				}
-			}else{
-				var cell9 = row.insertCell(8);
-				cell9.innerHTML = document.getElementById('idPartenaireLocal').value;
-			}
-		
-		
-}
-		}else{console.log("Aucune commune")}
-		}else{
-			
-			if(partLocal.length>1){
+	if(com.length==0){
+		console.log("Aucune commune")
+	}else{
+	for(var r = 0; r<reg.length; r++){
+		if(com[r].type == 'text'){
 				
-				for(let j in partLocal){
 			var rowCount = table.rows.length;
 			var row = table.insertRow(rowCount);
-				
+			
 			var cell1 = row.insertCell(0);
 			cell1.innerHTML = document.getElementById('projet').value;
 		
@@ -305,69 +278,94 @@ function ajouterPartenaire() {
 			cell2.innerHTML = document.getElementById('partenaire').value;
 			
 			var cell3 = row.insertCell(2);
-			cell3.innerHTML = document.getElementById('region').value;
+			cell3.innerHTML = reg[r].value;
 			
 			var cell4 = row.insertCell(3);
-			cell4.innerHTML = document.getElementById('departement').value;
+			cell4.innerHTML = dep[r].value;
 			
 			var cell5 = row.insertCell(4);
-			cell5.innerHTML = document.getElementById('commune').value;
+			cell5.innerHTML = com[r].value;
 			
 			var cell6 = row.insertCell(5);
-			cell6.innerHTML = document.getElementById('village').value;
+			cell6.innerHTML = vil[r].value;
 			
 			var cell7 = row.insertCell(6);
-			cell7.innerHTML = document.getElementById('latitude').value;
+			cell7.innerHTML = lat[r].value;
 			
 			var cell8 = row.insertCell(7);
-			cell8.innerHTML = document.getElementById('longitude').value;
-				
-			var cell9 = row.insertCell(8);
-			cell9.innerHTML = partLocal[j].value;
-			}
-				}else{
-					var rowCount = table.rows.length;
-					var row = table.insertRow(rowCount);
-						
-					var cell1 = row.insertCell(0);
-					cell1.innerHTML = document.getElementById('projet').value;
-				
-					var cell2 = row.insertCell(1);
-					cell2.innerHTML = document.getElementById('partenaire').value;
-					
-					var cell3 = row.insertCell(2);
-					cell3.innerHTML = document.getElementById('region').value;
-					
-					var cell4 = row.insertCell(3);
-					cell4.innerHTML = document.getElementById('departement').value;
-					
-					var cell5 = row.insertCell(4);
-					cell5.innerHTML = document.getElementById('commune').value;
-					
-					var cell6 = row.insertCell(5);
-					cell6.innerHTML = document.getElementById('village').value;
-					
-					var cell7 = row.insertCell(6);
-					cell7.innerHTML = document.getElementById('latitude').value;
-					
-					var cell8 = row.insertCell(7);
-					cell8.innerHTML = document.getElementById('longitude').value;
-					
+			cell8.innerHTML = lon[r].value;
+			
+			for(var p = 0; p < partLocal.length; p++){
+				if(partLocal[p].type == 'text'){
 					var cell9 = row.insertCell(8);
-					cell9.innerHTML = document.getElementById('idPartenaireLocal').value;
-				}
+					cell9.innerHTML = partLocal[p].value;
+				}							
+			}
 		}
-	
-	
+	}
 
-		
-		
+	/*  Réinitialisation de la vue après l'ajout d'un nouveau partenaire */
+	$('select').prop('selectedIndex', 0);
+	var nombreCommune = document.getElementsByName('nomCommune');
+	var nombreVillage = document.getElementsByName('nomVillage');
+	var nombreLatitude = document.getElementsByName('latitude');
+	var nombreLongitude = document.getElementsByName('longitude');
+	for(var a=0; a< nombreCommune.length; a++){
+		if(nombreCommune[a].type == 'text'){
+						
+			nombreCommune[a].style.display = "none";
+			nombreVillage[a].style.display = "none";
+			nombreLatitude[a].style.display = "none";
+			nombreLongitude[a].style.display = "none";
+			
+			nombreCommune[a].type = 'hidden';
+			nombreVillage[a].type = 'hidden';
+			nombreLatitude[a].type = 'hidden';
+			nombreLongitude[a].type = 'hidden';
+			
+			document.getElementById('labelForCommune').remove();
+			document.getElementById('labelForVillage').remove();
+			document.getElementById('labelForLatitude').remove();
+			document.getElementById('labelForLongitude').remove();
+			 for(var b = 0; b<4; b++){
+				if(document.getElementById('idDivForCommune').style.display == 'block'){
+					document.getElementById('idDivForCommune').style.display = "none";
+				}
+				if(document.getElementById('idDivForVillage').style.display == 'block'){
+					document.getElementById('idDivForVillage').style.display = "none";
+				}
+				if(document.getElementById('idDivForLatitude').style.display == 'block'){
+					document.getElementById('idDivForLatitude').style.display = "none";
+				}
+				if(document.getElementById('idDivForLongitude').style.display == 'block'){
+					document.getElementById('idDivForLongitude').style.display = "none";
+				}
+			} 
+			 
+		}
+	}
+	
+	var nombrePartenaireLocal = document.getElementsByName('nomPartenaireLocal');
+	for(var i = 0; i < nombrePartenaireLocal.length; i++){
+		if(nombrePartenaireLocal[i].type == 'text'){
+			nombrePartenaireLocal[i].type = 'hidden';
+			nombrePartenaireLocal[i].style.display = "none";
+			document.getElementById('labelForPartenaireLocal').remove();
+			document.getElementById('list-partenaireLocal').remove();
+		}
+	}
+	
+		let rowForAdd = '<div class=" form-floating mb-3" id="divPartenaireLocal" name="partenaireLocal"><input type="text" class = "form-control" id="idPartenaireLocal"  list="list-partenaireLocal" name="nomPartenaireLocal" placeholder="Partenaire local"/><datalist id="list-partenaireLocal"><option th:each="p:${listPartenaireLocal}" th:value="${p.nomPartenaireLocal}" th:text="${p.nomPartenaireLocal}"></option></datalist><label id="labelForPartenaireLocal">Partenaire local</label></div>';
+		document.getElementById('divPartenaireLocal').insertAdjacentHTML("beforeend", rowForAdd);
+		let tableau = document.getElementById("tableauAjoutPartenaire");
+		tableau.removeAttribute("hidden"); //Affichage du tableau des partenaires par la suppression de l'attribut hidden
+	}
 }
 	</script> 
      </div>
-        	</div>
-        	</div>
-        	</div>
+    	</div>
+    	</div>
+    	</div>
  
 </body>
 </html>

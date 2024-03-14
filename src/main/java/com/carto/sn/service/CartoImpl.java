@@ -9,8 +9,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,6 +49,8 @@ import com.carto.sn.entities.Type;
 import com.carto.sn.entities.Utilisateur;
 import com.carto.sn.entities.Village;
 
+import jakarta.persistence.EntityManagerFactory;
+
 @Service
 @Transactional
 public class CartoImpl implements ICarto{
@@ -78,6 +83,8 @@ public class CartoImpl implements ICarto{
 	private PartenaireLocalRepository partenaireLocalRepository;
 	@Autowired
 	PasswordEncoder passwordEncoder;
+	@Autowired
+	private EntityManagerFactory factory;
 
 	@Override
 	public Region ajoutRegion(String nomDepartement, String nomRegion, String nomPays, String nomCommune) {
@@ -511,9 +518,10 @@ public class CartoImpl implements ICarto{
 		Utilisateur utilisateur = utilisateurRepository.findById(idUtilisateur).orElse(null);
 		Projet projet = projetRepository.findByNomProjet(nomProjet);
 	
-		
-			projet.getUtilisateur().add(utilisateur);
-			projetRepository.save(projet);
+		utilisateur.getProjet().add(projet);
+		utilisateurRepository.save(utilisateur);
+			//projet.getUtilisateur().add(utilisateur);
+			//projetRepository.save(projet);
 			return projet;
 		
 		
@@ -579,6 +587,17 @@ public class CartoImpl implements ICarto{
 		projet.setStatut(statut);
 		projetRepository.save(projet);
 		return projet;
+	}
+
+	@Override
+	public List<Utilisateur> getAllOperationsOfUser(String login) {
+		AuditReader reader = AuditReaderFactory.get(factory.createEntityManager());
+		AuditQuery queryOperationsOfUser = reader.createQuery()
+				.forRevisionsOfEntity(Utilisateur.class, true, false)
+				.add(AuditEntity.revisionProperty("userModificateur").eq(login));
+		List <Utilisateur> listOperationsOfUser = queryOperationsOfUser.getResultList();
+		return listOperationsOfUser;
+		
 	}	
 
 

@@ -48,6 +48,7 @@ table td:hover{
 							</td>
 							</th:block>
 							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
+							<a type="button" title="Opérations" th:href="@{operations(login=${u.login})}"><i class="fa fa-tasks" style="color:gray; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
 							<a type="button" title="Ajouter un projet" th:onclick="showModalAjouterProjet([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="fas fa-exchange-alt" style="color:blue; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
 							<a type="button" title="Editer" th:onclick="showModalModifier([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
 							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>

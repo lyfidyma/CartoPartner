@@ -29,10 +29,10 @@ input[type='radio']:hover {
 <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a th:href="@{/projet}" style="text-decoration:none">Projets</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Partenaire</li>
+    <li class="breadcrumb-item active" aria-current="page">Partenaires</li>
   </ol>
 </nav>
-    <div class="row">
+    <!-- <div class="row">
       <div class="col-md-11">
        <h5>Projets - Partenaires</h5>
         </div>
@@ -40,7 +40,7 @@ input[type='radio']:hover {
   		 &ensp;
   		 
   		 <hr/>
-  </div>  
+  </div>  --> 
      <br></br>				
  						 <div class="row">
   						<div class="col-md-5">
@@ -54,10 +54,10 @@ input[type='radio']:hover {
 						<input type="hidden" name="pageAAfficher" value="ChoixPartenaire"/>
 						
 						<input type="hidden" th:field="*{pointFocal}"/>
-						<div th:object="${unPartenaire}">
+						<!-- <div th:object="${unPartenaire}">
 						<input type="hidden" th:field="*{nomPartenaire}"/>
-						</div>
-						<button id="boutonChanger" type="submit" class="btn btn-warning"  >Changer</button>
+						</div> -->
+						<button id="boutonChanger" type="submit" class="btn btn-warning">Changer</button>
 						<script type="text/javascript" th:if="${flag}">  
 
 $(document).ready(function(){

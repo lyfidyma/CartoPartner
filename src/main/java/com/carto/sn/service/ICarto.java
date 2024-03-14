@@ -84,5 +84,6 @@ public interface ICarto {
 	public Type findByIdType(Long idType);
 	public Categorie findByIdCategorie(Long idCategorie);
 	public Projet cloturerProjet(Long idProjet);
+	public List<Utilisateur> getAllOperationsOfUser(String login);
 	
 }

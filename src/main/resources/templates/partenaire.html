@@ -60,7 +60,7 @@ table td:hover{
 							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);width:40%" ><a type="button" th:onclick="showModalAjoutPartenaireLocal([[${p.idPartenaire}]], [[${p.nomPartenaire}]])"><i style="width:5px; height:5px; cursor:pointer; text-align:right" class="fa fa-plus" aria-hidden="true"></i></a>
 							<th:block th:each="c:${p.partenaireLocal}">
 							<ul>
-							<li th:text="${c.nomPartenaireLocal}"></li>
+								<li th:text="${c.nomPartenaireLocal}"></li>
 							</ul>
 							</th:block>
 							</td>
@@ -152,17 +152,17 @@ function showModalAjoutPartenaireLocal(idPartenaire, nomPartenaire){
 <div class="modal fade" id="ajoutPartenaireLocal" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md" role="document">
     <div class="modal-content">
-      <div class="modal-header" style="height:20px;">
+      <!-- <div class="modal-header" style="height:20px;">
    
        <h6>Ajouter un partenaire local</h6>  
          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+      </div> -->
       <div class="modal-body" id="modal-body-ajoutPartenaireLocal">
       <b><label>Partenaire de mise en oeuvre :</label></b>
       <br/>
       <span  id="nomPartenaire"></span>
       <br></br>
-      <input type=text class="form-control" id="nomPartenaireLocal" list="list-partenaireLocal" name="nomPartenaireLocal" placeholder="Partenaire communautaire"/>
+      <input type=text class="form-control" id="nomPartenaireLocal" list="list-partenaireLocal" name="nomPartenaireLocal" placeholder="Ajouter un partenaire communautaire"/>
       <datalist id="list-partenaireLocal">
       <option th:each="p:${listPartenaireLocal}" th:value="${p.nomPartenaireLocal}" th:text="${p.nomPartenaireLocal}"></option>
       </datalist>

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.carto.sn.dto.ProjetPartenaireDTO;
 import com.carto.sn.entities.Categorie;
 import com.carto.sn.entities.Commune;
 import com.carto.sn.entities.Departement;
@@ -39,19 +40,15 @@ import com.carto.sn.service.ICarto;
 
 import jakarta.validation.Valid;
 
-
 @Controller
+@PreAuthorize("isAuthenticated()")
 public class CartoController {
 	
 	@Autowired
 	private ICarto iCarto;
 	@Autowired
     private GeocodingService geocodingService;
-	
-	@RequestMapping("test")
-	public String test() {
-		return "testLiaison";
-	}
+		
 	@RequestMapping("/index")
 	public String index(@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("unType") Type unType,
 			@ModelAttribute("unPartenaire") Partenaire unPartenaire, 
@@ -271,8 +268,10 @@ public class CartoController {
 		model.addAttribute("listProjetPoinFocal", listProjetPoinFocal);	
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listRegion", listRegion);
-			if(nomProjet!=null)
-			model.addAttribute("nomProjet", nomProjet);
+			if(nomProjet!=null) {
+				model.addAttribute("nomProjet", nomProjet);
+				model.addAttribute("flag", flag);
+			}
 			//if(idProjet==null)
 				//idProjet=iCarto.findOneIdByProjetName(nomProjet).get(0).getIdProjet();
 			if(nomPartenaire!=null)
@@ -1035,10 +1034,7 @@ public class CartoController {
 	}
 	
 	@RequestMapping("liaisonPartenaireProjet")
-	public String projetPartenaireRegion( @ModelAttribute ("unProjet") Projet unProjet, 
-			@ModelAttribute ("unPartenaire") Partenaire unPartenaire, @ModelAttribute ("uneRegion") Region uneRegion, 
-			@ModelAttribute ("unDepartement") Departement unDepartement, @ModelAttribute ("uneCommune") Commune uneCommune,
-			@ModelAttribute ("unVillage") Village unVillage	, @ModelAttribute ("unPartenaireLocal") PartenaireLocal unPartenaireLocal, Model model) {
+	public String projetPartenaireRegionLiaison( @ModelAttribute ("projetPartenaireDTO") ProjetPartenaireDTO projetPartenaireDTO, Model model) {
 		List<Projet> listProjet = iCarto.tousLesProjets();
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
@@ -1050,19 +1046,12 @@ public class CartoController {
 		model.addAttribute("listDepartement", listDepartement);
 		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
 		
-		
-		
+			
 		return "liaisonPartenaireProjet";
 	}
 	
 	@RequestMapping("lierPartenaire")
-	public String projetPartenaireRegion( @ModelAttribute ("unProjet") Projet unProjet, 
-			@ModelAttribute ("unPartenaire") Partenaire unPartenaire, @ModelAttribute ("uneRegion") Region uneRegion,
-			@ModelAttribute ("unVillage") Village unVillage,
-			@ModelAttribute ("unDepartement") Departement unDepartement, @ModelAttribute ("uneCommune") Commune uneCommune,
-			@ModelAttribute ("unPartenaireLocal") PartenaireLocal unPartenaireLocal,
-			String nomProjet, Long idProjet, String nomRegion[],  String nomPartenaire, String nomDepartement[], String nomCommune[],
-			String nomVillage[], String latitude[], String longitude[], String nomPartenaireLocal[], Model model, RedirectAttributes ra) {
+	public String projetPartenaireRegion(@ModelAttribute ProjetPartenaireDTO projetPartenaireDTO, Model model) {
 		
 		List<Projet> listProjet = iCarto.tousLesProjets();
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
@@ -1070,47 +1059,34 @@ public class CartoController {
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listRegion", listRegion);
-		
-		if(nomCommune==null) {
-			model.addAttribute("messageErreur", "Renseigner la commune");
-			return "liaisonPartenaireProjet";
-		}		
-		
-		  if(nomCommune.length>=1){ 
-			  if(nomPartenaireLocal.length==0) {
-				 
-					  for(int i=0; i < nomCommune.length; i++) { 
-						  if(nomVillage.length==0) {
-							  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
-								  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
-								  for(int b=0; b<nomDepartement.length; b++) {
-									  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
-										  for(int c=0; c<nomRegion.length; c++) {
-										  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-											  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
-														nomCommune[i], null, null, null, null);		
-											  
-										  }
-										  }
-										  
-									  }
-									  
-								  }
-								  
-							  }
-							  
 	
-							 
-						  }else {
-							  if(latitude.length==0 || longitude.length==0) {
+			if(projetPartenaireDTO.getNomCommune() == null) {
+				model.addAttribute("messageErreur", "Renseigner la commune");
+				return "liaisonPartenaireProjet";
+		}
+			String nomProjet = projetPartenaireDTO.getNomProjet();
+			String[] nomCommune = projetPartenaireDTO.getNomCommune();
+			String[] nomPartenaire = projetPartenaireDTO.getNomPartenaire();
+			String[] nomRegion = projetPartenaireDTO.getNomRegion();
+			String[] nomDepartement = projetPartenaireDTO.getNomDepartement();
+			String[] nomVillage = projetPartenaireDTO.getNomVillage();
+			String[] latitude = projetPartenaireDTO.getLatitude();
+			String[] longitude = projetPartenaireDTO.getLongitude();
+			String[] nomPartenaireLocal = projetPartenaireDTO.getNomPartenaireLocal();
+
+			  if(nomCommune.length>=1){ 
+				  if(nomPartenaireLocal.length==0) {
+					 //for(int p=0; p < nomPartenaire.length; p++) { 
+						  for(int i=0; i < nomCommune.length; i++) { 
+							  if(nomVillage.length==0) {
 								  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
 									  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
 									  for(int b=0; b<nomDepartement.length; b++) {
 										  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
 											  for(int c=0; c<nomRegion.length; c++) {
 											  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
-															nomCommune[i], nomVillage[i], null, null, null);		
+												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c], nomRegion[c], nomDepartement[b],
+															nomCommune[i], null, null, null, null);		
 												  
 											  }
 											  }
@@ -1121,66 +1097,68 @@ public class CartoController {
 									  
 								  }
 								  
-	
+		
 								 
 							  }else {
-								  
-								  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
-									  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
-									  for(int b=0; b<nomDepartement.length; b++) {
-										  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
-											  for(int c=0; c<nomRegion.length; c++) {
-											  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
-															nomCommune[i], nomVillage[i], latitude[i], longitude[i], null);	
+								  if(latitude.length==0 || longitude.length==0) {
+									  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+										  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+										  for(int b=0; b<nomDepartement.length; b++) {
+											  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+												  for(int c=0; c<nomRegion.length; c++) {
+												  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+													  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c], nomRegion[c], nomDepartement[b],
+																nomCommune[i], nomVillage[i], null, null, null);		
+													  
+												  }
+												  }
 												  
 											  }
+											  
+										  }
+										  
+									  }
+									  
+		
+									 
+								  }else {
+									  
+									  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+										  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+										  for(int b=0; b<nomDepartement.length; b++) {
+											  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+												  for(int c=0; c<nomRegion.length; c++) {
+												  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+													  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c], nomRegion[c], nomDepartement[b],
+																nomCommune[i], nomVillage[i], latitude[i], longitude[i], null);	
+													  
+												  }
+												  }
+												  
 											  }
 											  
 										  }
 										  
 									  }
 									  
-								  }
-								  
-								  
-							  }
-						  }
-				  }
-					  
-				  }else  {
-					  
-					  for(int i=0; i < nomCommune.length; i++) { 
-						  for(int j=0; j < nomPartenaireLocal.length; j++) {
-						  if(nomVillage.length==0) {
-							  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
-								  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
-								  for(int b=0; b<nomDepartement.length; b++) {
-									  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
-										  for(int c=0; c<nomRegion.length; c++) {
-										  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-											  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
-														nomCommune[i], null, null, null, nomPartenaireLocal[j]);	
-											  
-										  }
-										  }
-										  
-									  }
 									  
 								  }
-								  
 							  }
-							  
-						  }else {
-							  if(latitude.length==0 || longitude.length==0) {
+					  }
+						  
+					  }else  {
+						 
+						  for(int i=0; i < nomCommune.length; i++) { 
+							  for(int j=0; j < nomPartenaireLocal.length; j++) {
+							  if(nomVillage.length==0) {
 								  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
 									  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
 									  for(int b=0; b<nomDepartement.length; b++) {
 										  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
 											  for(int c=0; c<nomRegion.length; c++) {
 											  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
-															nomCommune[i], nomVillage[i], null, null, nomPartenaireLocal[j]);	
+												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c], nomRegion[c], nomDepartement[b],
+															nomCommune[i], null, null, null, nomPartenaireLocal[j]);	
 												  
 											  }
 											  }
@@ -1192,16 +1170,38 @@ public class CartoController {
 								  }
 								  
 							  }else {
-								  
-								  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
-									  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
-									  for(int b=0; b<nomDepartement.length; b++) {
-										  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
-											  for(int c=0; c<nomRegion.length; c++) {
-											  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-												  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion[c], nomDepartement[b],
-															nomCommune[i], nomVillage[i], latitude[i], longitude[i],nomPartenaireLocal[j]);	
+								  if(latitude.length==0 || longitude.length==0) {
+									  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+										  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+										  for(int b=0; b<nomDepartement.length; b++) {
+											  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+												  for(int c=0; c<nomRegion.length; c++) {
+												  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+													  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c], nomRegion[c], nomDepartement[b],
+																nomCommune[i], nomVillage[i], null, null, nomPartenaireLocal[j]);	
+													  
+												  }
+												  }
+												  
 											  }
+											  
+										  }
+										  
+									  }
+									  
+								  }else {
+									  
+									  if(iCarto.findByNomCommune(nomCommune[i])!=null) {
+										  Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+										  for(int b=0; b<nomDepartement.length; b++) {
+											  if(comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) { 
+												  for(int c=0; c<nomRegion.length; c++) {
+												  if(comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+													  iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c], nomRegion[c], nomDepartement[b],
+																nomCommune[i], nomVillage[i], latitude[i], longitude[i],nomPartenaireLocal[j]);	
+												  }
+												  }
+												  
 											  }
 											  
 										  }
@@ -1209,137 +1209,23 @@ public class CartoController {
 									  }
 									  
 								  }
-								  
 							  }
-						  }
-				  }
-					  
-				  }
-				  }			  
-		  }
-
-model.addAttribute("idProjet", idProjet);
-model.addAttribute("nomProjet", nomProjet);
-model.addAttribute("flag", "Succes");	
-model.addAttribute("pageAAfficher", "choixPartenaire");
-return "choixPartenaire";
+						}
+						  
+					}
+				}
+			}			  
+			  
+		Projet unProjet = iCarto.findByNomProjet(projetPartenaireDTO.getNomProjet());
 		
-		/*
-		 * if(nomCommune.length==1 && (nomPartenaireLocal.length==1)) {
-		 * if(nomVillage.length==0) {
-		 * 
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[0], null, null, null, nomPartenaireLocal[0]);
-		 * model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
-		 * nomProjet); model.addAttribute("flag", "Succes");
-		 * model.addAttribute("pageAAfficher", "choixPartenaire");
-		 * 
-		 * return "choixPartenaire"; }else { if(latitude.length==0 ||
-		 * longitude.length==0) { iCarto.ajoutPartenaireAuProjet(nomProjet,
-		 * nomPartenaire, nomRegion, nomDepartement, nomCommune[0], nomVillage[0],null,
-		 * null, nomPartenaireLocal[0]); model.addAttribute("idProjet", idProjet);
-		 * model.addAttribute("nomProjet", nomProjet); model.addAttribute("flag",
-		 * "Succes"); model.addAttribute("pageAAfficher", "choixPartenaire");
-		 * 
-		 * return "choixPartenaire";
-		 * 
-		 * } }
-		 * 
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[0], nomVillage[0],latitude[0], longitude[0],
-		 * nomPartenaireLocal[0]);
-		 * 
-		 * }
-		 * 
-		 * if(nomCommune.length==1 && nomPartenaireLocal.length>1){
-		 * if(nomVillage.length==0) { for(int i=0; i < nomPartenaireLocal.length; i++) {
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[0], null,null, null, nomPartenaireLocal[i]);
-		 * 
-		 * } model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
-		 * nomProjet); model.addAttribute("flag", "Succes");
-		 * model.addAttribute("pageAAfficher", "choixPartenaire"); return
-		 * "choixPartenaire"; }else { if(latitude.length==0 || longitude.length==0) {
-		 * for(int i=0; i < nomPartenaireLocal.length; i++) {
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[0], nomVillage[0],null, null,
-		 * nomPartenaireLocal[i]);
-		 * 
-		 * } model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
-		 * nomProjet); model.addAttribute("flag", "Succes");
-		 * model.addAttribute("pageAAfficher", "choixPartenaire"); return
-		 * "choixPartenaire"; } }
-		 * 
-		 * for(int i=0; i < nomPartenaireLocal.length; i++) {
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[0], nomVillage[0],latitude[0], longitude[0],
-		 * nomPartenaireLocal[i]);
-		 * 
-		 * }
-		 * 
-		 * }
-		 * 
-		 * 
-		 * if(nomCommune.length>1 && nomPartenaireLocal.length==1){
-		 * System.out.println(nomVillage.length);
-		 * 
-		 * for(int i=0; i < nomCommune.length; i++) { if(nomVillage[i].isEmpty()) {
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[i], null, null, null, nomPartenaireLocal[0]);
-		 * }else { if(latitude[i].isEmpty() || longitude[i].isEmpty()) {
-		 * 
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[i], nomVillage[i], null, null,
-		 * nomPartenaireLocal[0]);
-		 * 
-		 * } }
-		 * 
-		 * } model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
-		 * nomProjet); model.addAttribute("flag", "Succes");
-		 * model.addAttribute("pageAAfficher", "choixPartenaire");
-		 * System.out.println("ok2"); return "choixPartenaire";
-		 * 
-		 * 
-		 * 
-		 * for(int i=0; i < nomCommune.length; i++) {
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[i], nomVillage[i],latitude[i], longitude[i],
-		 * nomPartenaireLocal[0]); } System.out.println("ok3"); }
-		 * 
-		 * 
-		 * if(nomCommune.length>1 && nomPartenaireLocal.length>1){
-		 * if(nomVillage.length==0) { for(int i=0; i < nomCommune.length; i++) { for(int
-		 * j=0; j < nomPartenaireLocal.length; j++) {
-		 * iCarto.ajoutPartenaireAuProjet(nomProjet, nomPartenaire, nomRegion,
-		 * nomDepartement, nomCommune[i], null, null, null, nomPartenaireLocal[j]); } }
-		 * model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
-		 * nomProjet); model.addAttribute("flag", "Succes");
-		 * model.addAttribute("pageAAfficher", "choixPartenaire"); return
-		 * "choixPartenaire"; }else { if(latitude.length==0 || longitude.length==0) {
-		 * for(int i=0; i < nomCommune.length; i++) { for(int j=0; j <
-		 * nomPartenaireLocal.length; j++) { iCarto.ajoutPartenaireAuProjet(nomProjet,
-		 * nomPartenaire, nomRegion, nomDepartement, nomCommune[i], nomVillage[i], null,
-		 * null, nomPartenaireLocal[j]); } } model.addAttribute("idProjet", idProjet);
-		 * model.addAttribute("nomProjet", nomProjet); model.addAttribute("flag",
-		 * "Succes"); model.addAttribute("pageAAfficher", "choixPartenaire"); return
-		 * "choixPartenaire"; }
-		 * 
-		 * }
-		 * 
-		 * for(int i=0; i < nomCommune.length; i++) { for(int j=0; j <
-		 * nomPartenaireLocal.length; j++) { iCarto.ajoutPartenaireAuProjet(nomProjet,
-		 * nomPartenaire, nomRegion, nomDepartement, nomCommune[i],
-		 * nomVillage[i],latitude[i], longitude[i], nomPartenaireLocal[j]); } }
-		 * 
-		 * }
-		 * 
-		 * 
-		 * 
-		 * model.addAttribute("idProjet", idProjet); model.addAttribute("nomProjet",
-		 * nomProjet); model.addAttribute("flag", "Succes");
-		 * model.addAttribute("pageAAfficher", "choixPartenaire"); return
-		 * "choixPartenaire";
-		 */
+		model.addAttribute("idProjet", projetPartenaireDTO.getNomProjet());
+		model.addAttribute("nomProjet", projetPartenaireDTO.getNomProjet());
+		model.addAttribute("flag", "Succes");	
+		model.addAttribute("pageAAfficher", "choixPartenaire");
+		model.addAttribute("unProjet", unProjet);
+		return "choixPartenaire";
+		
+		
 	}
 	
 	@RequestMapping("categorie")
@@ -1486,5 +1372,14 @@ return "choixPartenaire";
 	public String cloturerProjet(Long idProjet) {
 		iCarto.cloturerProjet(idProjet);
 		return "redirect:/detailsProjet?idProjet="+idProjet;
+	}
+	
+	@RequestMapping("operations")
+	public String UserOperations(Model model, String login) {
+		
+		List <Utilisateur> userOperations = iCarto.getAllOperationsOfUser(login);
+		System.out.println(userOperations.get(0).getIdUtilisateur());
+		model.addAttribute("userOperations", userOperations);
+		return "userOperation";
 	}
 }
