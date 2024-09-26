@@ -1,5 +1,10 @@
 package com.carto.sn.service;
 
-public interface DepartementService {
+import java.util.List;
 
+import com.carto.sn.entities.Departement;
+
+public interface DepartementService {
+	public List<Departement> tousLesDepartements();
+	public List<Departement> findDepartementByNomRegion(String nomRegion);
 }

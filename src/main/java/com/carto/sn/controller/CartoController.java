@@ -41,6 +41,7 @@ import com.carto.sn.enums.EnumPrivilege;
 import com.carto.sn.enums.EnumProfil;
 import com.carto.sn.service.CategorieService;
 import com.carto.sn.service.CommuneService;
+import com.carto.sn.service.DepartementService;
 import com.carto.sn.service.GeocodingService;
 import com.carto.sn.service.ICarto;
 
@@ -56,6 +57,8 @@ public class CartoController {
 	private CategorieService categorieService;
 	@Autowired
 	private CommuneService communeService;
+	@Autowired
+	private DepartementService departementService;
 	@Autowired
 	private GeocodingService geocodingService;
 
@@ -305,7 +308,7 @@ public class CartoController {
 			@ModelAttribute("uneCommune") Commune uneCommune, @ModelAttribute("unVillage") Village unVillage,
 			@ModelAttribute("unPays") Pays unPays, Model model) {
 		List<Commune> listCommune = communeService.toutesLesCommunes();
-		List<Departement> listDepartement = iCarto.tousLesDepartements();
+		List<Departement> listDepartement = departementService.tousLesDepartements();
 		List<Village> listVillage = iCarto.tousLesVillages();
 
 		model.addAttribute("listVillage", listVillage);
@@ -724,7 +727,7 @@ public class CartoController {
 		 * ra.addFlashAttribute("libelleLocalisation", libelleRegion); return
 		 * "redirect:/localisation"; } }
 		 */
-		List<Departement> listDepartement = iCarto.tousLesDepartements();
+		List<Departement> listDepartement = departementService.tousLesDepartements();
 		ra.addFlashAttribute("listDepartement", listDepartement);
 
 		iCarto.ajoutRegion(nomDepartement, nomRegion, nomPays, nomCommune);
@@ -1071,7 +1074,7 @@ public class CartoController {
 		List<Projet> listProjet = iCarto.tousLesProjets();
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
-		List<Departement> listDepartement = iCarto.tousLesDepartements();
+		List<Departement> listDepartement = departementService.tousLesDepartements();
 		List<PartenaireLocal> listPartenaireLocal = iCarto.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listProjet", listProjet);
@@ -1290,11 +1293,11 @@ public class CartoController {
 	@ResponseBody
 	public Set<Departement> getDepartement(String nomRegion) {
 
-		if (iCarto.findDepartementByNomRegion(nomRegion) == null) {
+		if (departementService.findDepartementByNomRegion(nomRegion) == null) {
 			return null;
 		}
 		// Map<String, Object> object = new HashMap<>();
-		List<Departement> listDep = iCarto.findDepartementByNomRegion(nomRegion);
+		List<Departement> listDep = departementService.findDepartementByNomRegion(nomRegion);
 		// for(Departement d:listDep)
 		// object.put(d.getNomDepartement(), d.getRegion().getNomRegion());
 		// System.out.println(listDep);

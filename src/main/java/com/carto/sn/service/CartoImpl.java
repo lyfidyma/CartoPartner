@@ -361,10 +361,10 @@ public class CartoImpl implements ICarto{
 		return typeRepository.findAll();
 	}
 
-	@Override
-	public List<Departement> tousLesDepartements() {
-		return departementRepository.findAll();
-	}
+//	@Override
+//	public List<Departement> tousLesDepartements() {
+//		return departementRepository.findAll();
+//	}
 
 	@Override
 	public List<Pays> tousLesPays() {
@@ -474,10 +474,10 @@ public class CartoImpl implements ICarto{
 	 * categorieRepository.findByNomCategorie(nomCategorie); }
 	 */
 
-	@Override
-	public List<Departement> findDepartementByNomRegion(String nomRegion) {
-		return departementRepository.findDepartementByNomRegion(nomRegion);
-	}
+//	@Override
+//	public List<Departement> findDepartementByNomRegion(String nomRegion) {
+//		return departementRepository.findDepartementByNomRegion(nomRegion);
+//	}
 
 //	@Override
 //	public List<Commune> findCommuneByNomDepartement(String nomDepartement) {

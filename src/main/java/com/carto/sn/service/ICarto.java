@@ -55,7 +55,7 @@ public interface ICarto {
 	public Type ajoutType(String type, String couleur);
 	public void supprimerType(Long idType);
 	public List <Type> tousLesTypes();
-	public List<Departement> tousLesDepartements();
+//	public List<Departement> tousLesDepartements();
 	public List<Pays> tousLesPays();
 	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
 			String nomCommune, String nomVillage, String latitude, String longitude, String nomPartenaireLocal );
@@ -75,7 +75,7 @@ public interface ICarto {
 	 * ajoutCategorie(String nomCategorie); public Categorie
 	 * findByNomCategorie(String nomCategorie);
 	 */
-	public List<Departement> findDepartementByNomRegion(String nomRegion);
+//	public List<Departement> findDepartementByNomRegion(String nomRegion);
 //	public List<Commune> findCommuneByNomDepartement(String nomDepartement);
 	public List <Village> findVillageByNomCommune(String nomCommune);
 	public List<PartenaireLocal> tousLesPartenairesLocaux();
