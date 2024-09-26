@@ -44,6 +44,7 @@ import com.carto.sn.service.CommuneService;
 import com.carto.sn.service.DepartementService;
 import com.carto.sn.service.GeocodingService;
 import com.carto.sn.service.ICarto;
+import com.carto.sn.service.PartenaireLocalService;
 
 import jakarta.validation.Valid;
 
@@ -59,6 +60,8 @@ public class CartoController {
 	private CommuneService communeService;
 	@Autowired
 	private DepartementService departementService;
+	@Autowired
+	private PartenaireLocalService parteLocalService;
 	@Autowired
 	private GeocodingService geocodingService;
 
@@ -188,7 +191,7 @@ public class CartoController {
 	public String partenaire(Model model) {
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List<Region> listLocalisation = iCarto.toutesLesRegions();
-		List<PartenaireLocal> listPartenaireLocal = iCarto.tousLesPartenairesLocaux();
+		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listLocalisation", listLocalisation);
@@ -1075,7 +1078,7 @@ public class CartoController {
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		List<Departement> listDepartement = departementService.tousLesDepartements();
-		List<PartenaireLocal> listPartenaireLocal = iCarto.tousLesPartenairesLocaux();
+		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listRegion", listRegion);
@@ -1338,7 +1341,7 @@ public class CartoController {
 
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List<Region> listLocalisation = iCarto.toutesLesRegions();
-		List<PartenaireLocal> listPartenaireLocal = iCarto.tousLesPartenairesLocaux();
+		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listLocalisation", listLocalisation);
@@ -1362,7 +1365,7 @@ public class CartoController {
 			}
 		}
 
-		iCarto.ajoutPartenaireLocalAPartenaire(nomPartenaireLocal, idPartenaire);
+		parteLocalService.ajoutPartenaireLocalAPartenaire(nomPartenaireLocal, idPartenaire);
 
 		return "redirect:/partenaire";
 

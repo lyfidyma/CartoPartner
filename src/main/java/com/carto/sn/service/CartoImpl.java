@@ -489,29 +489,29 @@ public class CartoImpl implements ICarto{
 		return villageRepository.findVillageByNomCommune(nomCommune);
 	}
 
-	@Override
-	public List<PartenaireLocal> tousLesPartenairesLocaux() {
-		return partenaireLocalRepository.findAll();
-	}
+//	@Override
+//	public List<PartenaireLocal> tousLesPartenairesLocaux() {
+//		return partenaireLocalRepository.findAll();
+//	}
 
-	@Override
-	public PartenaireLocal ajoutPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire) {
-		Partenaire part= partenaireRepository.findById(idPartenaire).orElse(null);
-		PartenaireLocal partLoc = null;
-		
-		if(partenaireLocalRepository.findByNomPartenaireLocal(nomPartenaireLocal)!=null) {
-			partLoc = partenaireLocalRepository.findByNomPartenaireLocal(nomPartenaireLocal);
-		}else {
-			Set<Partenaire> sPartenaire = Stream.of(part)
-                .collect(Collectors.toCollection(HashSet::new));
-				partLoc = partenaireLocalRepository.save(new PartenaireLocal(nomPartenaireLocal, sPartenaire));
-		}
-
-		
-		part.getPartenaireLocal().add(partLoc);
-		
-		return partLoc;
-	}
+//	@Override
+//	public PartenaireLocal ajoutPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire) {
+//		Partenaire part= partenaireRepository.findById(idPartenaire).orElse(null);
+//		PartenaireLocal partLoc = null;
+//		
+//		if(partenaireLocalRepository.findByNomPartenaireLocal(nomPartenaireLocal)!=null) {
+//			partLoc = partenaireLocalRepository.findByNomPartenaireLocal(nomPartenaireLocal);
+//		}else {
+//			Set<Partenaire> sPartenaire = Stream.of(part)
+//                .collect(Collectors.toCollection(HashSet::new));
+//				partLoc = partenaireLocalRepository.save(new PartenaireLocal(nomPartenaireLocal, sPartenaire));
+//		}
+//
+//		
+//		part.getPartenaireLocal().add(partLoc);
+//		
+//		return partLoc;
+//	}
 
 	@Override
 	public Partenaire findPartenaireByIdPartenaire(Long idPartenaire) {

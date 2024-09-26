@@ -78,8 +78,8 @@ public interface ICarto {
 //	public List<Departement> findDepartementByNomRegion(String nomRegion);
 //	public List<Commune> findCommuneByNomDepartement(String nomDepartement);
 	public List <Village> findVillageByNomCommune(String nomCommune);
-	public List<PartenaireLocal> tousLesPartenairesLocaux();
-	public PartenaireLocal ajoutPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire);
+//	public List<PartenaireLocal> tousLesPartenairesLocaux();
+//	public PartenaireLocal ajoutPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire);
 	public Partenaire findPartenaireByIdPartenaire(Long idPartenaire);
 	public Projet ajoutProjetAUtilisateur(Long idUtilisateur, String nomProjet);
 	public List<Projet> groupByPointFocal();
