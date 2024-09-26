@@ -40,6 +40,7 @@ import com.carto.sn.entities.Village;
 import com.carto.sn.enums.EnumPrivilege;
 import com.carto.sn.enums.EnumProfil;
 import com.carto.sn.service.CategorieService;
+import com.carto.sn.service.CommuneService;
 import com.carto.sn.service.GeocodingService;
 import com.carto.sn.service.ICarto;
 
@@ -53,6 +54,8 @@ public class CartoController {
 	private ICarto iCarto;
 	@Autowired
 	private CategorieService categorieService;
+	@Autowired
+	private CommuneService communeService;
 	@Autowired
 	private GeocodingService geocodingService;
 
@@ -301,7 +304,7 @@ public class CartoController {
 			@ModelAttribute("unDepartement") Departement unDepartement,
 			@ModelAttribute("uneCommune") Commune uneCommune, @ModelAttribute("unVillage") Village unVillage,
 			@ModelAttribute("unPays") Pays unPays, Model model) {
-		List<Commune> listCommune = iCarto.toutesLesCommunes();
+		List<Commune> listCommune = communeService.toutesLesCommunes();
 		List<Departement> listDepartement = iCarto.tousLesDepartements();
 		List<Village> listVillage = iCarto.tousLesVillages();
 
@@ -977,7 +980,7 @@ public class CartoController {
 
 	@RequestMapping("supprimerCommune")
 	public String supprimerCommune(Long idCommune) {
-		iCarto.supprimerCommune(idCommune);
+		communeService.supprimerCommune(idCommune);
 		return "redirect:/localisation";
 	}
 
@@ -1108,8 +1111,8 @@ public class CartoController {
 				// for(int p=0; p < nomPartenaire.length; p++) {
 				for (int i = 0; i < nomCommune.length; i++) {
 					if (nomVillage.length == 0) {
-						if (iCarto.findByNomCommune(nomCommune[i]) != null) {
-							Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+						if (communeService.findByNomCommune(nomCommune[i]) != null) {
+							Commune comm = communeService.findByNomCommune(nomCommune[i]);
 							for (int b = 0; b < nomDepartement.length; b++) {
 								if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
 									for (int c = 0; c < nomRegion.length; c++) {
@@ -1128,8 +1131,8 @@ public class CartoController {
 
 					} else {
 						if (latitude.length == 0 || longitude.length == 0) {
-							if (iCarto.findByNomCommune(nomCommune[i]) != null) {
-								Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+							if (communeService.findByNomCommune(nomCommune[i]) != null) {
+								Commune comm = communeService.findByNomCommune(nomCommune[i]);
 								for (int b = 0; b < nomDepartement.length; b++) {
 									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
 										for (int c = 0; c < nomRegion.length; c++) {
@@ -1149,8 +1152,8 @@ public class CartoController {
 
 						} else {
 
-							if (iCarto.findByNomCommune(nomCommune[i]) != null) {
-								Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+							if (communeService.findByNomCommune(nomCommune[i]) != null) {
+								Commune comm = communeService.findByNomCommune(nomCommune[i]);
 								for (int b = 0; b < nomDepartement.length; b++) {
 									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
 										for (int c = 0; c < nomRegion.length; c++) {
@@ -1177,8 +1180,8 @@ public class CartoController {
 				for (int i = 0; i < nomCommune.length; i++) {
 					for (int j = 0; j < nomPartenaireLocal.length; j++) {
 						if (nomVillage.length == 0) {
-							if (iCarto.findByNomCommune(nomCommune[i]) != null) {
-								Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+							if (communeService.findByNomCommune(nomCommune[i]) != null) {
+								Commune comm = communeService.findByNomCommune(nomCommune[i]);
 								for (int b = 0; b < nomDepartement.length; b++) {
 									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
 										for (int c = 0; c < nomRegion.length; c++) {
@@ -1198,8 +1201,8 @@ public class CartoController {
 
 						} else {
 							if (latitude.length == 0 || longitude.length == 0) {
-								if (iCarto.findByNomCommune(nomCommune[i]) != null) {
-									Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+								if (communeService.findByNomCommune(nomCommune[i]) != null) {
+									Commune comm = communeService.findByNomCommune(nomCommune[i]);
 									for (int b = 0; b < nomDepartement.length; b++) {
 										if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
 											for (int c = 0; c < nomRegion.length; c++) {
@@ -1220,8 +1223,8 @@ public class CartoController {
 
 							} else {
 
-								if (iCarto.findByNomCommune(nomCommune[i]) != null) {
-									Commune comm = iCarto.findByNomCommune(nomCommune[i]);
+								if (communeService.findByNomCommune(nomCommune[i]) != null) {
+									Commune comm = communeService.findByNomCommune(nomCommune[i]);
 									for (int b = 0; b < nomDepartement.length; b++) {
 										if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
 											for (int c = 0; c < nomRegion.length; c++) {
@@ -1305,10 +1308,10 @@ public class CartoController {
 	@ResponseBody
 	public Object getCommune(String nomDepartement) {
 
-		if (iCarto.findCommuneByNomDepartement(nomDepartement) == null) {
+		if (communeService.findCommuneByNomDepartement(nomDepartement) == null) {
 			return null;
 		}
-		List<Commune> listCom = iCarto.findCommuneByNomDepartement(nomDepartement);
+		List<Commune> listCom = communeService.findCommuneByNomDepartement(nomDepartement);
 
 		return listCom;
 

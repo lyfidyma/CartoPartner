@@ -67,7 +67,7 @@ public interface ICarto {
 	public List <ProjetPartenaireRegion> findByIdRegion(Long idRegion);
 	public List <ProjetPartenaireRegion> tousLesProjetsPartenairesRegions();
 	public Type findByNomType(String nomType);
-	public List<Commune> toutesLesCommunes();
+//	public List<Commune> toutesLesCommunes();
 	public List <Village> tousLesVillages();
 
 	/*
@@ -76,15 +76,15 @@ public interface ICarto {
 	 * findByNomCategorie(String nomCategorie);
 	 */
 	public List<Departement> findDepartementByNomRegion(String nomRegion);
-	public List<Commune> findCommuneByNomDepartement(String nomDepartement);
+//	public List<Commune> findCommuneByNomDepartement(String nomDepartement);
 	public List <Village> findVillageByNomCommune(String nomCommune);
 	public List<PartenaireLocal> tousLesPartenairesLocaux();
 	public PartenaireLocal ajoutPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire);
 	public Partenaire findPartenaireByIdPartenaire(Long idPartenaire);
 	public Projet ajoutProjetAUtilisateur(Long idUtilisateur, String nomProjet);
 	public List<Projet> groupByPointFocal();
-	public void supprimerCommune(Long idCommune);
-	public Commune findByNomCommune(String nomCommune);
+//	public void supprimerCommune(Long idCommune);
+//	public Commune findByNomCommune(String nomCommune);
 	public Projet trouverProjetParIdProjet(Long idProjet);
 	public Type findByIdType(Long idType);
 //	public Categorie findByIdCategorie(Long idCategorie);

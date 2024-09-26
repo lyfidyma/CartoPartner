@@ -452,10 +452,10 @@ public class CartoImpl implements ICarto{
 		return typeRepository.findByNomType(nomType);
 	}
 
-	@Override
-	public List<Commune> toutesLesCommunes() {
-		return communeRepository.findAll();
-	}
+//	@Override
+//	public List<Commune> toutesLesCommunes() {
+//		return communeRepository.findAll();
+//	}
 
 	@Override
 	public List<Village> tousLesVillages() {
@@ -479,10 +479,10 @@ public class CartoImpl implements ICarto{
 		return departementRepository.findDepartementByNomRegion(nomRegion);
 	}
 
-	@Override
-	public List<Commune> findCommuneByNomDepartement(String nomDepartement) {
-		return communeRepository.findCommuneByNomDepartement(nomDepartement);
-	}
+//	@Override
+//	public List<Commune> findCommuneByNomDepartement(String nomDepartement) {
+//		return communeRepository.findCommuneByNomDepartement(nomDepartement);
+//	}
 
 	@Override
 	public List<Village> findVillageByNomCommune(String nomCommune) {
@@ -561,16 +561,16 @@ public class CartoImpl implements ICarto{
 		return pprRepository.findAll();
 	}
 
-	@Override
-	public void supprimerCommune(Long idCommune) {
-		communeRepository.deleteById(idCommune);
-		
-	}
+//	@Override
+//	public void supprimerCommune(Long idCommune) {
+//		communeRepository.deleteById(idCommune);
+//		
+//	}
 
-	@Override
-	public Commune findByNomCommune(String nomCommune) {
-		return communeRepository.findByNomCommune(nomCommune);
-	}
+//	@Override
+//	public Commune findByNomCommune(String nomCommune) {
+//		return communeRepository.findByNomCommune(nomCommune);
+//	}
 
 	@Override
 	public Projet trouverProjetParIdProjet(Long idProjet) {
