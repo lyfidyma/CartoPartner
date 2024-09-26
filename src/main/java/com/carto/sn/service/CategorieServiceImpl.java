@@ -3,10 +3,12 @@ package com.carto.sn.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.carto.sn.dao.CategorieRepository;
 import com.carto.sn.entities.Categorie;
 
+@Service
 public class CategorieServiceImpl implements CategorieService{
 	
 	@Autowired
