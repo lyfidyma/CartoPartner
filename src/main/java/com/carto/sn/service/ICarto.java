@@ -12,6 +12,7 @@ import com.carto.sn.entities.Departement;
 import com.carto.sn.entities.Partenaire;
 import com.carto.sn.entities.PartenaireLocal;
 import com.carto.sn.entities.Pays;
+import com.carto.sn.entities.Privilege;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.entities.Projet;
 import com.carto.sn.entities.ProjetPartenaireRegion;
@@ -19,6 +20,7 @@ import com.carto.sn.entities.Region;
 import com.carto.sn.entities.Type;
 import com.carto.sn.entities.Utilisateur;
 import com.carto.sn.entities.Village;
+import com.carto.sn.enums.EnumPrivilege;
 
 
 public interface ICarto {
@@ -30,8 +32,8 @@ public interface ICarto {
 	public List <Projet> tousLesProjets();
 	public Projet ajoutProjet(String nomProjet, String pointFocal, 
 			String description, String nomType, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
-	public Projet ajouterPartenaireAuProjet(String nomProjet, String pointFocal, String nomPartenaire, String libelleRegion, 
-			String description, String type, String statut, int dateDebut, int dateFin);
+//	public Projet ajouterPartenaireAuProjet(String nomProjet, String pointFocal, String nomPartenaire, String libelleRegion, 
+//			String description, String type, String statut, int dateDebut, int dateFin);
 	public void supprimerPartenaire(Long idPartenaire);
 	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse);
 	public Optional <Projet> projetParId(Long id);
@@ -85,5 +87,10 @@ public interface ICarto {
 	public Categorie findByIdCategorie(Long idCategorie);
 	public Projet cloturerProjet(Long idProjet);
 	public List<Utilisateur> getAllOperationsOfUser(String login);
+	public Profil findByIdProfil(Long idProfil);
+	public Privilege ajoutPrivilege(Long idProfil, String[] enumPrivilege);
+	public List<Privilege> findPrivilegeByProfil(Long nomProfil);
+	public void enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled);
+	public void supprimerCategorie(Long idCategorie);
 	
 }

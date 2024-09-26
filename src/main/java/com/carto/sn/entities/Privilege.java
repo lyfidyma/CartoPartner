@@ -24,5 +24,18 @@ public class Privilege {
 	private String nomPrivilege;
 	@ManyToMany(mappedBy="privilege")
 	private Set<Profil> profil;
+	
+	
+	public Privilege(String nomPrivilege) {
+		super();
+		this.nomPrivilege = nomPrivilege;
+	}
+
+
+	public Privilege(String nomPrivilege, Set<Profil> profil) {
+		super();
+		this.nomPrivilege = nomPrivilege;
+		this.profil = profil;
+	}
 
 }

@@ -10,7 +10,7 @@
               function getCartoDataTypeAndPartenaire(){
             	  document.getELementById('formulaire').submit();
               }
-              </script>
+</script>
 <style>
 .rotate {
     -moz-transition: all .5s linear;
@@ -103,26 +103,26 @@ span{
     <!-- Sidebar -->
     <div id="sidebar-wrapper" >
         <p></p>
-        <div class=" overflow-auto v-100" style="width:250px; background:white;" >
+        <div class=" overflow-auto v-100" style="width:250px; background:white; padding:3% 5% " >
          
-  &nbsp;&nbsp;<span>Informations :</span> 
+ <span>Informations :</span> 
    <br/>
-               &nbsp;&nbsp;&nbsp;&nbsp;<b><span>Projets :&nbsp;</span></b><span th:text="${nombreProjets}"></span> 
+             <b><span>Projets :&nbsp;</span></b><span th:text="${nombreProjets}"></span> 
                 <br/>             
-                &nbsp;&nbsp;&nbsp;&nbsp;<b><span>Partenaires :&nbsp; </span></b><span th:text="${listPartSize}"></span>
+             <b><span>Partenaires :&nbsp; </span></b><span th:text="${listPartSize}"></span>
                 <br/>
-                &nbsp;&nbsp;&nbsp;&nbsp;<b><span>Type :&nbsp; </span></b><span th:style="'color:' + ${codeCouleur} +''" th:text="${nomDuType}"></span>
+                <b><span>Type :&nbsp; </span></b><span th:style="'color:' + ${codeCouleur} +''" th:text="${nomDuType}"></span>
                <hr color="purple" />
-                    <p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>&nbsp;&nbsp;Filtrer par :</span> </p>
+                    <p data-bs-parent="#sidebar"><i class="bi bi-film"></i><span>Filtrer par :</span> </p>
                     <form th:action="@{cartographie}" method="post" id="formulaireTous">
                      <div style="text-align:center"> <a type="button" class="btn btn-outline-secondary btn-sm" onclick="submitTous()" >Tous les projets</a></div>
                      </form>
                       <p></p>
                      <form th:action="@{cartographie}" method="post" id="formulaireProjet" th:object="${unProjet}">            
-                    &nbsp;&nbsp;<span>Projet</span>
-                   <div class="col-md-11" style="margin:auto">
+                    <span>Projet</span>
+                   <div>
                    <select class="form-select form-select-sm" id="idProjet" th:field="*{idProjet}" onchange="submitProjet()">
-                    <option value="" hidden> </option>
+                    <option value="" hidden="hidden"> </option>
 						 <option th:each="t:${listProjet}" th:text="${t.nomProjet}" th:value="${t.idProjet}"></option>
 						</select>
 						</div>
@@ -130,10 +130,10 @@ span{
 						 <p></p>
 						 
                     <form th:action="@{cartographieType}" method="post" id="formulaireType" th:object="${unType}">
-                    &nbsp;&nbsp;<span>Type</span>
-                    <div class="col-md-11" style="margin:auto">
+                    <span>Type</span>
+                    <div>
                    <select class="form-select form-select-sm" id="nomType" th:field="*{nomType}" onchange="submitType()">
-                    <option value="" hidden> </option>
+                    <option value="" hidden="hidden"> </option>
 						 <option th:each="t:${listType}" th:text="${t.nomType}" th:value="${t.nomType}"></option>
 						
 						</select>
@@ -141,16 +141,15 @@ span{
 						 </form>
 					 <p></p>
 					<form th:action="@{cartographiePartenaire}" method="post" id="formulairePart" th:object="${unPartenaire}">
-                  &nbsp;&nbsp; <span>Partenaire</span>
-                   <div class="col-md-11" style="margin:auto">
+                  	<span>Partenaire</span>
+                   <div>
                    <select class="form-select form-select-sm" id="nomPartenaire" th:field="*{nomPartenaire}" onchange="submitPartenaire()">
-                   <option value="" hidden> </option>
+                   <option value="" hidden="hidden"> </option>
 						 <option th:each="b:${listPartenaire}" th:text="${b.nomPartenaire}" th:value="${b.nomPartenaire}"></option>
 						</select>
 						</div>
                </form>
-               <br/>
-         <hr color="purple"/>
+       
   </div>
   
   
@@ -159,12 +158,12 @@ span{
     <div class="row flex-nowrap" >
         <div class="col-auto px-2"  >
             <div id="sidebar" class="collapse collapse-horizontal " >
-                <div id="sidebar-nav " style="width:340px; height:680px;overflow-y:scroll; overflow-x:hidden;" >
+                <div id="sidebar-nav " style="width:340px; height:680px;overflow-y:scroll; overflow-x:hidden" >
                
               <!-- <p data-bs-parent="#sidebar"><i class="bi bi-film"></i></p> -->
               
        
-		<div class="list-group list-group-flush"  th:if="${listProjet}" th:each="p:${listProjet}">
+		<div class="list-group list-group-flush"  th:if="${listProjet}" th:each="p:${listProjet}" >
 		
 		<div class="rounded" th:if="${p.dataImage.length==0} " style=" width:310px;height:110px; border: 2px solid #FFFF; 
 		box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.33);" >
@@ -174,8 +173,8 @@ span{
 		<a th:href="@{cartographie(idProjet=${p.idProjet})}"><img class = "image"  src="../static/img/background.jpeg}"  th:src="@{/img/background.jpeg}" width="120" height="105px" alt="" style=" border-radius:4%; 
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);"/></a>
 		</div>
-		<div class="col-md-7">
-		<span th:text="${p.nomProjet}"></span>
+		<div class="col-md-7" >
+		<span th:text="${p.nomProjet}" style="font-family:Candara; font-size:13px"></span>
 		</div>
 		</div>
 		
@@ -189,8 +188,8 @@ span{
 		<a th:href="@{cartographie(idProjet=${p.idProjet})}"><img class = "image"  th:src="@{'data:image/jpeg;base64,'+${p.generateBase64Image()}}" width="120" height="105px" alt="" style="border-radius:4%;
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);"/></a>
 		</div>
-		<div class="col-md-7">
-		<span th:text="${p.nomProjet}"></span>
+		<div class="col-md-7" >
+		<span th:text="${p.nomProjet}" style="font-family:Candara; font-size:13px"></span>
 		</div>
 		
 		
@@ -237,7 +236,7 @@ span{
        
         <main class="col ps-md-1" style="margin-top:-0.8%">
        <div style="position:absolute;z-index:2;">
-            &nbsp;&nbsp;<a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" ><i class="fa fa-chevron-right rotate" aria-hidden="true"></i></a>
+            &ensp;<a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" ><i class="fa fa-chevron-right rotate" aria-hidden="true"></i></a>
             </div> 
             <script> 
           $(".rotate").click(function () {
@@ -282,6 +281,7 @@ if(locationLat==null || locationLon==null){
 
 		let layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
 		mapList.addLayer(layer);
+		/* Positionnement du zoom en haut à droite */
 		L.control.zoom({
 		    position: 'topright'
 		}).addTo(mapList);

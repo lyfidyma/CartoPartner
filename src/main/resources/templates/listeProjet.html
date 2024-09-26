@@ -15,6 +15,9 @@ table a i{
 table td:hover{
 	background:#E6EBF0;
 }
+body{
+	font-family:Candara
+}
 </style>
 </head>
 <body>
@@ -34,7 +37,7 @@ table td:hover{
 	<h4 th:if="${listProjet.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouveauProjet}">Aucun projet</a> </h4>
 	</div>
   		 <div class="table-responsive" th:if="${listProjet}" >
-						<table  class="table table-bordered" id="dataTable" style="font-size:13px; font-family:Arial;  ">
+						<table  class="table table-bordered" id="dataTable" style="font-size:13px; ">
 							
 						<tbody>
 							<tr th:each="p:${listProjet}">

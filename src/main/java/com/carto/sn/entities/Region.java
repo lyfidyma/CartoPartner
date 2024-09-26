@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -39,12 +40,14 @@ public class Region {
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name="idPays")
+	@NotAudited
 	private Pays pays;
 	@JsonIgnore
 	@ManyToMany(mappedBy = "region")
 	Set <Projet> projet;
 	@JsonIgnore
 	@OneToMany(mappedBy = "region")
+	@NotAudited
 	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
 	
 	

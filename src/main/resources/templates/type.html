@@ -18,7 +18,9 @@ table td:hover{
 .error{
 	color:red;
 }
-
+body{
+	font-family:Candara
+}
 </style>
 </head>
 <body>
@@ -27,8 +29,8 @@ table td:hover{
       	<br/>
 		
 		<div class = "container">
-		<h5>Type</h5>
-		<hr/>
+		<!-- <h5>Type</h5>
+		<hr/> -->
 		<div style="margin: auto; background:#FFFF; width:50%; border-radius:10px; border: 2px solid #FFFFFF; 
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
 		<div class="col-md-8" style="margin: auto;">
@@ -56,7 +58,7 @@ table td:hover{
 		
 		<div class="col-md-6" style="margin:auto">
 			<div class="table-responsive" >
-						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px; font-family:Arial;  ">
+						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px; ">
 							
 						<tbody>
 							<tr th:each="l:${listType}">

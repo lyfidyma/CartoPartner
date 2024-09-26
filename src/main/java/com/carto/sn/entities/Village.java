@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Audited
 public class Village {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

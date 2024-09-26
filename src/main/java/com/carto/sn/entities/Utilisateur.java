@@ -7,6 +7,7 @@ import org.hibernate.envers.NotAudited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +41,8 @@ public class Utilisateur {
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Projet> projet;
+	@Column(name="enabled")
+	private boolean isEnabled;
 	
 	public Utilisateur(String nomUtilisateur, String prenomUtilisateur, String login, String password) {
 		super();
@@ -57,6 +60,18 @@ public class Utilisateur {
 		this.password = password;
 		this.profil = profil;
 	}
+	
+	public Utilisateur(@NotEmpty(message = "Renseigner le nom") String nomUtilisateur,
+			@NotEmpty(message = "Renseigner le prénom") String prenomUtilisateur,
+			@NotEmpty(message = "Renseigner le login") String login, String password, boolean isEnabled) {
+		super();
+		this.nomUtilisateur = nomUtilisateur;
+		this.prenomUtilisateur = prenomUtilisateur;
+		this.login = login;
+		this.password = password;
+		this.isEnabled = isEnabled;
+	}
+
 	public Long getIdUtilisateur() {
 		return idUtilisateur;
 	}
@@ -99,12 +114,11 @@ public class Utilisateur {
 	public void setProjet(Set<Projet> projet) {
 		this.projet = projet;
 	}
-
+	public boolean isEnabled() {
+		return isEnabled;
+	}
+	public void setEnabled(boolean isEnabled) {
+		this.isEnabled = isEnabled;
+	}
 	
-	
-	
-	
-	
-	
-
 }
