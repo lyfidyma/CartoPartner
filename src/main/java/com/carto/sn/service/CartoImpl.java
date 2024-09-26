@@ -462,22 +462,17 @@ public class CartoImpl implements ICarto{
 		return villageRepository.findAll();
 	}
 
-	@Override
-	public List<Categorie> toutesLesCategories() {
-		return categorieRepository.findAll();
-	}
-
-	@Override
-	public Categorie ajoutCategorie(String nomCategorie) {
-		Categorie categorie = null;
-		categorie = categorieRepository.save(new Categorie(nomCategorie));
-		return categorie;
-	}
-
-	@Override
-	public Categorie findByNomCategorie(String nomCategorie) {
-		return categorieRepository.findByNomCategorie(nomCategorie);
-	}
+	/*
+	 * @Override public List<Categorie> toutesLesCategories() { return
+	 * categorieRepository.findAll(); }
+	 * 
+	 * @Override public Categorie ajoutCategorie(String nomCategorie) { Categorie
+	 * categorie = null; categorie = categorieRepository.save(new
+	 * Categorie(nomCategorie)); return categorie; }
+	 * 
+	 * @Override public Categorie findByNomCategorie(String nomCategorie) { return
+	 * categorieRepository.findByNomCategorie(nomCategorie); }
+	 */
 
 	@Override
 	public List<Departement> findDepartementByNomRegion(String nomRegion) {
@@ -587,10 +582,10 @@ public class CartoImpl implements ICarto{
 		return typeRepository.findById(idType).orElse(null);
 	}
 
-	@Override
-	public Categorie findByIdCategorie(Long idCategorie) {
-		return categorieRepository.findById(idCategorie).orElse(null);
-	}
+//	@Override
+//	public Categorie findByIdCategorie(Long idCategorie) {
+//		return categorieRepository.findById(idCategorie).orElse(null);
+//	}
 
 	@Override
 	public Projet cloturerProjet(Long idProjet) {
@@ -663,10 +658,10 @@ public class CartoImpl implements ICarto{
 		utilisateur.get().setEnabled(isEnabled);
 	}
 
-	@Override
-	public void supprimerCategorie(Long idCategorie) {
-		categorieRepository.deleteById(idCategorie);
-		
-	}
+//	@Override
+//	public void supprimerCategorie(Long idCategorie) {
+//		categorieRepository.deleteById(idCategorie);
+//		
+//	}
 
 }

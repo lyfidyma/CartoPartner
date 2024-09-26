@@ -69,9 +69,12 @@ public interface ICarto {
 	public Type findByNomType(String nomType);
 	public List<Commune> toutesLesCommunes();
 	public List <Village> tousLesVillages();
-	public List<Categorie> toutesLesCategories();
-	public Categorie ajoutCategorie(String nomCategorie);
-	public Categorie findByNomCategorie(String nomCategorie);
+
+	/*
+	 * public List<Categorie> toutesLesCategories(); public Categorie
+	 * ajoutCategorie(String nomCategorie); public Categorie
+	 * findByNomCategorie(String nomCategorie);
+	 */
 	public List<Departement> findDepartementByNomRegion(String nomRegion);
 	public List<Commune> findCommuneByNomDepartement(String nomDepartement);
 	public List <Village> findVillageByNomCommune(String nomCommune);
@@ -84,13 +87,13 @@ public interface ICarto {
 	public Commune findByNomCommune(String nomCommune);
 	public Projet trouverProjetParIdProjet(Long idProjet);
 	public Type findByIdType(Long idType);
-	public Categorie findByIdCategorie(Long idCategorie);
+//	public Categorie findByIdCategorie(Long idCategorie);
 	public Projet cloturerProjet(Long idProjet);
 	public List<Utilisateur> getAllOperationsOfUser(String login);
 	public Profil findByIdProfil(Long idProfil);
 	public Privilege ajoutPrivilege(Long idProfil, String[] enumPrivilege);
 	public List<Privilege> findPrivilegeByProfil(Long nomProfil);
 	public void enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled);
-	public void supprimerCategorie(Long idCategorie);
+//	public void supprimerCategorie(Long idCategorie);
 	
 }

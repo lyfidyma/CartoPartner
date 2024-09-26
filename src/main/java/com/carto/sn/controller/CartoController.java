@@ -11,7 +11,6 @@ import java.util.Set;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -41,6 +39,7 @@ import com.carto.sn.entities.Utilisateur;
 import com.carto.sn.entities.Village;
 import com.carto.sn.enums.EnumPrivilege;
 import com.carto.sn.enums.EnumProfil;
+import com.carto.sn.service.CategorieService;
 import com.carto.sn.service.GeocodingService;
 import com.carto.sn.service.ICarto;
 
@@ -52,6 +51,8 @@ public class CartoController {
 
 	@Autowired
 	private ICarto iCarto;
+	@Autowired
+	private CategorieService categorieService;
 	@Autowired
 	private GeocodingService geocodingService;
 
@@ -167,7 +168,7 @@ public class CartoController {
 		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
 		List<Region> listLocalisation = iCarto.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
-		List<Categorie> listCategorie = iCarto.toutesLesCategories();
+		List<Categorie> listCategorie = categorieService.toutesLesCategories();
 
 		model.addAttribute("listCategorie", listCategorie);
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -1026,11 +1027,11 @@ public class CartoController {
 		Set<Categorie> categorie = unProjet.getCategorie();
 
 		for (Categorie cat : categorie) {
-			uneCategorie = iCarto.findByIdCategorie(cat.getIdCategorie());
+			uneCategorie = categorieService.findByIdCategorie(cat.getIdCategorie());
 
 		}
 
-		List<Categorie> listCategorie = iCarto.toutesLesCategories();
+		List<Categorie> listCategorie = categorieService.toutesLesCategories();
 		model.addAttribute("unProjet", unProjet);
 		model.addAttribute("unType", unType);
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -1260,7 +1261,7 @@ public class CartoController {
 
 	@RequestMapping("categorie")
 	public String categorie(@ModelAttribute("uneCategorie") Categorie uneCategorie, Model model) {
-		List<Categorie> listCategorie = iCarto.toutesLesCategories();
+		List<Categorie> listCategorie = categorieService.toutesLesCategories();
 		model.addAttribute("listCategorie", listCategorie);
 		return "categorie";
 	}
@@ -1268,17 +1269,17 @@ public class CartoController {
 	@RequestMapping("sauvegarderCategorie")
 	public String sauvegarderCategorie(@Valid @ModelAttribute("uneCategorie") Categorie uneCategorie, BindingResult br,
 			Model model, String nomCategorie) {
-		List<Categorie> listCategorie = iCarto.toutesLesCategories();
+		List<Categorie> listCategorie = categorieService.toutesLesCategories();
 
 		if (br.hasErrors()) {
 			model.addAttribute("listCategorie", listCategorie);
 			return "categorie";
 		}
-		if (iCarto.findByNomCategorie(nomCategorie) != null) {
+		if (categorieService.findByNomCategorie(nomCategorie) != null) {
 			model.addAttribute("messageDoublon", "Cette catégorie existe");
 			return "categorie";
 		}
-		iCarto.ajoutCategorie(nomCategorie);
+		categorieService.ajoutCategorie(nomCategorie);
 		return "redirect:/categorie";
 	}
 
@@ -1427,7 +1428,7 @@ public class CartoController {
 	
 	@RequestMapping("supprimerCategorie")
 	public String supprimerCategorie(Long idCategorie) {
-		iCarto.supprimerCategorie(idCategorie);
+		categorieService.supprimerCategorie(idCategorie);
 		return "redirect:/categorie";
 	}
 }
