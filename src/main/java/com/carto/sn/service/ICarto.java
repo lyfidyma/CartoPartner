@@ -56,7 +56,7 @@ public interface ICarto {
 	public void supprimerType(Long idType);
 	public List <Type> tousLesTypes();
 //	public List<Departement> tousLesDepartements();
-	public List<Pays> tousLesPays();
+//	public List<Pays> tousLesPays();
 	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
 			String nomCommune, String nomVillage, String latitude, String longitude, String nomPartenaireLocal );
 	public Projet findByNomProjet(String nomProjet);

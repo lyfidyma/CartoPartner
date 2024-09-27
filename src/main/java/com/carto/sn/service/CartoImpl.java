@@ -366,10 +366,10 @@ public class CartoImpl implements ICarto{
 //		return departementRepository.findAll();
 //	}
 
-	@Override
-	public List<Pays> tousLesPays() {
-		return paysRepository.findAll();
-	}
+//	@Override
+//	public List<Pays> tousLesPays() {
+//		return paysRepository.findAll();
+//	}
 
 	@Override
 	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
