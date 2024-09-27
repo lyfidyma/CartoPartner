@@ -12,11 +12,14 @@ import com.carto.sn.entities.Region;
 import com.carto.sn.entities.Type;
 import com.carto.sn.export.ProjetExport;
 import com.carto.sn.service.ICarto;
+import com.carto.sn.service.PartenaireService;
 
 @Controller
 public class ExcelController {
 	@Autowired
 	private ICarto iCarto;
+	@Autowired
+	private PartenaireService partenaireService;
 	
 	@GetMapping("/excelExport")
 	public ModelAndView exportVersExcel() {
@@ -24,7 +27,7 @@ public class ExcelController {
 		mav.setView(new ProjetExport());
 		List<Projet> list = iCarto.tousLesProjets();
 		List <Region> listLoc = iCarto.toutesLesRegions();
-		List <Partenaire> listPart = iCarto.tousLesPartenaires();
+		List <Partenaire> listPart = partenaireService.tousLesPartenaires();
 		List <Type> listType = iCarto.tousLesTypes();
 		mav.addObject("list", list);
 		mav.addObject("listLoc", listLoc);

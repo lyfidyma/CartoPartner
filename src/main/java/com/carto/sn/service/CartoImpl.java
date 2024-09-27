@@ -123,26 +123,26 @@ public class CartoImpl implements ICarto{
 		return uneRegion;
 	}
 
-	@Override
-	public Partenaire ajoutPartenaire(Long idPartenaire, String nomPartenaire, String adresse) {
-		
-		Partenaire partenaire = null;
-		if(idPartenaire==null) {
-		partenaire = partenaireRepository.save(new Partenaire(nomPartenaire, adresse));
-		return partenaire;
-		}else {
-			partenaire = partenaireRepository.findById(idPartenaire).orElse(partenaire);
-			partenaire.setNomPartenaire(nomPartenaire);
-			partenaire.setAdresse(adresse);
-			partenaireRepository.save(partenaire);
-			return partenaire;
-		}
-	}
+//	@Override
+//	public Partenaire ajoutPartenaire(Long idPartenaire, String nomPartenaire, String adresse) {
+//		
+//		Partenaire partenaire = null;
+//		if(idPartenaire==null) {
+//		partenaire = partenaireRepository.save(new Partenaire(nomPartenaire, adresse));
+//		return partenaire;
+//		}else {
+//			partenaire = partenaireRepository.findById(idPartenaire).orElse(partenaire);
+//			partenaire.setNomPartenaire(nomPartenaire);
+//			partenaire.setAdresse(adresse);
+//			partenaireRepository.save(partenaire);
+//			return partenaire;
+//		}
+//	}
 
-	@Override
-	public List<Partenaire> tousLesPartenaires() {
-		return partenaireRepository.findAll();
-	}
+//	@Override
+//	public List<Partenaire> tousLesPartenaires() {
+//		return partenaireRepository.findAll();
+//	}
 
 	@Override
 	public List<Region> toutesLesRegions() {
@@ -214,30 +214,30 @@ public class CartoImpl implements ICarto{
 //		return proj;
 //	}
 
-	@Override
-	public void supprimerPartenaire(Long idPartenaire) {
-		partenaireRepository.deleteById(idPartenaire);
-	}
+//	@Override
+//	public void supprimerPartenaire(Long idPartenaire) {
+//		partenaireRepository.deleteById(idPartenaire);
+//	}
 
 	@Override
 	public Optional<Projet> projetParId(Long id) {
 		return projetRepository.findById(id);
 	}
 
-	@Override
-	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse) {
-		Partenaire partenaire  = null;
-		partenaire = partenaireRepository.findByNomPartenaire(nomPartenaire);
-		partenaire.setNomPartenaire(nouveauNomPartenaire);
-		partenaire.setAdresse(nouvelleAdresse);
-		partenaireRepository.save(partenaire);
-		return partenaire;
-	}
+//	@Override
+//	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse) {
+//		Partenaire partenaire  = null;
+//		partenaire = partenaireRepository.findByNomPartenaire(nomPartenaire);
+//		partenaire.setNomPartenaire(nouveauNomPartenaire);
+//		partenaire.setAdresse(nouvelleAdresse);
+//		partenaireRepository.save(partenaire);
+//		return partenaire;
+//	}
 
-	@Override
-	public Optional <Partenaire> findPartenaireById(Long id) {
-		return partenaireRepository.findById(id);
-	}
+//	@Override
+//	public Optional <Partenaire> findPartenaireById(Long id) {
+//		return partenaireRepository.findById(id);
+//	}
 
 	@Override
 	public List<Projet> chercher(String motCle) {
@@ -422,10 +422,10 @@ public class CartoImpl implements ICarto{
 		return projetRepository.findByNomProjet(nomProjet);
 	}
 
-	@Override
-	public Partenaire findByNomPartenaire(String nomPartenaire) {
-		return partenaireRepository.findByNomPartenaire(nomPartenaire);
-	}
+//	@Override
+//	public Partenaire findByNomPartenaire(String nomPartenaire) {
+//		return partenaireRepository.findByNomPartenaire(nomPartenaire);
+//	}
 
 	@Override
 	public List<Projet> findByPointFocal(String pointFocal) {
@@ -513,10 +513,10 @@ public class CartoImpl implements ICarto{
 //		return partLoc;
 //	}
 
-	@Override
-	public Partenaire findPartenaireByIdPartenaire(Long idPartenaire) {
-		return partenaireRepository.findById(idPartenaire).orElse(null);
-	}
+//	@Override
+//	public Partenaire findPartenaireByIdPartenaire(Long idPartenaire) {
+//		return partenaireRepository.findById(idPartenaire).orElse(null);
+//	}
 
 	@Override
 	public Projet ajoutProjetAUtilisateur(Long idUtilisateur, String nomProjet) {

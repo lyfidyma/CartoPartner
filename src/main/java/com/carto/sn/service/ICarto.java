@@ -26,18 +26,18 @@ import com.carto.sn.enums.EnumPrivilege;
 public interface ICarto {
 	
 	public Region ajoutRegion(String nomDepartement, String nomRegion, String nomPays, String nomCommune);
-	public Partenaire ajoutPartenaire(Long idPartenaire, String nomPartenaire, String adresse);
-	public List <Partenaire> tousLesPartenaires();
+//	public Partenaire ajoutPartenaire(Long idPartenaire, String nomPartenaire, String adresse);
+//	public List <Partenaire> tousLesPartenaires();
 	public List <Region> toutesLesRegions();
 	public List <Projet> tousLesProjets();
 	public Projet ajoutProjet(String nomProjet, String pointFocal, 
 			String description, String nomType, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
 //	public Projet ajouterPartenaireAuProjet(String nomProjet, String pointFocal, String nomPartenaire, String libelleRegion, 
 //			String description, String type, String statut, int dateDebut, int dateFin);
-	public void supprimerPartenaire(Long idPartenaire);
-	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse);
+//	public void supprimerPartenaire(Long idPartenaire);
+//	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse);
 	public Optional <Projet> projetParId(Long id);
-	public Optional <Partenaire> findPartenaireById(Long id);
+//	public Optional <Partenaire> findPartenaireById(Long id);
 	public List<Projet> chercher(String motCle);
 	public Profil ajoutProfil(String profil);
 	public Utilisateur ajoutUtilisateur(Long idUtilisateur, String nom, String prenom, String login, String password, String profil);
@@ -60,7 +60,7 @@ public interface ICarto {
 	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
 			String nomCommune, String nomVillage, String latitude, String longitude, String nomPartenaireLocal );
 	public Projet findByNomProjet(String nomProjet);
-	public Partenaire findByNomPartenaire(String nomPartenaire);
+//	public Partenaire findByNomPartenaire(String nomPartenaire);
 	public List<Projet> findByPointFocal(String pointFocal);
 	public List <ProjetPartenaireRegion> findByIdProjet(Long idProjet);
 	public List <ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire);
@@ -80,7 +80,7 @@ public interface ICarto {
 	public List <Village> findVillageByNomCommune(String nomCommune);
 //	public List<PartenaireLocal> tousLesPartenairesLocaux();
 //	public PartenaireLocal ajoutPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire);
-	public Partenaire findPartenaireByIdPartenaire(Long idPartenaire);
+//	public Partenaire findPartenaireByIdPartenaire(Long idPartenaire);
 	public Projet ajoutProjetAUtilisateur(Long idUtilisateur, String nomProjet);
 	public List<Projet> groupByPointFocal();
 //	public void supprimerCommune(Long idCommune);

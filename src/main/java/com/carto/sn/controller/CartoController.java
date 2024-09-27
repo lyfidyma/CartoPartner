@@ -45,6 +45,7 @@ import com.carto.sn.service.DepartementService;
 import com.carto.sn.service.GeocodingService;
 import com.carto.sn.service.ICarto;
 import com.carto.sn.service.PartenaireLocalService;
+import com.carto.sn.service.PartenaireService;
 
 import jakarta.validation.Valid;
 
@@ -63,6 +64,8 @@ public class CartoController {
 	@Autowired
 	private PartenaireLocalService parteLocalService;
 	@Autowired
+	private PartenaireService partenaireService;
+	@Autowired
 	private GeocodingService geocodingService;
 
 	@RequestMapping("/index")
@@ -72,7 +75,7 @@ public class CartoController {
 		List<Projet> listProjetPoinFocal = iCarto.groupByPointFocal();
 		List<Projet> listProjet = iCarto.tousLesProjets();
 
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
@@ -174,7 +177,7 @@ public class CartoController {
 			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("uneRegion") Region uneRegion,
 			@ModelAttribute("unType") Type unType, @ModelAttribute("uneCategorie") Categorie uneCategorie,
 			Model model) {
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listLocalisation = iCarto.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 		List<Categorie> listCategorie = categorieService.toutesLesCategories();
@@ -189,7 +192,7 @@ public class CartoController {
 
 	@RequestMapping("partenaire")
 	public String partenaire(Model model) {
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listLocalisation = iCarto.toutesLesRegions();
 		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
@@ -208,7 +211,7 @@ public class CartoController {
 		// List <ProjetPartenaireRegion> listPpr =
 		// iCarto.tousLesProjetsPartenairesRegions();
 		List<Projet> listProjet = iCarto.tousLesProjets();
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		List<Projet> listProjetPoinFocal = iCarto.groupByPointFocal();
 
@@ -230,7 +233,7 @@ public class CartoController {
 				Set<ProjetPartenaireRegion> partenaireName = new HashSet<ProjetPartenaireRegion>();
 
 				// Set <Projet> projetPourType=new HashSet<Projet>();
-				partenaireName1 = iCarto.findByNomPartenaire(nomPartenaire);
+				partenaireName1 = partenaireService.findByNomPartenaire(nomPartenaire);
 				for (int i = 0; i < listProjet.size(); i++) {
 					partenaireProjet = (listProjet.get(i).getPartenaire());
 					for (Partenaire p : partenaireProjet) {
@@ -327,7 +330,7 @@ public class CartoController {
 
 		List<ProjetPartenaireRegion> listPpr = iCarto.tousLesProjetsPartenairesRegions();
 		List<Projet> listProjet = iCarto.tousLesProjets();
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 
@@ -513,7 +516,7 @@ public class CartoController {
 		Set<String> listDesProjetsSize = new HashSet<>();
 		Set<String> listTypeParRegion = new HashSet<String>();
 		List<Projet> listProjet = iCarto.tousLesProjets();
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 
@@ -615,7 +618,7 @@ public class CartoController {
 		HashMap<String, Set<String>> hmapProjet = new HashMap<String, Set<String>>();
 		HashMap<String, Set<String>> hmapType = new HashMap<String, Set<String>>();
 		List<Projet> listProjet = iCarto.tousLesProjets();
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
@@ -639,7 +642,7 @@ public class CartoController {
 		if (nomPartenaire != null) {
 			Set<Partenaire> projetType = null;
 			Set<ProjetPartenaireRegion> typeName = new HashSet<ProjetPartenaireRegion>();
-			Partenaire parte = iCarto.findByNomPartenaire(nomPartenaire);
+			Partenaire parte = partenaireService.findByNomPartenaire(nomPartenaire);
 			for (int i = 0; i < listProjet.size(); i++) {
 
 				projetType = listProjet.get(i).getPartenaire();
@@ -745,7 +748,7 @@ public class CartoController {
 			return "nouveauPartenaire";
 		}
 		if (idPartenaire == null) {
-			List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+			List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 			for (Partenaire part : listPartenaire) {
 				if (part.getNomPartenaire().equals(nomPartenaire)) {
 					ra.addFlashAttribute("messageDoublon", "Ce partenaire existe déjà");
@@ -756,7 +759,7 @@ public class CartoController {
 
 		}
 
-		iCarto.ajoutPartenaire(idPartenaire, nomPartenaire, adresse);
+		partenaireService.ajoutPartenaire(idPartenaire, nomPartenaire, adresse);
 		return "redirect:/partenaire";
 	}
 
@@ -842,7 +845,7 @@ public class CartoController {
 
 	@RequestMapping("supprimerPartenaire")
 	public String supprimerPartenaire(Long idPartenaire) {
-		iCarto.supprimerPartenaire(idPartenaire);
+		partenaireService.supprimerPartenaire(idPartenaire);
 		return "redirect:/partenaire";
 	}
 
@@ -850,7 +853,7 @@ public class CartoController {
 	public String modifierPartenaire(@ModelAttribute("unPartenaire") Partenaire unPartenaire, Model model,
 			Long idPartenaire) {
 		model.addAttribute("idPartenaire", idPartenaire);
-		unPartenaire = iCarto.findPartenaireById(idPartenaire).get();
+		unPartenaire = partenaireService.findPartenaireById(idPartenaire).get();
 		model.addAttribute("unPartenaire", unPartenaire);
 		return "nouveauPartenaire";
 	}
@@ -1031,7 +1034,7 @@ public class CartoController {
 		for (Type t : type) {
 			unType = iCarto.findByIdType(t.getIdType());
 		}
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Type> listType = iCarto.tousLesTypes();
 		Set<Categorie> categorie = unProjet.getCategorie();
 
@@ -1075,7 +1078,7 @@ public class CartoController {
 	public String projetPartenaireRegionLiaison(
 			@ModelAttribute("projetPartenaireDTO") ProjetPartenaireDTO projetPartenaireDTO, Model model) {
 		List<Projet> listProjet = iCarto.tousLesProjets();
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		List<Departement> listDepartement = departementService.tousLesDepartements();
 		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
@@ -1092,7 +1095,7 @@ public class CartoController {
 	public String projetPartenaireRegion(@ModelAttribute ProjetPartenaireDTO projetPartenaireDTO, Model model) {
 
 		List<Projet> listProjet = iCarto.tousLesProjets();
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listProjet", listProjet);
@@ -1339,7 +1342,7 @@ public class CartoController {
 	@RequestMapping("lierPartenaireLocalAPartenaire")
 	public String lierPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire, Model model) {
 
-		List<Partenaire> listPartenaire = iCarto.tousLesPartenaires();
+		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listLocalisation = iCarto.toutesLesRegions();
 		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
@@ -1351,8 +1354,8 @@ public class CartoController {
 			return "partenaire";
 		}
 
-		if (iCarto.findPartenaireById(idPartenaire) != null) {
-			Partenaire part = iCarto.findPartenaireByIdPartenaire(idPartenaire);
+		if (partenaireService.findPartenaireById(idPartenaire) != null) {
+			Partenaire part = partenaireService.findPartenaireByIdPartenaire(idPartenaire);
 			if (part.getPartenaireLocal() != null) {
 				Set<PartenaireLocal> paLo = part.getPartenaireLocal();
 				for (PartenaireLocal pc : paLo) {
