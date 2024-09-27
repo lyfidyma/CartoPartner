@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.carto.sn.dao.PrivilegeRepository;
 import com.carto.sn.dto.ProjetPartenaireDTO;
 import com.carto.sn.entities.Categorie;
 import com.carto.sn.entities.Commune;
@@ -46,6 +47,7 @@ import com.carto.sn.service.GeocodingService;
 import com.carto.sn.service.ICarto;
 import com.carto.sn.service.PartenaireLocalService;
 import com.carto.sn.service.PartenaireService;
+import com.carto.sn.service.PrivilegeService;
 
 import jakarta.validation.Valid;
 
@@ -65,6 +67,8 @@ public class CartoController {
 	private PartenaireLocalService parteLocalService;
 	@Autowired
 	private PartenaireService partenaireService;
+	@Autowired
+	private PrivilegeService privilegeService;
 	@Autowired
 	private GeocodingService geocodingService;
 
@@ -881,7 +885,7 @@ public class CartoController {
 	@RequestMapping("getPrivilegeByProfil")
 	@ResponseBody
 	public Object getPrivilegeByProfil(Long idProfil) {
-		List<Privilege> listPrivileges = iCarto.findPrivilegeByProfil(idProfil);
+		List<Privilege> listPrivileges = privilegeService.findPrivilegeByProfil(idProfil);
 		List<String> listNomPrivileges = new ArrayList<>();
 		Map<String, Object> object = new HashMap<>();
 		for(Privilege p : listPrivileges) {
@@ -1427,7 +1431,7 @@ public class CartoController {
 	@RequestMapping("sauvegarderPrivilege")
 	public String sauvegarderPrivilege(Model model, Long idProfil, String checkboxPrivilege[]) {
 
-		iCarto.ajoutPrivilege(idProfil, checkboxPrivilege);
+		privilegeService.ajoutPrivilege(idProfil, checkboxPrivilege);
 		return "redirect:nouveauProfil";
 
 	}

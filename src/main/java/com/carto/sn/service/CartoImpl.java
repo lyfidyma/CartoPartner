@@ -614,43 +614,43 @@ public class CartoImpl implements ICarto{
 		return profilRepository.findById(idProfil).orElseThrow(RuntimeException::new);
 	}
 
-	@Override
-	public Privilege ajoutPrivilege(Long idProfil, String checkboxPrivilege[]) {
-		
-		Privilege nouveauPrivilege = null ;
-		Profil profil = profilRepository.findById(idProfil).get();
-		List<EnumPrivilege> enumPrivileges = Arrays.asList(EnumPrivilege.values());
-		List <Privilege> privilege = privilegeRepository.findAll();
-		/*Cette partie permet de remplir la table des privilèges. Elle n'est exécutée qu'une seule fois lorsque 
-		 * la table privilèges est vide*/
-		if(privilege.isEmpty()) {
-			for(EnumPrivilege en : enumPrivileges) {
-				privilegeRepository.save(new Privilege(en.toString()));
-				privilege = privilegeRepository.findAll();
-			}
-			
-		}
-		/*Ajout des privilèges au profil*/
-		for(String chPrivilege : checkboxPrivilege) {			
-					for(Privilege pr : privilege) {
-						if(chPrivilege.equals(pr.getNomPrivilege())) {	
-							nouveauPrivilege = pr;
-							profil.getPrivilege().add(pr);
-									
-					}
-				}
-			}
-		
-			return nouveauPrivilege;
-		
-	}
+//	@Override
+//	public Privilege ajoutPrivilege(Long idProfil, String checkboxPrivilege[]) {
+//		
+//		Privilege nouveauPrivilege = null ;
+//		Profil profil = profilRepository.findById(idProfil).get();
+//		List<EnumPrivilege> enumPrivileges = Arrays.asList(EnumPrivilege.values());
+//		List <Privilege> privilege = privilegeRepository.findAll();
+//		/*Cette partie permet de remplir la table des privilèges. Elle n'est exécutée qu'une seule fois lorsque 
+//		 * la table privilèges est vide*/
+//		if(privilege.isEmpty()) {
+//			for(EnumPrivilege en : enumPrivileges) {
+//				privilegeRepository.save(new Privilege(en.toString()));
+//				privilege = privilegeRepository.findAll();
+//			}
+//			
+//		}
+//		/*Ajout des privilèges au profil*/
+//		for(String chPrivilege : checkboxPrivilege) {			
+//					for(Privilege pr : privilege) {
+//						if(chPrivilege.equals(pr.getNomPrivilege())) {	
+//							nouveauPrivilege = pr;
+//							profil.getPrivilege().add(pr);
+//									
+//					}
+//				}
+//			}
+//		
+//			return nouveauPrivilege;
+//		
+//	}
 
-	@Override
-	public List<Privilege> findPrivilegeByProfil(Long idProfil) {
-		Profil profil = profilRepository.findById(idProfil).orElseThrow(()-> new RuntimeException("Profil not found"));
-		List<Privilege> listPrivileges = profil.getPrivilege().stream().collect(Collectors.toList());
-		return listPrivileges;
-	}
+//	@Override
+//	public List<Privilege> findPrivilegeByProfil(Long idProfil) {
+//		Profil profil = profilRepository.findById(idProfil).orElseThrow(()-> new RuntimeException("Profil not found"));
+//		List<Privilege> listPrivileges = profil.getPrivilege().stream().collect(Collectors.toList());
+//		return listPrivileges;
+//	}
 
 	@Override
 	public void enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled) {

@@ -91,8 +91,8 @@ public interface ICarto {
 	public Projet cloturerProjet(Long idProjet);
 	public List<Utilisateur> getAllOperationsOfUser(String login);
 	public Profil findByIdProfil(Long idProfil);
-	public Privilege ajoutPrivilege(Long idProfil, String[] enumPrivilege);
-	public List<Privilege> findPrivilegeByProfil(Long nomProfil);
+//	public Privilege ajoutPrivilege(Long idProfil, String[] enumPrivilege);
+//	public List<Privilege> findPrivilegeByProfil(Long nomProfil);
 	public void enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled);
 //	public void supprimerCategorie(Long idCategorie);
 	
