@@ -48,6 +48,7 @@ import com.carto.sn.service.ICarto;
 import com.carto.sn.service.PartenaireLocalService;
 import com.carto.sn.service.PartenaireService;
 import com.carto.sn.service.PrivilegeService;
+import com.carto.sn.service.ProfilService;
 
 import jakarta.validation.Valid;
 
@@ -69,6 +70,8 @@ public class CartoController {
 	private PartenaireService partenaireService;
 	@Autowired
 	private PrivilegeService privilegeService;
+	@Autowired
+	private ProfilService profilService;
 	@Autowired
 	private GeocodingService geocodingService;
 
@@ -868,14 +871,14 @@ public class CartoController {
 		List<EnumProfil> enumProfils = Arrays.asList(EnumProfil.values());
 		List<EnumPrivilege> enumPrivileges = Arrays.asList(EnumPrivilege.values());
 		Map<String, List<Privilege>> profilPrivilegeMap = new HashMap<>();
-		List<Profil> listProfils = iCarto.tousLesProfils();
+		List<Profil> listProfils = profilService.tousLesProfils();
 		
 		for(Profil prof : listProfils) {		
 			profilPrivilegeMap.computeIfAbsent(prof.getNomProfil(), k-> new ArrayList<>())
 			  .addAll(prof.getPrivilege());			
 		}
 		
-		model.addAttribute("listProfil", iCarto.tousLesProfils());
+		model.addAttribute("listProfil", profilService.tousLesProfils());
 		model.addAttribute("enumProfils", enumProfils);
 		model.addAttribute("enumPrivileges", enumPrivileges);
 		model.addAttribute("profilPrivilegeMap", profilPrivilegeMap);
@@ -901,13 +904,13 @@ public class CartoController {
 			String nomProfil, RedirectAttributes ra) {
 		List<EnumPrivilege> enumPrivileges = Arrays.asList(EnumPrivilege.values());
 		if (br.hasErrors()) {
-			List<Profil> listProfil = iCarto.tousLesProfils();
+			List<Profil> listProfil = profilService.tousLesProfils();
 			model.addAttribute("listProfil", listProfil);
 			model.addAttribute("enumPrivileges", enumPrivileges);
 			return "nouveauProfil";
 		}
 
-		List<Profil> listProfil = iCarto.tousLesProfils();
+		List<Profil> listProfil = profilService.tousLesProfils();
 		for (Profil prof : listProfil) {
 			if (prof.getNomProfil().equals(nomProfil)) {
 
@@ -916,7 +919,7 @@ public class CartoController {
 				return "redirect:/nouveauProfil";
 			}
 		}
-		iCarto.ajoutProfil(nomProfil);
+		profilService.ajoutProfil(nomProfil);
 		return "redirect:/nouveauProfil";
 	}
 
@@ -932,7 +935,7 @@ public class CartoController {
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String nouvelUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
 			@ModelAttribute("unProfil") Profil unProfil, Model model) {
-		List<Profil> listProfil = iCarto.tousLesProfils();
+		List<Profil> listProfil = profilService.tousLesProfils();
 		model.addAttribute("listProfil", listProfil);
 		return "nouvelUtilisateur";
 	}
@@ -945,7 +948,7 @@ public class CartoController {
 			RedirectAttributes ra) {
 
 		if (br.hasErrors()) {
-			List<Profil> listProfil = iCarto.tousLesProfils();
+			List<Profil> listProfil = profilService.tousLesProfils();
 			model.addAttribute("listProfil", listProfil);
 			return "nouvelUtilisateur";
 		}
@@ -953,7 +956,7 @@ public class CartoController {
 			List<Utilisateur> listUtil = iCarto.tousLesUtilisateurs();
 			for (Utilisateur util : listUtil) {
 				if (util.getLogin().equals(login)) {
-					List<Profil> listProfil = iCarto.tousLesProfils();
+					List<Profil> listProfil = profilService.tousLesProfils();
 					model.addAttribute("listProfil", listProfil);
 					model.addAttribute("messageDoublon", "Ce login existe déjà");
 					return "nouvelUtilisateur";
@@ -978,7 +981,7 @@ public class CartoController {
 
 		unUtilisateur = iCarto.findUtilisateurById(idUtilisateur).get();
 		model.addAttribute("unUtilisateur", unUtilisateur);
-		List<Profil> listProfil = iCarto.tousLesProfils();
+		List<Profil> listProfil = profilService.tousLesProfils();
 		model.addAttribute("listProfil", listProfil);
 		model.addAttribute("flagProfil", iCarto.findUtilisateurById(idUtilisateur).get().getProfil());
 
@@ -1005,7 +1008,7 @@ public class CartoController {
 
 	@RequestMapping("supprimerProfil")
 	public String supprimerProfil(Long idProfil) {
-		iCarto.supprimerProfil(idProfil);
+		profilService.supprimerProfil(idProfil);
 		return "redirect:/nouveauProfil";
 	}
 

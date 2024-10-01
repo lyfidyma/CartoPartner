@@ -39,14 +39,14 @@ public interface ICarto {
 	public Optional <Projet> projetParId(Long id);
 //	public Optional <Partenaire> findPartenaireById(Long id);
 	public List<Projet> chercher(String motCle);
-	public Profil ajoutProfil(String profil);
+//	public Profil ajoutProfil(String profil);
 	public Utilisateur ajoutUtilisateur(Long idUtilisateur, String nom, String prenom, String login, String password, String profil);
-	public List <Profil> tousLesProfils();
+//	public List <Profil> tousLesProfils();
 	public List <Utilisateur> tousLesUtilisateurs();
 	public void supprimerUtilisateur(Long idUtilisateur);
 	public Optional<Utilisateur> findUtilisateurById(Long idUtilisateur);
 	public void supprimerRegion(Long idRegion);
-	public void supprimerProfil(Long idProfil);
+//	public void supprimerProfil(Long idProfil);
 	public void supprimerProjet(Long idProjet);
 	public Optional <Region> findRegionById(Long idRegion);
 	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal,  
@@ -90,7 +90,7 @@ public interface ICarto {
 //	public Categorie findByIdCategorie(Long idCategorie);
 	public Projet cloturerProjet(Long idProjet);
 	public List<Utilisateur> getAllOperationsOfUser(String login);
-	public Profil findByIdProfil(Long idProfil);
+//	public Profil findByIdProfil(Long idProfil);
 //	public Privilege ajoutPrivilege(Long idProfil, String[] enumPrivilege);
 //	public List<Privilege> findPrivilegeByProfil(Long nomProfil);
 	public void enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled);

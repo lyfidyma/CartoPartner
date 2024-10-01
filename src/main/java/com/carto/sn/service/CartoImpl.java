@@ -244,12 +244,12 @@ public class CartoImpl implements ICarto{
 		return projetRepository.chercher(motCle);
 	}
 
-	@Override
-	public Profil ajoutProfil(String profil) {
-		//Profil prof = null;
-		return profilRepository.save(new Profil(profil));
-		//return prof;
-	}
+//	@Override
+//	public Profil ajoutProfil(String profil) {
+//		//Profil prof = null;
+//		return profilRepository.save(new Profil(profil));
+//		//return prof;
+//	}
 
 	@Override
 	public Utilisateur ajoutUtilisateur(Long idUtilisateur, String nom, String prenom, String login, String password, String profil) {
@@ -274,10 +274,10 @@ public class CartoImpl implements ICarto{
 		return utilisateur;
 	}
 
-	@Override
-	public List <Profil> tousLesProfils() {
-		return profilRepository.findAll();
-	}
+//	@Override
+//	public List <Profil> tousLesProfils() {
+//		return profilRepository.findAll();
+//	}
 
 	@Override
 	public List<Utilisateur> tousLesUtilisateurs() {
@@ -301,11 +301,11 @@ public class CartoImpl implements ICarto{
 		
 	}
 
-	@Override
-	public void supprimerProfil(Long idProfil) {
-		profilRepository.deleteById(idProfil);
-		
-	}
+//	@Override
+//	public void supprimerProfil(Long idProfil) {
+//		profilRepository.deleteById(idProfil);
+//		
+//	}
 
 	@Override
 	public void supprimerProjet(Long idProjet) {
@@ -609,10 +609,10 @@ public class CartoImpl implements ICarto{
 		
 	}
 
-	@Override
-	public Profil findByIdProfil(Long idProfil) {
-		return profilRepository.findById(idProfil).orElseThrow(RuntimeException::new);
-	}
+//	@Override
+//	public Profil findByIdProfil(Long idProfil) {
+//		return profilRepository.findById(idProfil).orElseThrow(RuntimeException::new);
+//	}
 
 //	@Override
 //	public Privilege ajoutPrivilege(Long idProfil, String checkboxPrivilege[]) {
