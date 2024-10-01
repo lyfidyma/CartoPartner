@@ -3,6 +3,7 @@ package com.carto.sn.entities;
 import java.util.Set;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,7 +26,7 @@ public class Profil {
 	@ManyToMany(mappedBy="profil")
 	private Set<Utilisateur> utilisateur;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	private Set<Privilege> privilege;
 	public Profil(String nomProfil) {
 		super();
@@ -50,6 +51,33 @@ public class Profil {
 
 	public void setNomProfil(String nomProfil) {
 		this.nomProfil = nomProfil;
+	}
+
+
+	public Set<Utilisateur> getUtilisateur() {
+		return utilisateur;
+	}
+
+
+	public void setUtilisateur(Set<Utilisateur> utilisateur) {
+		this.utilisateur = utilisateur;
+	}
+
+
+	public Set<Privilege> getPrivilege() {
+		return privilege;
+	}
+
+
+	public void setPrivilege(Set<Privilege> privilege) {
+		this.privilege = privilege;
+	}
+
+
+	public Profil(Long idProfil, Set<Privilege> privilege) {
+		super();
+		this.idProfil = idProfil;
+		this.privilege = privilege;
 	}
 	
 	

@@ -59,6 +59,7 @@ public class Projet {
 	Set <Categorie> categorie;
 	@JsonIgnore
 	@OneToMany(mappedBy = "projet", cascade = CascadeType.ALL)
+	@NotAudited
 	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
 	@JsonIgnore
 	@ManyToMany(mappedBy="projet")

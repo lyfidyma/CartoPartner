@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class ProjetPartenaireRegion {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -17,6 +17,26 @@ table a i{
 table td:hover{
 	background:#E6EBF0;
 }
+#btn-back-to-top {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  display: none;
+  color:white;
+  background: #350B54;
+  border: 1px solid #350B54;
+  -webkit-transition: .5s; 
+  -moz-transition:.5s; 
+  -ms-transition:.5s; 
+  -o-transition:.5s;
+   transition: .5s;
+}
+
+#btn-back-to-top:hover {
+  background: #350B54 ;
+  border: 1px solid #350B54;
+  border-radius: 50%;
+}
 </style>
 
 </head>
@@ -178,7 +198,39 @@ function showModalAjoutPartenaireLocal(idPartenaire, nomPartenaire){
 
 </form>
  </div>
-						 
+<button
+        type="button"
+        class="btn btn-floating btn-sm"
+        id="btn-back-to-top">
+  <i class="fas fa-arrow-up"></i>
+</button>
+<script>
+//Get the button
+let mybutton = document.getElementById("btn-back-to-top");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function () {
+  scrollFunction();
+};
+
+function scrollFunction() {
+  if (
+    document.body.scrollTop > 20 ||
+    document.documentElement.scrollTop > 20
+  ) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+// When the user clicks on the button, scroll to the top of the document
+mybutton.addEventListener("click", backToTop);
+
+function backToTop() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>						 
    </div>
 </div>
 

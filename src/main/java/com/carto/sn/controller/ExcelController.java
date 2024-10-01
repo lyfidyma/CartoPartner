@@ -11,21 +11,31 @@ import com.carto.sn.entities.Projet;
 import com.carto.sn.entities.Region;
 import com.carto.sn.entities.Type;
 import com.carto.sn.export.ProjetExport;
-import com.carto.sn.service.ICarto;
+import com.carto.sn.service.PartenaireService;
+import com.carto.sn.service.ProjetService;
+import com.carto.sn.service.RegionService;
+import com.carto.sn.service.TypeService;
 
 @Controller
 public class ExcelController {
+	
 	@Autowired
-	private ICarto iCarto;
+	private PartenaireService partenaireService;
+	@Autowired
+	private ProjetService projetService;
+	@Autowired
+	private RegionService regionService;
+	@Autowired
+	private TypeService typeService;
 	
 	@GetMapping("/excelExport")
 	public ModelAndView exportVersExcel() {
 		ModelAndView mav = new ModelAndView();
 		mav.setView(new ProjetExport());
-		List<Projet> list = iCarto.tousLesProjets();
-		List <Region> listLoc = iCarto.toutesLesRegions();
-		List <Partenaire> listPart = iCarto.tousLesPartenaires();
-		List <Type> listType = iCarto.tousLesTypes();
+		List<Projet> list = projetService.tousLesProjets();
+		List <Region> listLoc = regionService.toutesLesRegions();
+		List <Partenaire> listPart = partenaireService.tousLesPartenaires();
+		List <Type> listType = typeService.tousLesTypes();
 		mav.addObject("list", list);
 		mav.addObject("listLoc", listLoc);
 		mav.addObject("listPart", listPart);

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+//@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 public class Pays {
 	
 	@Id

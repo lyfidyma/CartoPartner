@@ -7,6 +7,7 @@
 <title>Nouveau profil</title>
 
 <style>
+
 table a i{
 	transition: all 0.3s linear;
 }
@@ -16,16 +17,22 @@ table a i{
 .error{
 	color:red;
 }
-
+tr:hover{
+	background: lightgray;
+}
+body{
+	font-family:Candara
+}
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
 <div layout:fragment="content">
   
       <div class = "container">
       <br/>
-       <h5>Profils</h5> 		 
-  		 <hr/>
+      <!--  <h5>Rôles et permissions</h5> 		 
+  		 <hr/> -->
   		<div style="margin: auto; background:#FFFF; width:50%; border-radius:10px; border: 2px solid #F6DFE3; 
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
   		  <div class="col-md-8" style="margin: auto;">
@@ -34,17 +41,15 @@ table a i{
 							  <div class="form-floating  mb-3">	  
 							     
 							    <select id="profil" th:field="*{nomProfil}" class="form-control" >
-							      <option value="" hidden>------------</option>
-							      <option value="ROLE_ADMIN">ADMIN</option>
-							       <option value="ROLE_USER">USER</option>						       
+							      <option value="" hidden="hidden">------------</option>
+							      <option th:each="enPr:${enumProfils}" th:text="${enPr}" th:value="ROLE_+${enPr}"></option>
+							       						       
 							    </select>
-							    <label  class="form-label">Profil</label>
+							    <label  class="form-label">Rôle</label>
 								  <span th:if="${#fields.hasErrors('nomProfil')}" th:errors="*{nomProfil}" th:errorclass="error"></span>
 								  <span style="color:red">[[${messageDoublon}]]</span>
 							 		</div>					   
-						  
-						
-						  
+					  
 					    <button type="submit" class="btn btn-success" style="margin-left:160px">Enregistrer</button>
 
 					 <br></br>
@@ -52,22 +57,97 @@ table a i{
 						</div>
 						</div>
 						<div class="col-md-6" style="margin:auto; margin-top:25px" th:if="${listProfil}">
-			<div class="table-responsive" >
-						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px; font-family:Arial;  ">
+						<div class="table-responsive" style="margin: auto; background:#FFFF; width:100%; border-radius:10px; 
+									box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);">
+						<table id="dataTable" style="width:100%; font-size:13px">
 							
 						<tbody>
-							<tr th:each="p:${listProfil}">
-							<td style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.nomProfil}"></span>
+							<tr th:each="p:${listProfil}" >
+							<!-- <td valign="middle" style="width:10%;">
+							&nbsp;&nbsp;&nbsp;<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idProfil}]], [[${p.nomProfil}]])"><i class="far fa-trash-alt" style="color:red; font-size:15px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							</td> -->
+							<td>&nbsp;&nbsp;&nbsp;<span th:text="${p.nomProfil}"></span>
 							</td>
-							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
-							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${p.idProfil}]], [[${p.nomProfil}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+							<td>
+							
+							<!-- <i class="fas fa-caret-right" th:onclick="showModalPrivileges([[${p.idProfil}]], [[${p.nomProfil}]])"></i> -->
+							<a type="button" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+    						<span class="visually-hidden">Toggle Dropdown</span>
+						  </a>
+						  <ul class="dropdown-menu dropdown-menu-start">
+						    <li>  		
+						    	<button class="dropdown-item" th:onclick="showModalPrivileges([[${p.idProfil}]], [[${p.nomProfil}]])">Permissions</button>
+						    </li>
+						    <li>	 
+						    	<button class="dropdown-item" th:onclick="showModalSupprimer([[${p.idProfil}]], [[${p.nomProfil}]])">Supprimer</button>
+						    </li>
+						    
+						  </ul>
+						   
 							</td>
 							</tr>				
 						</tbody>
 						</table>
-						 
+			<!-- Fenêtre modal pour l'ajout de privilèges-->
+<form th:action="@{sauvegarderPrivilege}" method="post">   
+<div class="modal fade" id="privileges" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="background:#045675; color:white">
+      <h6 id="nomProfil" ></h6>
+      </div>
+      <div class="modal-body" id="modal-body-privileges">
+     
+      <h6>Permissions</h6>
+    	 <table >
+    	 <tbody >
+    	 	<tr th:each="en:${enumPrivileges}">
+    	 		<td><input type="checkbox" th:id="${en}" name="checkboxPrivilege" th:value="${en}"/></td>
+    	 		<td th:text="${en}"></td>
+    	 	</tr>
+    	 	</tbody>
+    	 </table>
+    	 
+    	 <div style="text-align:right">
+    	 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:href="@{/nouveauProfil}">Annuler</button>
+        <button type="submit" id="button" class="btn btn-success" >Ajouter</button>
+         </div>
+      </div>
+    </div>
+  </div>
+  <script>
+function showModalPrivileges(idProfil, nomProfil){
+	var modal = new bootstrap.Modal(document.getElementById('privileges'), {
+		  keyboard: false
+		})
+	var dataIdProfil= "<input type='hidden' name='idProfil' value='"+idProfil+"' />"
+	document.getElementById('modal-body-privileges').innerHTML+=dataIdProfil;
+	document.getElementById('nomProfil').innerHTML = nomProfil;
+	$.get("/getPrivilegeByProfil", {idProfil:idProfil}, function (data) {  
+		  if(!data){
+			 	  
+		  }else{
+			  var privileges = document.getElementsByName("checkboxPrivilege");
+			 
+			  for(var i in privileges){ 
+				  for(var j in data.listNomPrivileges){
+					  if(privileges[i].value === data.listNomPrivileges[j])
+						  document.getElementById(data.listNomPrivileges[j]).checked = true;
+				  }
+			  }
+			  
+			 
+		  }
+}); 
+	modal.show();
+}
+</script>
+</div>
+</form>
+	<!-- Fin modal pour l'ajout de privilèges-->
+
+	<!--Modal pour la suppression d'un profil  -->					 
 <form th:action="@{supprimerProfil}" method="post">
-   <!-- Fenetre modal supprimer -->
 <div class="modal fade" id="supProfil" role="dialog">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-sm" role="document">
     <div class="modal-content">
@@ -96,6 +176,7 @@ function showModalSupprimer(idProfil, nomProfil){
 </div>
 
 </form>
+<!--Fin modal pour la suppression d'un profil  -->	
  </div>
  </div>
   

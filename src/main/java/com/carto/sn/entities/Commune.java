@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Audited
+@Audited(withModifiedFlag = true)
 public class Commune {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,6 +30,7 @@ public class Commune {
 	private String nomCommune;
 	@JsonIgnore
 	@OneToMany(mappedBy="commune")
+	@NotAudited
 	private Collection <Village> village;
 	@JsonIgnore
 	@ManyToOne
@@ -36,6 +38,7 @@ public class Commune {
 	private Departement departement;
 	@JsonIgnore
 	@OneToMany(mappedBy = "commune")
+	@NotAudited
 	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
 	
 	public Commune(String nomCommune, Departement departement) {

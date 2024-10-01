@@ -15,6 +15,13 @@ table a i{
 table td:hover{
 	background:#E6EBF0;
 }
+body{
+	font-family:Candara
+}
+.cellTable{
+	text-align:center
+}
+
 </style>
 </head>
 <body>
@@ -23,36 +30,59 @@ table td:hover{
   
       <div class = "container">
       <br/>
-      <div class="row">
-      <div class="col-md-11">
-       <h5>Utilisateurs</h5>
-        </div>
-         <div class="col-md-1">
-  		<a class="btn btn-outline-danger" th:href="@{/nouvelUtilisateur}" style="color:black">Ajouter</a>
+      
+<nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+  <ol class="breadcrumb" >
+    <li class="breadcrumb-item"><a th:href="@{/parametres}" style="text-decoration:none">Paramètres</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Comptes</li>
+  </ol>
+</nav>
+     
+         <div style="text-align:right; padding:1% 0 1%" >
+  			<a class="btn btn-outline-danger" th:href="@{/nouvelUtilisateur}" style="color:black">Nouveau compte</a>
   		 </div>
-  		 &ensp;
+  	
   		 
-  		 <hr/>
+  		 
   	<div>
 	<h4 th:if="${listUtilisateur.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouvelUtilisateur}">Ajouter un utilisateur</a> </h4>
 	</div>	 
   		 <div class="table-responsive" th:if="${listUtilisateur}">
-						<table  class="table table-bordered" id="dataTable" style="width:90%; font-size:13px; font-family:Arial;  ">
-							
-						<tbody>
-							<tr th:each="u:${listUtilisateur}">
-							<td style="width:50%; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${u.prenomUtilisateur}+' '+${u.nomUtilisateur}"></span>
-							</td>
-							<th:block th:each="p:${u.profil}">
-							<td style=" box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); text-shadow: 0px 1px 1px rgba(0, 0, 0, 0.5);" ><span th:text="${p.nomProfil}"></span>
-							</td>
-							</th:block>
-							<td valign="middle" style="text-align:center; box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); background: linear-gradient(to right, lightyellow, lightblue);">
-							<a type="button" title="Opérations" th:href="@{operations(login=${u.login})}"><i class="fa fa-tasks" style="color:gray; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
-							<a type="button" title="Ajouter un projet" th:onclick="showModalAjouterProjet([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="fas fa-exchange-alt" style="color:blue; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
-							<a type="button" title="Editer" th:onclick="showModalModifier([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
-							<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
-							</td>
+						<table  class="table table-bordered" id="dataTable" style="width:100%; font-size:13px;">
+						<thead>
+							<tr>
+								<th>Prénom et nom</th><th>Statut</th><th class="cellTable">Rôle</th><th class="cellTable">Opérations</th><th class="cellTable">Lier à un projet</th><th class="cellTable">Modifier/Supprimer</th>
+							</tr>
+						</thead>	
+						<tbody>						
+							<tr th:each="u:${listUtilisateur}" valign="middle">
+								<td style="width:30%;" ><span th:text="${u.prenomUtilisateur}+' '+${u.nomUtilisateur}"></span>
+								</td>
+								<td>
+									<a class="form-check form-switch" style="text-decoration:none; color:black">
+										<span th:if="${u.isEnabled}">
+	  										<input  class="form-check-input" type="checkbox" role="switch" th:id="checkboxSwitchID+${u.idUtilisateur}" th:onclick="enableOrDisableUserAccount([[${u.idUtilisateur}]])" checked/>
+	  										<label style="background: lightgreen; border-radius:10%" th:id="label+${u.idUtilisateur}" th:text="Activé"></label>
+	  									</span>
+	  									<span th:if="${!u.isEnabled}" >
+	  										<input class="form-check-input" type="checkbox" role="switch" th:id="checkboxSwitchID+${u.idUtilisateur}" th:onclick="enableOrDisableUserAccount([[${u.idUtilisateur}]])"/>
+	  										<label style="background: #FE3E55; border-radius:10%" th:id="label+${u.idUtilisateur}" th:text="Désactivé" ></label>
+	  									</span>
+	  								</a>
+								</td>
+								<th:block th:each="p:${u.profil}">
+									<td class="cellTable"><span th:text="${p.nomProfil}"></span></td>
+								</th:block>
+								<td class="cellTable">
+									<a type="button" title="Opérations" th:href="@{operations(login=${u.login})}"><i class="fa fa-tasks" style="color:gray; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+								</td>
+								<td class="cellTable">
+									<a type="button" title="Ajouter un projet" th:onclick="showModalAjouterProjet([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="fas fa-exchange-alt" style="color:blue; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+								</td>
+								<td class="cellTable">		
+									<a type="button" title="Editer" th:onclick="showModalModifier([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-edit" style="color:green; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>&ensp;&ensp;
+									<a type="button" title="Supprimer" th:onclick="showModalSupprimer([[${u.idUtilisateur}]], [[${u.nomUtilisateur}]], [[${u.prenomUtilisateur}]])"><i class="far fa-trash-alt" style="color:red; font-size:20px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);"></i></a>
+								</td>
 							</tr>				
 						</tbody>
 						</table>
@@ -107,6 +137,28 @@ function showModalAjouterProjet(idUtilisateur, nomUtilisateur, prenomUtilisateur
 	document.getElementById('prenomEtNomUser').innerHTML = prenomUtilisateur+' '+nomUtilisateur;
 	modal.show();
 }
+
+function enableOrDisableUserAccount(idUtilisateur){
+	var checkboxSwitchID = document.getElementById("checkboxSwitchID"+idUtilisateur);
+	var labelID = document.getElementById("label"+idUtilisateur);
+	var labelBackground;
+	var isEnabled = new Boolean();
+	var isEnabledValueTranslate;
+	if(checkboxSwitchID.checked){
+		isEnabled = true;
+		isEnabledValueTranslate = "Activé";
+		labelBackground = "lightgreen";
+	}
+	if(!checkboxSwitchID.checked){
+		isEnabled = false;
+		isEnabledValueTranslate = "Désactivé";
+		labelBackground ="#FE3E55";
+	}
+	
+	$.get("/enableOrDisableUserAccount", {idUtilisateur:idUtilisateur, isEnabled:isEnabled});
+	labelID.innerHTML = isEnabledValueTranslate;
+	labelID.style.backgroundColor = labelBackground;
+}
 </script>
 
 </div>
@@ -157,7 +209,7 @@ function showModalAjouterProjet(idUtilisateur, nomUtilisateur, prenomUtilisateur
 
 </form>
   </div>
-  </div>
+  
   </div>
 </div>
 

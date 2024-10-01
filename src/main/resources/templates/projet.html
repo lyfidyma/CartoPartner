@@ -15,8 +15,20 @@
   bottom: 15px;
   right: 15px;
   display: none;
-  color:black;
-  border: 1px solid black;
+  color:white;
+  background: #350B54;
+  border: 1px solid #350B54;
+  -webkit-transition: .5s; 
+  -moz-transition:.5s; 
+  -ms-transition:.5s; 
+  -o-transition:.5s;
+   transition: .5s;
+}
+
+#btn-back-to-top:hover {
+  background: #350B54 ;
+  border: 1px solid #350B54;
+  border-radius: 50%;
 }
 .modal-header{
 	background: linear-gradient(to right,   #EEF6DF  ,   #F8F5F1 ,   #F8F9EA  );
@@ -105,7 +117,7 @@
      cursor:pointer;
      transition: all 0.5s linear;
    } 
-.col-md-1 .btn {
+/* .col-md-1 .btn {
   text-decoration: none;
   border: 1px solid Tomato;
   color: Tomato;
@@ -134,27 +146,38 @@
 }
 .col-md-1 .btn:hover {
   color: #fff;
-}  
+} */  
 </style>
 </head>
 <body>
   <div layout:fragment="content">
   <br/>
-  <div class="row">
+  <!-- <div class="row">
       <div class="col-md-11">
        
         </div>
-         <div class="col-md-1">
-  		<a class="btn btn-sm" th:href="@{/nouveauProjet}" style="color:black">Ajouter</a>
+ 
+         <div class="col-md-1" data-bs-toggle="dropdown" aria-expanded="false" >
+         <i class="fas fa-ellipsis-v" style="position:fixed"></i>
+                            <ul class="dropdown-menu">
+                              <li>
+                               
+                                   <a class="dropdown-item" th:href="@{/nouveauProjet}">Ajouter projet</a>
+                                
+                              </li>
+                             
+                            </ul>
+  		
   		 </div>
   		
   		 
   	
-  </div>
+  </div> -->
       <div class = "container">
      <br/>
       
   <div>
+                        
 	<h4 th:if="${listProjet.isEmpty()}==true" style="color:blue; text-align:center"><a th:href="@{/nouveauProjet}">Ajouter un projet</a> </h4>
 	</div>
       <div class="row">
@@ -179,12 +202,12 @@
 		<label th:style="'margin-left:390px; color:' + ${t.couleur} +''">Type : </label>&nbsp;<span th:style="'color:' + ${t.couleur} +''"th:text="${t.nomType}" ></span>
 		</div>
 		
-		 <a th:if="${p.statut} eq 'En cours' or ${p.statut} eq 'En plan' " th:href="@{/displayChoixPartenaire(nomProjet=${p.nomProjet}, idProjet=${p.idProjet}, pageAAfficher=ChoixPartenaire, nomPartenaire='', pointFocal='', nomType='')}" style="margin-left:390px; text-decoration:none" >Choisir partenaire</a>
-		  <a th:if="${p.statut} eq 'Clôturé'" style="margin-left:390px; text-decoration:none" >Choisir partenaire</a>
+		 <a th:if="${p.statut} eq 'En cours' or ${p.statut} eq 'En plan' " th:href="@{/displayChoixPartenaire(nomProjet=${p.nomProjet}, idProjet=${p.idProjet}, pageAAfficher=ChoixPartenaire, nomPartenaire='', pointFocal='', nomType='')}" style="margin-left:390px; text-decoration:none" >Partenaires &otimes;</a>
+		  <a th:if="${p.statut} eq 'Clôturé'" style="margin-left:390px; text-decoration:none" >Partenaires &otimes;</a>
 		
-		 &ensp;<a th:href="@{/detailsProjet(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="text-decoration:none">Détails</a>
-		 &ensp;<a th:href="@{/cartographie(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="text-decoration:none">Voir sur la carte</a>
-		
+		 <a th:href="@{/detailsProjet(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="text-decoration:none">Détails</a>
+		 <a th:if="${p.statut} eq 'En cours' or ${p.statut} eq 'En plan' " th:href="@{/cartographie(nomProjet=${p.nomProjet}, idProjet=${p.idProjet})}" style="text-decoration:none">&otimes; Voir sur la carte</a>
+				<a th:if="${p.statut} eq 'Clôturé'" style="text-decoration:none">&otimes; Voir sur la carte</a>
 		<br></br>
 		<br></br>
 		<hr/>

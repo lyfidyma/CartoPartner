@@ -54,7 +54,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity httpSecurity, AuthenticationManager authManager) throws Exception {    	
        //  MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
-        httpSecurity.formLogin(formLogin -> (formLogin
+        httpSecurity
+        .formLogin(formLogin -> (formLogin
         		.loginPage("/login")
         		.defaultSuccessUrl("/index", true))
         		.permitAll())

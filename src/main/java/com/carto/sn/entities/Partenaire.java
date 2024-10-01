@@ -40,6 +40,7 @@ public class Partenaire {
 	Set <PartenaireLocal> partenaireLocal;
 	@JsonIgnore
 	@OneToMany(mappedBy = "partenaire", cascade = CascadeType.ALL)
+	@NotAudited
 	private Set<ProjetPartenaireRegion> projetPartenaireRegion;
 	
 	
