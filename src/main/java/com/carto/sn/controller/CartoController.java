@@ -52,6 +52,7 @@ import com.carto.sn.service.PrivilegeService;
 import com.carto.sn.service.ProfilService;
 import com.carto.sn.service.ProjetPartenaireRegionService;
 import com.carto.sn.service.ProjetService;
+import com.carto.sn.service.RegionService;
 
 import jakarta.validation.Valid;
 
@@ -80,6 +81,8 @@ public class CartoController {
 	@Autowired
 	private ProjetService projetService;
 	@Autowired
+	private RegionService regionService;
+	@Autowired
 	private GeocodingService geocodingService;
 
 	@RequestMapping("/index")
@@ -90,7 +93,7 @@ public class CartoController {
 		List<Projet> listProjet = projetService.tousLesProjets();
 
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = iCarto.toutesLesRegions();
+		List<Region> listRegion = regionService.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listType", listType);
@@ -192,7 +195,7 @@ public class CartoController {
 			@ModelAttribute("unType") Type unType, @ModelAttribute("uneCategorie") Categorie uneCategorie,
 			Model model) {
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listLocalisation = iCarto.toutesLesRegions();
+		List<Region> listLocalisation = regionService.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 		List<Categorie> listCategorie = categorieService.toutesLesCategories();
 
@@ -207,7 +210,7 @@ public class CartoController {
 	@RequestMapping("partenaire")
 	public String partenaire(Model model) {
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listLocalisation = iCarto.toutesLesRegions();
+		List<Region> listLocalisation = regionService.toutesLesRegions();
 		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -226,7 +229,7 @@ public class CartoController {
 		// iCarto.tousLesProjetsPartenairesRegions();
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = iCarto.toutesLesRegions();
+		List<Region> listRegion = regionService.toutesLesRegions();
 		List<Projet> listProjetPoinFocal = projetService.groupByPointFocal();
 
 		if (nomProjet.isEmpty() == false) {
@@ -345,7 +348,7 @@ public class CartoController {
 		List<ProjetPartenaireRegion> listPpr = pprService.tousLesProjetsPartenairesRegions();
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = iCarto.toutesLesRegions();
+		List<Region> listRegion = regionService.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 
 		model.addAttribute("listProjet", listProjet);
@@ -531,7 +534,7 @@ public class CartoController {
 		Set<String> listTypeParRegion = new HashSet<String>();
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = iCarto.toutesLesRegions();
+		List<Region> listRegion = regionService.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 
 		model.addAttribute("listProjet", listProjet);
@@ -633,7 +636,7 @@ public class CartoController {
 		HashMap<String, Set<String>> hmapType = new HashMap<String, Set<String>>();
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = iCarto.toutesLesRegions();
+		List<Region> listRegion = regionService.toutesLesRegions();
 		List<Type> listType = iCarto.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -750,7 +753,7 @@ public class CartoController {
 		List<Departement> listDepartement = departementService.tousLesDepartements();
 		ra.addFlashAttribute("listDepartement", listDepartement);
 
-		iCarto.ajoutRegion(nomDepartement, nomRegion, nomPays, nomCommune);
+		regionService.ajoutRegion(nomDepartement, nomRegion, nomPays, nomCommune);
 		return "redirect:/localisation";
 	}
 
@@ -997,7 +1000,7 @@ public class CartoController {
 
 	@RequestMapping("supprimerRegion")
 	public String supprimerRegion(Long idRegion) {
-		iCarto.supprimerRegion(idRegion);
+		regionService.supprimerRegion(idRegion);
 		return "redirect:/localisation";
 	}
 
@@ -1093,7 +1096,7 @@ public class CartoController {
 			@ModelAttribute("projetPartenaireDTO") ProjetPartenaireDTO projetPartenaireDTO, Model model) {
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = iCarto.toutesLesRegions();
+		List<Region> listRegion = regionService.toutesLesRegions();
 		List<Departement> listDepartement = departementService.tousLesDepartements();
 		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -1110,7 +1113,7 @@ public class CartoController {
 
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = iCarto.toutesLesRegions();
+		List<Region> listRegion = regionService.toutesLesRegions();
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listRegion", listRegion);
@@ -1357,7 +1360,7 @@ public class CartoController {
 	public String lierPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire, Model model) {
 
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listLocalisation = iCarto.toutesLesRegions();
+		List<Region> listLocalisation = regionService.toutesLesRegions();
 		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
 		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
 		model.addAttribute("listPartenaire", listPartenaire);

@@ -25,10 +25,10 @@ import com.carto.sn.enums.EnumPrivilege;
 
 public interface ICarto {
 	
-	public Region ajoutRegion(String nomDepartement, String nomRegion, String nomPays, String nomCommune);
+//	public Region ajoutRegion(String nomDepartement, String nomRegion, String nomPays, String nomCommune);
 //	public Partenaire ajoutPartenaire(Long idPartenaire, String nomPartenaire, String adresse);
 //	public List <Partenaire> tousLesPartenaires();
-	public List <Region> toutesLesRegions();
+//	public List <Region> toutesLesRegions();
 //	public List <Projet> tousLesProjets();
 //	public Projet ajoutProjet(String nomProjet, String pointFocal, 
 //			String description, String nomType, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
@@ -43,10 +43,10 @@ public interface ICarto {
 	public List <Utilisateur> tousLesUtilisateurs();
 	public void supprimerUtilisateur(Long idUtilisateur);
 	public Optional<Utilisateur> findUtilisateurById(Long idUtilisateur);
-	public void supprimerRegion(Long idRegion);
+//	public void supprimerRegion(Long idRegion);
 //	public void supprimerProfil(Long idProfil);
 //	public void supprimerProjet(Long idProjet);
-	public Optional <Region> findRegionById(Long idRegion);
+//	public Optional <Region> findRegionById(Long idRegion);
 //	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal,  
 //			String description, String type, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
 //	public List <Projet> findOneIdByProjetName(String nomProjet);

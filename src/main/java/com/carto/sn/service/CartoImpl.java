@@ -93,35 +93,35 @@ public class CartoImpl implements ICarto{
 	@Autowired
 	private EntityManagerFactory factory;
 
-	@Override
-	public Region ajoutRegion(String nomDepartement, String nomRegion, String nomPays, String nomCommune) {
-		Pays unPays = null;
-		if(paysRepository.findByNomPays(nomPays)!=null) {
-			unPays = paysRepository.findByNomPays(nomPays);
-		}else {
-			unPays = paysRepository.save(new Pays(nomPays));
-		}
-		Region uneRegion = null;
-		if(regionRepository.findByNomRegion(nomRegion)!=null) {
-			uneRegion = regionRepository.findByNomRegion(nomRegion);
-		}else {
-			uneRegion = regionRepository.save(new Region(nomRegion, unPays));
-		}
-		 Departement unDepartement = null;
-		 if(departementRepository.findByNomDepartement(nomDepartement)!=null) {
-			 unDepartement = departementRepository.findByNomDepartement(nomDepartement);
-		 }else {
-			 unDepartement = departementRepository.save(new Departement(nomDepartement, uneRegion));
-		 }
-		 Commune uneCommune = null;
-		 if(communeRepository.findByNomCommune(nomCommune)!=null) {
-			 uneCommune = communeRepository.findByNomCommune(nomCommune);
-		 }else {
-			 uneCommune =  communeRepository.save(new Commune(nomCommune, unDepartement));
-		 }	
-		
-		return uneRegion;
-	}
+//	@Override
+//	public Region ajoutRegion(String nomDepartement, String nomRegion, String nomPays, String nomCommune) {
+//		Pays unPays = null;
+//		if(paysRepository.findByNomPays(nomPays)!=null) {
+//			unPays = paysRepository.findByNomPays(nomPays);
+//		}else {
+//			unPays = paysRepository.save(new Pays(nomPays));
+//		}
+//		Region uneRegion = null;
+//		if(regionRepository.findByNomRegion(nomRegion)!=null) {
+//			uneRegion = regionRepository.findByNomRegion(nomRegion);
+//		}else {
+//			uneRegion = regionRepository.save(new Region(nomRegion, unPays));
+//		}
+//		 Departement unDepartement = null;
+//		 if(departementRepository.findByNomDepartement(nomDepartement)!=null) {
+//			 unDepartement = departementRepository.findByNomDepartement(nomDepartement);
+//		 }else {
+//			 unDepartement = departementRepository.save(new Departement(nomDepartement, uneRegion));
+//		 }
+//		 Commune uneCommune = null;
+//		 if(communeRepository.findByNomCommune(nomCommune)!=null) {
+//			 uneCommune = communeRepository.findByNomCommune(nomCommune);
+//		 }else {
+//			 uneCommune =  communeRepository.save(new Commune(nomCommune, unDepartement));
+//		 }	
+//		
+//		return uneRegion;
+//	}
 
 //	@Override
 //	public Partenaire ajoutPartenaire(Long idPartenaire, String nomPartenaire, String adresse) {
@@ -144,10 +144,10 @@ public class CartoImpl implements ICarto{
 //		return partenaireRepository.findAll();
 //	}
 
-	@Override
-	public List<Region> toutesLesRegions() {
-		return regionRepository.findAll();
-	}
+//	@Override
+//	public List<Region> toutesLesRegions() {
+//		return regionRepository.findAll();
+//	}
 	
 //	@Override
 //	public List<Projet> tousLesProjets() {
@@ -295,11 +295,11 @@ public class CartoImpl implements ICarto{
 		return utilisateurRepository.findById(idUtilisateur);
 	}
 
-	@Override
-	public void supprimerRegion(Long idRegion) {
-		regionRepository.deleteById(idRegion);
-		
-	}
+//	@Override
+//	public void supprimerRegion(Long idRegion) {
+//		regionRepository.deleteById(idRegion);
+//		
+//	}
 
 //	@Override
 //	public void supprimerProfil(Long idProfil) {
@@ -313,10 +313,10 @@ public class CartoImpl implements ICarto{
 //		
 //	}
 
-	@Override
-	public Optional<Region> findRegionById(Long idRegion) {
-		return regionRepository.findById(idRegion);
-	}
+//	@Override
+//	public Optional<Region> findRegionById(Long idRegion) {
+//		return regionRepository.findById(idRegion);
+//	}
 
 //	@Override
 //	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal,
