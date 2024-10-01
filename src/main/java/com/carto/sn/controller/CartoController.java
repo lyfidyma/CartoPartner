@@ -55,6 +55,7 @@ import com.carto.sn.service.ProjetService;
 import com.carto.sn.service.RegionService;
 import com.carto.sn.service.TypeService;
 import com.carto.sn.service.UtilisateurService;
+import com.carto.sn.service.VillageService;
 
 import jakarta.validation.Valid;
 
@@ -88,6 +89,8 @@ public class CartoController {
 	private TypeService typeService;
 	@Autowired
 	private UtilisateurService utilisateurService;
+	@Autowired
+	private VillageService villageService;
 	@Autowired
 	private GeocodingService geocodingService;
 
@@ -338,7 +341,7 @@ public class CartoController {
 			@ModelAttribute("unPays") Pays unPays, Model model) {
 		List<Commune> listCommune = communeService.toutesLesCommunes();
 		List<Departement> listDepartement = departementService.tousLesDepartements();
-		List<Village> listVillage = iCarto.tousLesVillages();
+		List<Village> listVillage = villageService.tousLesVillages();
 
 		model.addAttribute("listVillage", listVillage);
 		model.addAttribute("listCommune", listCommune);
@@ -1353,10 +1356,10 @@ public class CartoController {
 	@ResponseBody
 	public Object getVillage(String nomCommune) {
 
-		if (iCarto.findVillageByNomCommune(nomCommune) == null) {
+		if (villageService.findVillageByNomCommune(nomCommune) == null) {
 			return null;
 		}
-		List<Village> listVil = iCarto.findVillageByNomCommune(nomCommune);
+		List<Village> listVil = villageService.findVillageByNomCommune(nomCommune);
 
 		return listVil;
 

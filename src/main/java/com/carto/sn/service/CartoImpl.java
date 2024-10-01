@@ -457,10 +457,10 @@ public class CartoImpl implements ICarto{
 //		return communeRepository.findAll();
 //	}
 
-	@Override
-	public List<Village> tousLesVillages() {
-		return villageRepository.findAll();
-	}
+//	@Override
+//	public List<Village> tousLesVillages() {
+//		return villageRepository.findAll();
+//	}
 
 	/*
 	 * @Override public List<Categorie> toutesLesCategories() { return
@@ -484,10 +484,10 @@ public class CartoImpl implements ICarto{
 //		return communeRepository.findCommuneByNomDepartement(nomDepartement);
 //	}
 
-	@Override
-	public List<Village> findVillageByNomCommune(String nomCommune) {
-		return villageRepository.findVillageByNomCommune(nomCommune);
-	}
+//	@Override
+//	public List<Village> findVillageByNomCommune(String nomCommune) {
+//		return villageRepository.findVillageByNomCommune(nomCommune);
+//	}
 
 //	@Override
 //	public List<PartenaireLocal> tousLesPartenairesLocaux() {
