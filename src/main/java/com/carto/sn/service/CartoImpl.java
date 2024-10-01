@@ -149,61 +149,61 @@ public class CartoImpl implements ICarto{
 		return regionRepository.findAll();
 	}
 	
-	@Override
-	public List<Projet> tousLesProjets() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		List<Projet> proj = projetRepository.findAll();
-		List<Projet> projetUtilisateur = new ArrayList<>();
-		
-		for(GrantedAuthority grAuth : authentication.getAuthorities()) {
-			if(grAuth.getAuthority().equals("ROLE_"+EnumProfil.ADMIN)) {
-			return proj;
-		}
-	}
-	
-			for(Projet p:proj) {	
-				Set<Utilisateur> ut = p.getUtilisateur();
-				for(Utilisateur u:ut) {
-					if(u.getLogin().equals(authentication.getName())) {
-						projetUtilisateur.add(p);
-					}
-				}
-			}
-			return projetUtilisateur;
-		
-		
-	}
+//	@Override
+//	public List<Projet> tousLesProjets() {
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		List<Projet> proj = projetRepository.findAll();
+//		List<Projet> projetUtilisateur = new ArrayList<>();
+//		
+//		for(GrantedAuthority grAuth : authentication.getAuthorities()) {
+//			if(grAuth.getAuthority().equals("ROLE_"+EnumProfil.ADMIN)) {
+//			return proj;
+//		}
+//	}
+//	
+//			for(Projet p:proj) {	
+//				Set<Utilisateur> ut = p.getUtilisateur();
+//				for(Utilisateur u:ut) {
+//					if(u.getLogin().equals(authentication.getName())) {
+//						projetUtilisateur.add(p);
+//					}
+//				}
+//			}
+//			return projetUtilisateur;
+//		
+//		
+//	}
 
-	@Override
-	public Projet ajoutProjet(String nomProjet, String pointFocal, 
-			String description, String nomType,  MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException{
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		Type typeProjet = typeRepository.findByNomType(nomType);
-		Utilisateur user = utilisateurRepository.findByLogin(authentication.getName()).orElse(null);
-		Projet proj = null;
-		Set<Type> sType = Stream.of(typeProjet)
-                .collect(Collectors.toCollection(HashSet::new));
-		
-		Categorie categorie = categorieRepository.findByNomCategorie(nomCategorie);
-		Set<Categorie> sCategorie = Stream.of(categorie)
-                .collect(Collectors.toCollection(HashSet::new));
-		
-		proj = projetRepository.save(new Projet(nomProjet, pointFocal, description, dateDebut, dateFin, file.getBytes(), statut));
-		proj.setType(sType);
-		proj.setCategorie(sCategorie);
-		for(GrantedAuthority authority :authentication.getAuthorities()) {
-			if(authority.getAuthority().equals("ROLE_USER")){
-//				Set<Utilisateur> sUtilisateur = Stream.of(user)
-//		                .collect(Collectors.toCollection(HashSet::new));
-//				proj.setUtilisateur(sUtilisateur);
-				//proj.getUtilisateur().add(user);
-				user.getProjet().add(proj);
-				break;
-			}
-		}
-		return proj;
-	}
+//	@Override
+//	public Projet ajoutProjet(String nomProjet, String pointFocal, 
+//			String description, String nomType,  MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException{
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		
+//		Type typeProjet = typeRepository.findByNomType(nomType);
+//		Utilisateur user = utilisateurRepository.findByLogin(authentication.getName()).orElse(null);
+//		Projet proj = null;
+//		Set<Type> sType = Stream.of(typeProjet)
+//                .collect(Collectors.toCollection(HashSet::new));
+//		
+//		Categorie categorie = categorieRepository.findByNomCategorie(nomCategorie);
+//		Set<Categorie> sCategorie = Stream.of(categorie)
+//                .collect(Collectors.toCollection(HashSet::new));
+//		
+//		proj = projetRepository.save(new Projet(nomProjet, pointFocal, description, dateDebut, dateFin, file.getBytes(), statut));
+//		proj.setType(sType);
+//		proj.setCategorie(sCategorie);
+//		for(GrantedAuthority authority :authentication.getAuthorities()) {
+//			if(authority.getAuthority().equals("ROLE_USER")){
+////				Set<Utilisateur> sUtilisateur = Stream.of(user)
+////		                .collect(Collectors.toCollection(HashSet::new));
+////				proj.setUtilisateur(sUtilisateur);
+//				//proj.getUtilisateur().add(user);
+//				user.getProjet().add(proj);
+//				break;
+//			}
+//		}
+//		return proj;
+//	}
 
 //	@Override
 //	public Projet ajouterPartenaireAuProjet(String nomProjet, String pointFocal, String nomPartenaire,
@@ -219,10 +219,10 @@ public class CartoImpl implements ICarto{
 //		partenaireRepository.deleteById(idPartenaire);
 //	}
 
-	@Override
-	public Optional<Projet> projetParId(Long id) {
-		return projetRepository.findById(id);
-	}
+//	@Override
+//	public Optional<Projet> projetParId(Long id) {
+//		return projetRepository.findById(id);
+//	}
 
 //	@Override
 //	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse) {
@@ -239,10 +239,10 @@ public class CartoImpl implements ICarto{
 //		return partenaireRepository.findById(id);
 //	}
 
-	@Override
-	public List<Projet> chercher(String motCle) {
-		return projetRepository.chercher(motCle);
-	}
+//	@Override
+//	public List<Projet> chercher(String motCle) {
+//		return projetRepository.chercher(motCle);
+//	}
 
 //	@Override
 //	public Profil ajoutProfil(String profil) {
@@ -307,41 +307,41 @@ public class CartoImpl implements ICarto{
 //		
 //	}
 
-	@Override
-	public void supprimerProjet(Long idProjet) {
-		projetRepository.deleteById(idProjet);
-		
-	}
+//	@Override
+//	public void supprimerProjet(Long idProjet) {
+//		projetRepository.deleteById(idProjet);
+//		
+//	}
 
 	@Override
 	public Optional<Region> findRegionById(Long idRegion) {
 		return regionRepository.findById(idRegion);
 	}
 
-	@Override
-	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal,
-			String description, String type, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie)
-			throws IOException {
-		Projet projet = null;
-		Categorie categorie = categorieRepository.findByNomCategorie(nomCategorie);
-		Set<Categorie> sCategorie = Stream.of(categorie).collect(Collectors.toCollection(HashSet::new));
-		
-		projet = projetRepository.findById(idProjet).orElse(projet);
-		projet.setNomProjet(nomProjet);
-		projet.setPointFocal(pointFocal);
-		projet.setDescription(description);
-		projet.setStatut(statut);
-		projet.setCategorie(sCategorie);
-		if(file.isEmpty()==false)
-			projet.setDataImage(file.getBytes());
-		projetRepository.save(projet);
-		return projet;
-	}
+//	@Override
+//	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal,
+//			String description, String type, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie)
+//			throws IOException {
+//		Projet projet = null;
+//		Categorie categorie = categorieRepository.findByNomCategorie(nomCategorie);
+//		Set<Categorie> sCategorie = Stream.of(categorie).collect(Collectors.toCollection(HashSet::new));
+//		
+//		projet = projetRepository.findById(idProjet).orElse(projet);
+//		projet.setNomProjet(nomProjet);
+//		projet.setPointFocal(pointFocal);
+//		projet.setDescription(description);
+//		projet.setStatut(statut);
+//		projet.setCategorie(sCategorie);
+//		if(file.isEmpty()==false)
+//			projet.setDataImage(file.getBytes());
+//		projetRepository.save(projet);
+//		return projet;
+//	}
 
-	@Override
-	public  List <Projet> findOneIdByProjetName(String nomProjet) {
-		return projetRepository.findOneIdByProjetName(nomProjet);
-	}
+//	@Override
+//	public  List <Projet> findOneIdByProjetName(String nomProjet) {
+//		return projetRepository.findOneIdByProjetName(nomProjet);
+//	}
 
 	@Override
 	public Type ajoutType(String type, String couleur) {
@@ -371,66 +371,66 @@ public class CartoImpl implements ICarto{
 //		return paysRepository.findAll();
 //	}
 
-	@Override
-	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
-			String nomCommune, String nomVillage, String latitude, String longitude, String nomPartenaireLocal)  {
-		
-		Projet proj = projetRepository.findByNomProjet(nomProjet);
-		Partenaire part = partenaireRepository.findByNomPartenaire(nomDuPartenaire);
-		Region reg = regionRepository.findByNomRegion(nomRegion);
-		Departement dep = departementRepository.findByNomDepartement(nomDepartement);
-		Commune com = communeRepository.findByNomCommune(nomCommune);
-		if(nomVillage!=null) {
-			Village vil = null;
-			if(villageRepository.findByNomVillage(nomVillage)!=null) {
-				vil = villageRepository.findByNomVillage(nomVillage);
-				vil.setLatitude(latitude);
-				vil.setLongitude(longitude);
-				villageRepository.save(vil);
-			}else {
-				vil = villageRepository.save(new Village(nomVillage, com));
-			}
-		}
-		
-		PartenaireLocal paLoc = null;
-		if(nomPartenaireLocal!=null) {
-		if(partenaireLocalRepository.findByNomPartenaireLocal(nomPartenaireLocal)!=null) {
-			paLoc = partenaireLocalRepository.findByNomPartenaireLocal(nomPartenaireLocal);	
-		}else {
-			Set<Partenaire> sPartenaire = Stream.of(part)
-	                .collect(Collectors.toCollection(HashSet::new));
-			paLoc = partenaireLocalRepository.save(new PartenaireLocal(nomPartenaireLocal, sPartenaire));
-		}
-		part.getPartenaireLocal().add(paLoc);
-		proj.getPartenaire().add(part);
-		}
-		
-		proj.getRegion().add(reg);
-		projetRepository.save(proj);
-		
-		if(pprRepository.findProjetPartenaireRegion(proj.getIdProjet(), part.getIdPartenaire(), reg.getIdRegion(), com.getIdCommune()).isEmpty()) {
-			ProjetPartenaireRegion ppr = pprRepository.save(new ProjetPartenaireRegion(proj, part, reg, com));
-		
-		}
-		
-		
-		return proj;
-	}
+//	@Override
+//	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
+//			String nomCommune, String nomVillage, String latitude, String longitude, String nomPartenaireLocal)  {
+//		
+//		Projet proj = projetRepository.findByNomProjet(nomProjet);
+//		Partenaire part = partenaireRepository.findByNomPartenaire(nomDuPartenaire);
+//		Region reg = regionRepository.findByNomRegion(nomRegion);
+//		Departement dep = departementRepository.findByNomDepartement(nomDepartement);
+//		Commune com = communeRepository.findByNomCommune(nomCommune);
+//		if(nomVillage!=null) {
+//			Village vil = null;
+//			if(villageRepository.findByNomVillage(nomVillage)!=null) {
+//				vil = villageRepository.findByNomVillage(nomVillage);
+//				vil.setLatitude(latitude);
+//				vil.setLongitude(longitude);
+//				villageRepository.save(vil);
+//			}else {
+//				vil = villageRepository.save(new Village(nomVillage, com));
+//			}
+//		}
+//		
+//		PartenaireLocal paLoc = null;
+//		if(nomPartenaireLocal!=null) {
+//		if(partenaireLocalRepository.findByNomPartenaireLocal(nomPartenaireLocal)!=null) {
+//			paLoc = partenaireLocalRepository.findByNomPartenaireLocal(nomPartenaireLocal);	
+//		}else {
+//			Set<Partenaire> sPartenaire = Stream.of(part)
+//	                .collect(Collectors.toCollection(HashSet::new));
+//			paLoc = partenaireLocalRepository.save(new PartenaireLocal(nomPartenaireLocal, sPartenaire));
+//		}
+//		part.getPartenaireLocal().add(paLoc);
+//		proj.getPartenaire().add(part);
+//		}
+//		
+//		proj.getRegion().add(reg);
+//		projetRepository.save(proj);
+//		
+//		if(pprRepository.findProjetPartenaireRegion(proj.getIdProjet(), part.getIdPartenaire(), reg.getIdRegion(), com.getIdCommune()).isEmpty()) {
+//			ProjetPartenaireRegion ppr = pprRepository.save(new ProjetPartenaireRegion(proj, part, reg, com));
+//		
+//		}
+//		
+//		
+//		return proj;
+//	}
 
-	@Override
-	public Projet findByNomProjet(String nomProjet) {
-		return projetRepository.findByNomProjet(nomProjet);
-	}
+//	@Override
+//	public Projet findByNomProjet(String nomProjet) {
+//		return projetRepository.findByNomProjet(nomProjet);
+//	}
 
 //	@Override
 //	public Partenaire findByNomPartenaire(String nomPartenaire) {
 //		return partenaireRepository.findByNomPartenaire(nomPartenaire);
 //	}
 
-	@Override
-	public List<Projet> findByPointFocal(String pointFocal) {
-		return projetRepository.findByPointFocal(pointFocal);
-	}
+//	@Override
+//	public List<Projet> findByPointFocal(String pointFocal) {
+//		return projetRepository.findByPointFocal(pointFocal);
+//	}
 
 //	@Override
 //	public List<ProjetPartenaireRegion> findByIdProjet(Long idProjet) {
@@ -518,43 +518,43 @@ public class CartoImpl implements ICarto{
 //		return partenaireRepository.findById(idPartenaire).orElse(null);
 //	}
 
-	@Override
-	public Projet ajoutProjetAUtilisateur(Long idUtilisateur, String nomProjet) {
-		Utilisateur utilisateur = utilisateurRepository.findById(idUtilisateur).orElse(null);
-		Projet projet = projetRepository.findByNomProjet(nomProjet);
-	
-		utilisateur.getProjet().add(projet);
-		//utilisateurRepository.save(utilisateur);
-			//projet.getUtilisateur().add(utilisateur);
-			//projetRepository.save(projet);
-			return projet;
-		
-		
-	}
+//	@Override
+//	public Projet ajoutProjetAUtilisateur(Long idUtilisateur, String nomProjet) {
+//		Utilisateur utilisateur = utilisateurRepository.findById(idUtilisateur).orElse(null);
+//		Projet projet = projetRepository.findByNomProjet(nomProjet);
+//	
+//		utilisateur.getProjet().add(projet);
+//		//utilisateurRepository.save(utilisateur);
+//			//projet.getUtilisateur().add(utilisateur);
+//			//projetRepository.save(projet);
+//			return projet;
+//		
+//		
+//	}
 
-	@Override
-	public List<Projet> groupByPointFocal() {
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		List<Projet> proj = projetRepository.groupByPointFocal();
-		List<Projet> projetUtilisateur = new ArrayList<>();
-		for(GrantedAuthority grAuth : authentication.getAuthorities()) {
-			if(grAuth.getAuthority().equals("ROLE_"+EnumProfil.ADMIN)) {
-			return proj;
-			}
-		}
-		
-			for(Projet p:proj) {
-				Set<Utilisateur> ut = p.getUtilisateur();
-				for(Utilisateur u:ut) {
-					if(u.getLogin().equals(authentication.getName())) {
-						projetUtilisateur.add(p);
-					}
-				}
-			}
-			return projetUtilisateur;
-		
-	}
+//	@Override
+//	public List<Projet> groupByPointFocal() {
+//		
+//		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//		List<Projet> proj = projetRepository.groupByPointFocal();
+//		List<Projet> projetUtilisateur = new ArrayList<>();
+//		for(GrantedAuthority grAuth : authentication.getAuthorities()) {
+//			if(grAuth.getAuthority().equals("ROLE_"+EnumProfil.ADMIN)) {
+//			return proj;
+//			}
+//		}
+//		
+//			for(Projet p:proj) {
+//				Set<Utilisateur> ut = p.getUtilisateur();
+//				for(Utilisateur u:ut) {
+//					if(u.getLogin().equals(authentication.getName())) {
+//						projetUtilisateur.add(p);
+//					}
+//				}
+//			}
+//			return projetUtilisateur;
+//		
+//	}
 
 //	@Override
 //	public List<ProjetPartenaireRegion> tousLesProjetsPartenairesRegions() {
@@ -572,10 +572,10 @@ public class CartoImpl implements ICarto{
 //		return communeRepository.findByNomCommune(nomCommune);
 //	}
 
-	@Override
-	public Projet trouverProjetParIdProjet(Long idProjet) {
-		return projetRepository.findById(idProjet).orElse(null);
-	}
+//	@Override
+//	public Projet trouverProjetParIdProjet(Long idProjet) {
+//		return projetRepository.findById(idProjet).orElse(null);
+//	}
 
 	@Override
 	public Type findByIdType(Long idType) {
@@ -587,14 +587,14 @@ public class CartoImpl implements ICarto{
 //		return categorieRepository.findById(idCategorie).orElse(null);
 //	}
 
-	@Override
-	public Projet cloturerProjet(Long idProjet) {
-		Projet projet = projetRepository.findById(idProjet).orElse(null);
-		String statut="Clôturé";
-		projet.setStatut(statut);
-		projetRepository.save(projet);
-		return projet;
-	}
+//	@Override
+//	public Projet cloturerProjet(Long idProjet) {
+//		Projet projet = projetRepository.findById(idProjet).orElse(null);
+//		String statut="Clôturé";
+//		projet.setStatut(statut);
+//		projetRepository.save(projet);
+//		return projet;
+//	}
 
 	@Override
 	public List<Utilisateur> getAllOperationsOfUser(String login) {

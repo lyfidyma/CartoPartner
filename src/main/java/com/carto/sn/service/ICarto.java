@@ -29,16 +29,14 @@ public interface ICarto {
 //	public Partenaire ajoutPartenaire(Long idPartenaire, String nomPartenaire, String adresse);
 //	public List <Partenaire> tousLesPartenaires();
 	public List <Region> toutesLesRegions();
-	public List <Projet> tousLesProjets();
-	public Projet ajoutProjet(String nomProjet, String pointFocal, 
-			String description, String nomType, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
-//	public Projet ajouterPartenaireAuProjet(String nomProjet, String pointFocal, String nomPartenaire, String libelleRegion, 
-//			String description, String type, String statut, int dateDebut, int dateFin);
+//	public List <Projet> tousLesProjets();
+//	public Projet ajoutProjet(String nomProjet, String pointFocal, 
+//			String description, String nomType, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
 //	public void supprimerPartenaire(Long idPartenaire);
 //	public Partenaire modifierPartenaire(String nomPartenaire, String nouveauNomPartenaire, String nouvelleAdresse);
-	public Optional <Projet> projetParId(Long id);
+//	public Optional <Projet> projetParId(Long id);
 //	public Optional <Partenaire> findPartenaireById(Long id);
-	public List<Projet> chercher(String motCle);
+//	public List<Projet> chercher(String motCle);
 //	public Profil ajoutProfil(String profil);
 	public Utilisateur ajoutUtilisateur(Long idUtilisateur, String nom, String prenom, String login, String password, String profil);
 //	public List <Profil> tousLesProfils();
@@ -47,21 +45,21 @@ public interface ICarto {
 	public Optional<Utilisateur> findUtilisateurById(Long idUtilisateur);
 	public void supprimerRegion(Long idRegion);
 //	public void supprimerProfil(Long idProfil);
-	public void supprimerProjet(Long idProjet);
+//	public void supprimerProjet(Long idProjet);
 	public Optional <Region> findRegionById(Long idRegion);
-	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal,  
-			String description, String type, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
-	public List <Projet> findOneIdByProjetName(String nomProjet);
+//	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal,  
+//			String description, String type, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
+//	public List <Projet> findOneIdByProjetName(String nomProjet);
 	public Type ajoutType(String type, String couleur);
 	public void supprimerType(Long idType);
 	public List <Type> tousLesTypes();
 //	public List<Departement> tousLesDepartements();
 //	public List<Pays> tousLesPays();
-	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
-			String nomCommune, String nomVillage, String latitude, String longitude, String nomPartenaireLocal );
-	public Projet findByNomProjet(String nomProjet);
+//	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
+//			String nomCommune, String nomVillage, String latitude, String longitude, String nomPartenaireLocal );
+//	public Projet findByNomProjet(String nomProjet);
 //	public Partenaire findByNomPartenaire(String nomPartenaire);
-	public List<Projet> findByPointFocal(String pointFocal);
+//	public List<Projet> findByPointFocal(String pointFocal);
 //	public List <ProjetPartenaireRegion> findByIdProjet(Long idProjet);
 //	public List <ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire);
 //	public List <ProjetPartenaireRegion> findByIdRegion(Long idRegion);
@@ -81,14 +79,14 @@ public interface ICarto {
 //	public List<PartenaireLocal> tousLesPartenairesLocaux();
 //	public PartenaireLocal ajoutPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire);
 //	public Partenaire findPartenaireByIdPartenaire(Long idPartenaire);
-	public Projet ajoutProjetAUtilisateur(Long idUtilisateur, String nomProjet);
-	public List<Projet> groupByPointFocal();
+//	public Projet ajoutProjetAUtilisateur(Long idUtilisateur, String nomProjet);
+//	public List<Projet> groupByPointFocal();
 //	public void supprimerCommune(Long idCommune);
 //	public Commune findByNomCommune(String nomCommune);
-	public Projet trouverProjetParIdProjet(Long idProjet);
+//	public Projet trouverProjetParIdProjet(Long idProjet);
 	public Type findByIdType(Long idType);
 //	public Categorie findByIdCategorie(Long idCategorie);
-	public Projet cloturerProjet(Long idProjet);
+//	public Projet cloturerProjet(Long idProjet);
 	public List<Utilisateur> getAllOperationsOfUser(String login);
 //	public Profil findByIdProfil(Long idProfil);
 //	public Privilege ajoutPrivilege(Long idProfil, String[] enumPrivilege);
