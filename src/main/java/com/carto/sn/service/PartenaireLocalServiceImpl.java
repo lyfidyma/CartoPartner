@@ -7,12 +7,14 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.carto.sn.dao.PartenaireLocalRepository;
 import com.carto.sn.dao.PartenaireRepository;
 import com.carto.sn.entities.Partenaire;
 import com.carto.sn.entities.PartenaireLocal;
 
+@Service
 public class PartenaireLocalServiceImpl implements PartenaireLocalService{
 	
 	@Autowired

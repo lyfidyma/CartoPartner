@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.carto.sn.dao.PrivilegeRepository;
 import com.carto.sn.dao.ProfilRepository;
@@ -12,6 +13,7 @@ import com.carto.sn.entities.Privilege;
 import com.carto.sn.entities.Profil;
 import com.carto.sn.enums.EnumPrivilege;
 
+@Service
 public class PrivilegeServiceImpl implements PrivilegeService {
 	
 	@Autowired
