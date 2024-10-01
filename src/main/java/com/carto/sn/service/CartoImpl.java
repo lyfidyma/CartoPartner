@@ -432,20 +432,20 @@ public class CartoImpl implements ICarto{
 		return projetRepository.findByPointFocal(pointFocal);
 	}
 
-	@Override
-	public List<ProjetPartenaireRegion> findByIdProjet(Long idProjet) {
-		return pprRepository.findByIdProjet(idProjet);
-	}
+//	@Override
+//	public List<ProjetPartenaireRegion> findByIdProjet(Long idProjet) {
+//		return pprRepository.findByIdProjet(idProjet);
+//	}
 
-	@Override
-	public List<ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire) {
-		return pprRepository.findByIdProjet(idPartenaire);
-	}
+//	@Override
+//	public List<ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire) {
+//		return pprRepository.findByIdProjet(idPartenaire);
+//	}
 
-	@Override
-	public List<ProjetPartenaireRegion> findByIdRegion(Long idRegion) {
-		return pprRepository.findByIdProjet(idRegion);
-	}
+//	@Override
+//	public List<ProjetPartenaireRegion> findByIdRegion(Long idRegion) {
+//		return pprRepository.findByIdProjet(idRegion);
+//	}
 
 	@Override
 	public Type findByNomType(String nomType) {
@@ -556,10 +556,10 @@ public class CartoImpl implements ICarto{
 		
 	}
 
-	@Override
-	public List<ProjetPartenaireRegion> tousLesProjetsPartenairesRegions() {
-		return pprRepository.findAll();
-	}
+//	@Override
+//	public List<ProjetPartenaireRegion> tousLesProjetsPartenairesRegions() {
+//		return pprRepository.findAll();
+//	}
 
 //	@Override
 //	public void supprimerCommune(Long idCommune) {

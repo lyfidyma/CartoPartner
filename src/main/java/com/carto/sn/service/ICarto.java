@@ -62,10 +62,10 @@ public interface ICarto {
 	public Projet findByNomProjet(String nomProjet);
 //	public Partenaire findByNomPartenaire(String nomPartenaire);
 	public List<Projet> findByPointFocal(String pointFocal);
-	public List <ProjetPartenaireRegion> findByIdProjet(Long idProjet);
-	public List <ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire);
-	public List <ProjetPartenaireRegion> findByIdRegion(Long idRegion);
-	public List <ProjetPartenaireRegion> tousLesProjetsPartenairesRegions();
+//	public List <ProjetPartenaireRegion> findByIdProjet(Long idProjet);
+//	public List <ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire);
+//	public List <ProjetPartenaireRegion> findByIdRegion(Long idRegion);
+//	public List <ProjetPartenaireRegion> tousLesProjetsPartenairesRegions();
 	public Type findByNomType(String nomType);
 //	public List<Commune> toutesLesCommunes();
 	public List <Village> tousLesVillages();

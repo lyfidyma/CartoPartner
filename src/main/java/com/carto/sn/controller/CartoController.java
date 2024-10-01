@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.carto.sn.dao.PrivilegeRepository;
+import com.carto.sn.dao.ProjetPartenaireRegionRepository;
 import com.carto.sn.dto.ProjetPartenaireDTO;
 import com.carto.sn.entities.Categorie;
 import com.carto.sn.entities.Commune;
@@ -49,6 +50,7 @@ import com.carto.sn.service.PartenaireLocalService;
 import com.carto.sn.service.PartenaireService;
 import com.carto.sn.service.PrivilegeService;
 import com.carto.sn.service.ProfilService;
+import com.carto.sn.service.ProjetPartenaireRegionService;
 
 import jakarta.validation.Valid;
 
@@ -73,6 +75,8 @@ public class CartoController {
 	@Autowired
 	private ProfilService profilService;
 	@Autowired
+	private ProjetPartenaireRegionService pprService;
+	@Autowired
 	private GeocodingService geocodingService;
 
 	@RequestMapping("/index")
@@ -96,7 +100,7 @@ public class CartoController {
 
 		model.addAttribute("idProjet", idProjet);
 
-		List<ProjetPartenaireRegion> listPpr = iCarto.tousLesProjetsPartenairesRegions();
+		List<ProjetPartenaireRegion> listPpr = pprService.tousLesProjetsPartenairesRegions();
 
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -226,7 +230,7 @@ public class CartoController {
 			List<ProjetPartenaireRegion> projetName = null;
 			Projet projetName1 = null;
 			projetName1 = iCarto.findByNomProjet(nomProjet);
-			projetName = iCarto.findByIdProjet(projetName1.getIdProjet());
+			projetName = pprService.findByIdProjet(projetName1.getIdProjet());
 			model.addAttribute("projetName1", projetName1);
 			model.addAttribute("projetName", projetName);
 		}
@@ -247,7 +251,7 @@ public class CartoController {
 						if (partenaireName1.getNomPartenaire() == p.getNomPartenaire()) {
 							projetsDunPartenaire.addAll(p.getProjet());
 							for (Projet pr : projetsDunPartenaire) {
-								partenaireName.addAll(iCarto.findByIdProjet(pr.getIdProjet()));
+								partenaireName.addAll(pprService.findByIdProjet(pr.getIdProjet()));
 							}
 						}
 
@@ -277,7 +281,7 @@ public class CartoController {
 
 					for (Type typ : projetType) {
 						if (typeName1.getNomType() == typ.getNomType()) {
-							typeName.addAll(iCarto.findByIdProjet(listProjet.get(i).getIdProjet()));
+							typeName.addAll(pprService.findByIdProjet(listProjet.get(i).getIdProjet()));
 
 						}
 					}
@@ -335,7 +339,7 @@ public class CartoController {
 			@ModelAttribute("unPartenaire") Partenaire unPartenaire, Model model, Long idProjet, String type,
 			String departement, String region, RedirectAttributes ra) {
 
-		List<ProjetPartenaireRegion> listPpr = iCarto.tousLesProjetsPartenairesRegions();
+		List<ProjetPartenaireRegion> listPpr = pprService.tousLesProjetsPartenairesRegions();
 		List<Projet> listProjet = iCarto.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = iCarto.toutesLesRegions();
@@ -445,7 +449,7 @@ public class CartoController {
 			Set<String> listDesProjets = new HashSet<>();
 			Set<String> listDesProjetsSize = new HashSet<>();
 
-			List<ProjetPartenaireRegion> proj = iCarto.findByIdProjet(idProjet);
+			List<ProjetPartenaireRegion> proj = pprService.findByIdProjet(idProjet);
 			Set<Type> typ = iCarto.projetParId(idProjet).get().getType();
 			for (Type t : typ) {
 				listTypeParRegion.add(t.getCouleur());
@@ -551,7 +555,7 @@ public class CartoController {
 
 				for (Type typ : projetType) {
 					if (tp.getNomType() == typ.getNomType()) {
-						typeName.addAll(iCarto.findByIdProjet(listProjet.get(i).getIdProjet()));
+						typeName.addAll(pprService.findByIdProjet(listProjet.get(i).getIdProjet()));
 					}
 				}
 			}
@@ -656,7 +660,7 @@ public class CartoController {
 
 				for (Partenaire typ : projetType) {
 					if (parte.getNomPartenaire() == typ.getNomPartenaire()) {
-						typeName.addAll(iCarto.findByIdProjet(listProjet.get(i).getIdProjet()));
+						typeName.addAll(pprService.findByIdProjet(listProjet.get(i).getIdProjet()));
 					}
 				}
 			}
