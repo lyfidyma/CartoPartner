@@ -54,6 +54,7 @@ import com.carto.sn.service.ProjetPartenaireRegionService;
 import com.carto.sn.service.ProjetService;
 import com.carto.sn.service.RegionService;
 import com.carto.sn.service.TypeService;
+import com.carto.sn.service.UtilisateurService;
 
 import jakarta.validation.Valid;
 
@@ -85,6 +86,8 @@ public class CartoController {
 	private RegionService regionService;
 	@Autowired
 	private TypeService typeService;
+	@Autowired
+	private UtilisateurService utilisateurService;
 	@Autowired
 	private GeocodingService geocodingService;
 
@@ -939,7 +942,7 @@ public class CartoController {
 	@RequestMapping("utilisateur")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String utilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, Model model) {
-		List<Utilisateur> listUtilisateur = iCarto.tousLesUtilisateurs();
+		List<Utilisateur> listUtilisateur = utilisateurService.tousLesUtilisateurs();
 		model.addAttribute("listUtilisateur", listUtilisateur);
 		return "utilisateur";
 	}
@@ -966,7 +969,7 @@ public class CartoController {
 			return "nouvelUtilisateur";
 		}
 		if (idUtilisateur == null) {
-			List<Utilisateur> listUtil = iCarto.tousLesUtilisateurs();
+			List<Utilisateur> listUtil = utilisateurService.tousLesUtilisateurs();
 			for (Utilisateur util : listUtil) {
 				if (util.getLogin().equals(login)) {
 					List<Profil> listProfil = profilService.tousLesProfils();
@@ -976,14 +979,14 @@ public class CartoController {
 				}
 			}
 		}
-		iCarto.ajoutUtilisateur(idUtilisateur, nomUtilisateur, prenomUtilisateur, login, password, nomProfil);
+		utilisateurService.ajoutUtilisateur(idUtilisateur, nomUtilisateur, prenomUtilisateur, login, password, nomProfil);
 		return "redirect:/utilisateur";
 	}
 
 	@RequestMapping("supprimerUtilisateur")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
 	public String supprimerUtilisateur(Long idUtilisateur) {
-		iCarto.supprimerUtilisateur(idUtilisateur);
+		utilisateurService.supprimerUtilisateur(idUtilisateur);
 		return "redirect:/utilisateur";
 	}
 
@@ -992,11 +995,11 @@ public class CartoController {
 	public String getDonneesUtilisateurAModifier(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
 			@ModelAttribute("unProfil") Profil unProfil, Model model, Long idUtilisateur) {
 
-		unUtilisateur = iCarto.findUtilisateurById(idUtilisateur).get();
+		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
 		model.addAttribute("unUtilisateur", unUtilisateur);
 		List<Profil> listProfil = profilService.tousLesProfils();
 		model.addAttribute("listProfil", listProfil);
-		model.addAttribute("flagProfil", iCarto.findUtilisateurById(idUtilisateur).get().getProfil());
+		model.addAttribute("flagProfil", utilisateurService.findUtilisateurById(idUtilisateur).get().getProfil());
 
 		return "nouvelUtilisateur";
 	}
@@ -1398,7 +1401,7 @@ public class CartoController {
 	public String getDonneesProjetAAjouterAUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
 			@ModelAttribute("unProjet") Projet unProjet, Model model, Long idUtilisateur) {
 
-		unUtilisateur = iCarto.findUtilisateurById(idUtilisateur).get();
+		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
 		model.addAttribute("unUtilisateur", unUtilisateur);
 		List<Projet> listProjet = projetService.tousLesProjets();
 		model.addAttribute("listProjet", listProjet);
@@ -1411,7 +1414,7 @@ public class CartoController {
 	@RequestMapping("/sauvegarderProjetUtilisateur")
 	public String sauvegarderProjetUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
 			@ModelAttribute("unProjet") Projet unProjet, Model model, Long idUtilisateur, String nomProjet) {
-		unUtilisateur = iCarto.findUtilisateurById(idUtilisateur).get();
+		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
 		List<Projet> listProjet = projetService.tousLesProjets();
 
 		projetService.ajoutProjetAUtilisateur(idUtilisateur, nomProjet);
@@ -1439,7 +1442,7 @@ public class CartoController {
 	@RequestMapping("operations")
 	public String UserOperations(Model model, String login) {
 
-		List<Utilisateur> userOperations = iCarto.getAllOperationsOfUser(login);
+		List<Utilisateur> userOperations = utilisateurService.getAllOperationsOfUser(login);
 		model.addAttribute("userOperations", userOperations);
 		return "userOperation";
 	}
@@ -1454,7 +1457,7 @@ public class CartoController {
 	@RequestMapping("enableOrDisableUserAccount")
 	@ResponseBody
 	public String enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled) {
-		iCarto.enableOrDisableUserAccount(idUtilisateur, isEnabled);
+		utilisateurService.enableOrDisableUserAccount(idUtilisateur, isEnabled);
 		return "redirect:utilisateur";
 	}
 	
