@@ -53,6 +53,7 @@ import com.carto.sn.service.ProfilService;
 import com.carto.sn.service.ProjetPartenaireRegionService;
 import com.carto.sn.service.ProjetService;
 import com.carto.sn.service.RegionService;
+import com.carto.sn.service.TypeService;
 
 import jakarta.validation.Valid;
 
@@ -83,6 +84,8 @@ public class CartoController {
 	@Autowired
 	private RegionService regionService;
 	@Autowired
+	private TypeService typeService;
+	@Autowired
 	private GeocodingService geocodingService;
 
 	@RequestMapping("/index")
@@ -94,7 +97,7 @@ public class CartoController {
 
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = regionService.toutesLesRegions();
-		List<Type> listType = iCarto.tousLesTypes();
+		List<Type> listType = typeService.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listType", listType);
 
@@ -196,7 +199,7 @@ public class CartoController {
 			Model model) {
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listLocalisation = regionService.toutesLesRegions();
-		List<Type> listType = iCarto.tousLesTypes();
+		List<Type> listType = typeService.tousLesTypes();
 		List<Categorie> listCategorie = categorieService.toutesLesCategories();
 
 		model.addAttribute("listCategorie", listCategorie);
@@ -279,7 +282,7 @@ public class CartoController {
 				Type typeName1 = null;
 				Set<Type> projetType = null;
 				Set<ProjetPartenaireRegion> typeName = new HashSet<ProjetPartenaireRegion>();
-				typeName1 = iCarto.findByNomType(nomType);
+				typeName1 = typeService.findByNomType(nomType);
 
 				for (int i = 0; i < listProjet.size(); i++) {
 
@@ -298,7 +301,7 @@ public class CartoController {
 			}
 		}
 
-		List<Type> listType = iCarto.tousLesTypes();
+		List<Type> listType = typeService.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listType", listType);
 		model.addAttribute("listProjetPoinFocal", listProjetPoinFocal);
@@ -349,7 +352,7 @@ public class CartoController {
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = regionService.toutesLesRegions();
-		List<Type> listType = iCarto.tousLesTypes();
+		List<Type> listType = typeService.tousLesTypes();
 
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -535,7 +538,7 @@ public class CartoController {
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = regionService.toutesLesRegions();
-		List<Type> listType = iCarto.tousLesTypes();
+		List<Type> listType = typeService.tousLesTypes();
 
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listPartenaire", listPartenaire);
@@ -551,7 +554,7 @@ public class CartoController {
 			Set<Type> projetType = null;
 			Set<ProjetPartenaireRegion> typeName = new HashSet<ProjetPartenaireRegion>();
 
-			Type tp = iCarto.findByNomType(nomType);
+			Type tp = typeService.findByNomType(nomType);
 			listTypeParRegion.add(tp.getCouleur());
 			codeCouleur = tp.getCouleur();
 
@@ -637,7 +640,7 @@ public class CartoController {
 		List<Projet> listProjet = projetService.tousLesProjets();
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
 		List<Region> listRegion = regionService.toutesLesRegions();
-		List<Type> listType = iCarto.tousLesTypes();
+		List<Type> listType = typeService.tousLesTypes();
 		model.addAttribute("listProjet", listProjet);
 		model.addAttribute("listPartenaire", listPartenaire);
 		model.addAttribute("listRegion", listRegion);
@@ -790,7 +793,7 @@ public class CartoController {
 
 		if (nomProjet.isBlank()) {
 
-			List<Type> listType = iCarto.tousLesTypes();
+			List<Type> listType = typeService.tousLesTypes();
 
 			model.addAttribute("listType", listType);
 			model.addAttribute("messageErreurNomProj", "Renseigner le nom du projet");
@@ -798,7 +801,7 @@ public class CartoController {
 
 		}
 		if (nomType.isBlank()) {
-			List<Type> listType = iCarto.tousLesTypes();
+			List<Type> listType = typeService.tousLesTypes();
 			model.addAttribute("listType", listType);
 			model.addAttribute("messageErreurType", "Choisir le type du projet");
 			return "nouveauProjet";
@@ -809,7 +812,7 @@ public class CartoController {
 			List<Projet> listProjet = projetService.tousLesProjets();
 			for (int i = 0; i < listProjet.size(); i++) {
 				if (nomProjet.equals(listProjet.get(i).getNomProjet())) {
-					List<Type> listType = iCarto.tousLesTypes();
+					List<Type> listType = typeService.tousLesTypes();
 					model.addAttribute("listType", listType);
 					model.addAttribute("messageDoublon", "Ce projet existe");
 					return "nouveauProjet";
@@ -1049,10 +1052,10 @@ public class CartoController {
 		unProjet = projetService.projetParId(idProjet).get();
 		Set<Type> type = unProjet.getType();
 		for (Type t : type) {
-			unType = iCarto.findByIdType(t.getIdType());
+			unType = typeService.findByIdType(t.getIdType());
 		}
 		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Type> listType = iCarto.tousLesTypes();
+		List<Type> listType = typeService.tousLesTypes();
 		Set<Categorie> categorie = unProjet.getCategorie();
 
 		for (Categorie cat : categorie) {
@@ -1073,7 +1076,7 @@ public class CartoController {
 
 	@RequestMapping("type")
 	public String type(@ModelAttribute("unType") Type unType, Model model) {
-		List<Type> listType = iCarto.tousLesTypes();
+		List<Type> listType = typeService.tousLesTypes();
 		model.addAttribute("listType", listType);
 
 		return "type";
@@ -1081,13 +1084,13 @@ public class CartoController {
 
 	@RequestMapping("sauvegarderType")
 	public String sauvegarderType(@ModelAttribute("unType") Type unType, Model model, String nomType, String couleur) {
-		iCarto.ajoutType(nomType, couleur);
+		typeService.ajoutType(nomType, couleur);
 		return "redirect:/type";
 	}
 
 	@RequestMapping("supprimerType")
 	public String supprimerType(@ModelAttribute("unType") Type unType, Long idType) {
-		iCarto.supprimerType(idType);
+		typeService.supprimerType(idType);
 		return "redirect:/type";
 	}
 

@@ -50,9 +50,9 @@ public interface ICarto {
 //	public Projet modifierProjet(Long idProjet, String nomProjet, String pointFocal,  
 //			String description, String type, MultipartFile file, String statut, int dateDebut, int dateFin, String nomCategorie) throws IOException;
 //	public List <Projet> findOneIdByProjetName(String nomProjet);
-	public Type ajoutType(String type, String couleur);
-	public void supprimerType(Long idType);
-	public List <Type> tousLesTypes();
+//	public Type ajoutType(String type, String couleur);
+//	public void supprimerType(Long idType);
+//	public List <Type> tousLesTypes();
 //	public List<Departement> tousLesDepartements();
 //	public List<Pays> tousLesPays();
 //	public Projet ajoutPartenaireAuProjet(String nomProjet, String nomDuPartenaire, String nomRegion, String nomDepartement,
@@ -64,7 +64,7 @@ public interface ICarto {
 //	public List <ProjetPartenaireRegion> findByIdPartenaire(Long idPartenaire);
 //	public List <ProjetPartenaireRegion> findByIdRegion(Long idRegion);
 //	public List <ProjetPartenaireRegion> tousLesProjetsPartenairesRegions();
-	public Type findByNomType(String nomType);
+//	public Type findByNomType(String nomType);
 //	public List<Commune> toutesLesCommunes();
 	public List <Village> tousLesVillages();
 
@@ -84,7 +84,7 @@ public interface ICarto {
 //	public void supprimerCommune(Long idCommune);
 //	public Commune findByNomCommune(String nomCommune);
 //	public Projet trouverProjetParIdProjet(Long idProjet);
-	public Type findByIdType(Long idType);
+//	public Type findByIdType(Long idType);
 //	public Categorie findByIdCategorie(Long idCategorie);
 //	public Projet cloturerProjet(Long idProjet);
 	public List<Utilisateur> getAllOperationsOfUser(String login);

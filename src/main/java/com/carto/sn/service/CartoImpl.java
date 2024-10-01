@@ -343,23 +343,23 @@ public class CartoImpl implements ICarto{
 //		return projetRepository.findOneIdByProjetName(nomProjet);
 //	}
 
-	@Override
-	public Type ajoutType(String type, String couleur) {
-		Type unType = null;
-		unType = typeRepository.save(new Type(type, couleur));
-		return unType;
-	}
+//	@Override
+//	public Type ajoutType(String type, String couleur) {
+//		Type unType = null;
+//		unType = typeRepository.save(new Type(type, couleur));
+//		return unType;
+//	}
 
-	@Override
-	public void supprimerType(Long idType) {
-		typeRepository.deleteById(idType);
-		
-	}
+//	@Override
+//	public void supprimerType(Long idType) {
+//		typeRepository.deleteById(idType);
+//		
+//	}
 
-	@Override
-	public List<Type> tousLesTypes() {
-		return typeRepository.findAll();
-	}
+//	@Override
+//	public List<Type> tousLesTypes() {
+//		return typeRepository.findAll();
+//	}
 
 //	@Override
 //	public List<Departement> tousLesDepartements() {
@@ -447,10 +447,10 @@ public class CartoImpl implements ICarto{
 //		return pprRepository.findByIdProjet(idRegion);
 //	}
 
-	@Override
-	public Type findByNomType(String nomType) {
-		return typeRepository.findByNomType(nomType);
-	}
+//	@Override
+//	public Type findByNomType(String nomType) {
+//		return typeRepository.findByNomType(nomType);
+//	}
 
 //	@Override
 //	public List<Commune> toutesLesCommunes() {
@@ -577,10 +577,10 @@ public class CartoImpl implements ICarto{
 //		return projetRepository.findById(idProjet).orElse(null);
 //	}
 
-	@Override
-	public Type findByIdType(Long idType) {
-		return typeRepository.findById(idType).orElse(null);
-	}
+//	@Override
+//	public Type findByIdType(Long idType) {
+//		return typeRepository.findById(idType).orElse(null);
+//	}
 
 //	@Override
 //	public Categorie findByIdCategorie(Long idCategorie) {
