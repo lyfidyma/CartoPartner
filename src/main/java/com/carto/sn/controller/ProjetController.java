@@ -206,7 +206,12 @@ public class ProjetController {
 
 		return "nouveauProjet";
 	}
-
+		
+	@RequestMapping("cloturerProjet")
+	public String cloturerProjet(Long idProjet) {
+		projetService.cloturerProjet(idProjet);
+		return "redirect:/detailsProjet?idProjet=" + idProjet;
+	}
 
 
 }
