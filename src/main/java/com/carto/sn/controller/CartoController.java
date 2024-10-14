@@ -183,38 +183,38 @@ public class CartoController {
 //		return "index";
 //	}
 
-	@RequestMapping("projet")
-	public String projet(Model model, String motCle) {
-
-		if (motCle == null) {
-			// List <Projet> listProjet = iCarto.tousLesProjets();
-			List<Projet> listProjet = projetService.tousLesProjets();
-			model.addAttribute("listProjet", listProjet);
-		} else {
-			List<Projet> listProjet = projetService.chercher(motCle);
-			model.addAttribute("listProjet", listProjet);
-		}
-
-		return "projet";
-	}
-
-	@RequestMapping("nouveauProjet")
-	public String nouveauProjet(@ModelAttribute("unProjet") Projet unProjet,
-			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("uneRegion") Region uneRegion,
-			@ModelAttribute("unType") Type unType, @ModelAttribute("uneCategorie") Categorie uneCategorie,
-			Model model) {
-		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listLocalisation = regionService.toutesLesRegions();
-		List<Type> listType = typeService.tousLesTypes();
-		List<Categorie> listCategorie = categorieService.toutesLesCategories();
-
-		model.addAttribute("listCategorie", listCategorie);
-		model.addAttribute("listPartenaire", listPartenaire);
-		model.addAttribute("listLocalisation", listLocalisation);
-		model.addAttribute("listType", listType);
-
-		return "nouveauProjet";
-	}
+//	@RequestMapping("projet")
+//	public String projet(Model model, String motCle) {
+//
+//		if (motCle == null) {
+//			// List <Projet> listProjet = iCarto.tousLesProjets();
+//			List<Projet> listProjet = projetService.tousLesProjets();
+//			model.addAttribute("listProjet", listProjet);
+//		} else {
+//			List<Projet> listProjet = projetService.chercher(motCle);
+//			model.addAttribute("listProjet", listProjet);
+//		}
+//
+//		return "projet";
+//	}
+//
+//	@RequestMapping("nouveauProjet")
+//	public String nouveauProjet(@ModelAttribute("unProjet") Projet unProjet,
+//			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("uneRegion") Region uneRegion,
+//			@ModelAttribute("unType") Type unType, @ModelAttribute("uneCategorie") Categorie uneCategorie,
+//			Model model) {
+//		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
+//		List<Region> listLocalisation = regionService.toutesLesRegions();
+//		List<Type> listType = typeService.tousLesTypes();
+//		List<Categorie> listCategorie = categorieService.toutesLesCategories();
+//
+//		model.addAttribute("listCategorie", listCategorie);
+//		model.addAttribute("listPartenaire", listPartenaire);
+//		model.addAttribute("listLocalisation", listLocalisation);
+//		model.addAttribute("listType", listType);
+//
+//		return "nouveauProjet";
+//	}
 
 	@RequestMapping("partenaire")
 	public String partenaire(Model model) {
@@ -789,54 +789,54 @@ public class CartoController {
 		return "redirect:/partenaire";
 	}
 
-	@RequestMapping("sauvegarderProjet")
-	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'AJOUTER_PROJET')")
-	public String sauvegarderProjet(@ModelAttribute("unProjet") Projet unProjet, @ModelAttribute("unType") Type unType,
-			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("uneRegion") Region uneRegion,
-			Model model, Long idProjet, String nomProjet, String pointFocal, String description, String nomType,
-			String statut, MultipartFile file, int dateDebut, int dateFin, String nomCategorie, RedirectAttributes ra)
-			throws IOException {
-
-		if (nomProjet.isBlank()) {
-
-			List<Type> listType = typeService.tousLesTypes();
-
-			model.addAttribute("listType", listType);
-			model.addAttribute("messageErreurNomProj", "Renseigner le nom du projet");
-			return "nouveauProjet";
-
-		}
-		if (nomType.isBlank()) {
-			List<Type> listType = typeService.tousLesTypes();
-			model.addAttribute("listType", listType);
-			model.addAttribute("messageErreurType", "Choisir le type du projet");
-			return "nouveauProjet";
-
-		}
-
-		if (idProjet == null) {
-			List<Projet> listProjet = projetService.tousLesProjets();
-			for (int i = 0; i < listProjet.size(); i++) {
-				if (nomProjet.equals(listProjet.get(i).getNomProjet())) {
-					List<Type> listType = typeService.tousLesTypes();
-					model.addAttribute("listType", listType);
-					model.addAttribute("messageDoublon", "Ce projet existe");
-					return "nouveauProjet";
-				}
-			}
-			projetService.ajoutProjet(nomProjet, pointFocal, description, nomType, file, statut, dateDebut, dateFin,
-					nomCategorie);
-			// ra.addFlashAttribute("flagEnregistrement", "1");
-			return "redirect:/nouveauProjet";
-		} else if (idProjet != null) {
-			projetService.modifierProjet(idProjet, nomProjet, pointFocal, description, nomType, file, statut, dateDebut,
-					dateFin, nomCategorie);
-			// ra.addFlashAttribute("flagModification", "1");
-			return "redirect:/listeProjet";
-		}
-
-		return "redirect:/projet";
-	}
+//	@RequestMapping("sauvegarderProjet")
+//	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'AJOUTER_PROJET')")
+//	public String sauvegarderProjet(@ModelAttribute("unProjet") Projet unProjet, @ModelAttribute("unType") Type unType,
+//			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("uneRegion") Region uneRegion,
+//			Model model, Long idProjet, String nomProjet, String pointFocal, String description, String nomType,
+//			String statut, MultipartFile file, int dateDebut, int dateFin, String nomCategorie, RedirectAttributes ra)
+//			throws IOException {
+//
+//		if (nomProjet.isBlank()) {
+//
+//			List<Type> listType = typeService.tousLesTypes();
+//
+//			model.addAttribute("listType", listType);
+//			model.addAttribute("messageErreurNomProj", "Renseigner le nom du projet");
+//			return "nouveauProjet";
+//
+//		}
+//		if (nomType.isBlank()) {
+//			List<Type> listType = typeService.tousLesTypes();
+//			model.addAttribute("listType", listType);
+//			model.addAttribute("messageErreurType", "Choisir le type du projet");
+//			return "nouveauProjet";
+//
+//		}
+//
+//		if (idProjet == null) {
+//			List<Projet> listProjet = projetService.tousLesProjets();
+//			for (int i = 0; i < listProjet.size(); i++) {
+//				if (nomProjet.equals(listProjet.get(i).getNomProjet())) {
+//					List<Type> listType = typeService.tousLesTypes();
+//					model.addAttribute("listType", listType);
+//					model.addAttribute("messageDoublon", "Ce projet existe");
+//					return "nouveauProjet";
+//				}
+//			}
+//			projetService.ajoutProjet(nomProjet, pointFocal, description, nomType, file, statut, dateDebut, dateFin,
+//					nomCategorie);
+//			// ra.addFlashAttribute("flagEnregistrement", "1");
+//			return "redirect:/nouveauProjet";
+//		} else if (idProjet != null) {
+//			projetService.modifierProjet(idProjet, nomProjet, pointFocal, description, nomType, file, statut, dateDebut,
+//					dateFin, nomCategorie);
+//			// ra.addFlashAttribute("flagModification", "1");
+//			return "redirect:/listeProjet";
+//		}
+//
+//		return "redirect:/projet";
+//	}
 
 	/*
 	 * @RequestMapping("sauvegarderChoixPartenaire") public String
@@ -884,25 +884,25 @@ public class CartoController {
 		return "nouveauPartenaire";
 	}
 
-	@RequestMapping("nouveauProfil")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public String nouveauProfil(@ModelAttribute("unProfil") Profil unProfil, Model model) {
-		List<EnumProfil> enumProfils = Arrays.asList(EnumProfil.values());
-		List<EnumPrivilege> enumPrivileges = Arrays.asList(EnumPrivilege.values());
-		Map<String, List<Privilege>> profilPrivilegeMap = new HashMap<>();
-		List<Profil> listProfils = profilService.tousLesProfils();
-		
-		for(Profil prof : listProfils) {		
-			profilPrivilegeMap.computeIfAbsent(prof.getNomProfil(), k-> new ArrayList<>())
-			  .addAll(prof.getPrivilege());			
-		}
-		
-		model.addAttribute("listProfil", profilService.tousLesProfils());
-		model.addAttribute("enumProfils", enumProfils);
-		model.addAttribute("enumPrivileges", enumPrivileges);
-		model.addAttribute("profilPrivilegeMap", profilPrivilegeMap);
-		return "nouveauProfil";
-	}
+//	@RequestMapping("nouveauProfil")
+//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	public String nouveauProfil(@ModelAttribute("unProfil") Profil unProfil, Model model) {
+//		List<EnumProfil> enumProfils = Arrays.asList(EnumProfil.values());
+//		List<EnumPrivilege> enumPrivileges = Arrays.asList(EnumPrivilege.values());
+//		Map<String, List<Privilege>> profilPrivilegeMap = new HashMap<>();
+//		List<Profil> listProfils = profilService.tousLesProfils();
+//		
+//		for(Profil prof : listProfils) {		
+//			profilPrivilegeMap.computeIfAbsent(prof.getNomProfil(), k-> new ArrayList<>())
+//			  .addAll(prof.getPrivilege());			
+//		}
+//		
+//		model.addAttribute("listProfil", profilService.tousLesProfils());
+//		model.addAttribute("enumProfils", enumProfils);
+//		model.addAttribute("enumPrivileges", enumPrivileges);
+//		model.addAttribute("profilPrivilegeMap", profilPrivilegeMap);
+//		return "nouveauProfil";
+//	}
 	
 	@RequestMapping("getPrivilegeByProfil")
 	@ResponseBody
@@ -917,30 +917,30 @@ public class CartoController {
 		return object;
 	}
 
-	@RequestMapping("sauvegarderProfil")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public String sauvegarderProfil(@Valid @ModelAttribute("unProfil") Profil unProfil, BindingResult br, Model model,
-			String nomProfil, RedirectAttributes ra) {
-		List<EnumPrivilege> enumPrivileges = Arrays.asList(EnumPrivilege.values());
-		if (br.hasErrors()) {
-			List<Profil> listProfil = profilService.tousLesProfils();
-			model.addAttribute("listProfil", listProfil);
-			model.addAttribute("enumPrivileges", enumPrivileges);
-			return "nouveauProfil";
-		}
-
-		List<Profil> listProfil = profilService.tousLesProfils();
-		for (Profil prof : listProfil) {
-			if (prof.getNomProfil().equals(nomProfil)) {
-
-				ra.addFlashAttribute("messageDoublon", "Ce profil existe déjà");
-				ra.addFlashAttribute("nomProfil", nomProfil);
-				return "redirect:/nouveauProfil";
-			}
-		}
-		profilService.ajoutProfil(nomProfil);
-		return "redirect:/nouveauProfil";
-	}
+//	@RequestMapping("sauvegarderProfil")
+//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	public String sauvegarderProfil(@Valid @ModelAttribute("unProfil") Profil unProfil, BindingResult br, Model model,
+//			String nomProfil, RedirectAttributes ra) {
+//		List<EnumPrivilege> enumPrivileges = Arrays.asList(EnumPrivilege.values());
+//		if (br.hasErrors()) {
+//			List<Profil> listProfil = profilService.tousLesProfils();
+//			model.addAttribute("listProfil", listProfil);
+//			model.addAttribute("enumPrivileges", enumPrivileges);
+//			return "nouveauProfil";
+//		}
+//
+//		List<Profil> listProfil = profilService.tousLesProfils();
+//		for (Profil prof : listProfil) {
+//			if (prof.getNomProfil().equals(nomProfil)) {
+//
+//				ra.addFlashAttribute("messageDoublon", "Ce profil existe déjà");
+//				ra.addFlashAttribute("nomProfil", nomProfil);
+//				return "redirect:/nouveauProfil";
+//			}
+//		}
+//		profilService.ajoutProfil(nomProfil);
+//		return "redirect:/nouveauProfil";
+//	}
 
 	@RequestMapping("utilisateur")
 	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -1025,416 +1025,416 @@ public class CartoController {
 //		return "parametres";
 //	}
 
-	@RequestMapping("supprimerProfil")
-	public String supprimerProfil(Long idProfil) {
-		profilService.supprimerProfil(idProfil);
-		return "redirect:/nouveauProfil";
-	}
-
-	@RequestMapping("appErreur")
-	public String appErreur() {
-		return "appErreur";
-	}
-
-	@RequestMapping("listeProjet")
-	public String listeProjet(Model model) {
-		List<Projet> listProjet = projetService.tousLesProjets();
-		model.addAttribute("listProjet", listProjet);
-		return "listeProjet";
-	}
-
-	@RequestMapping("supprimerProjet")
-	public String supprimerProjet(Long idProjet) {
-		projetService.supprimerProjet(idProjet);
-		return "redirect:/listeProjet";
-	}
-
-	@RequestMapping("getDonneesProjetAModifier")
-	public String getDonneesProjetAModifier(@ModelAttribute("unProjet") Projet unProjet,
-			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("unType") Type unType,
-			@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("uneCategorie") Categorie uneCategorie,
-			Model model, Long idProjet) {
-
-		unProjet = projetService.projetParId(idProjet).get();
-		Set<Type> type = unProjet.getType();
-		for (Type t : type) {
-			unType = typeService.findByIdType(t.getIdType());
-		}
-		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Type> listType = typeService.tousLesTypes();
-		Set<Categorie> categorie = unProjet.getCategorie();
-
-		for (Categorie cat : categorie) {
-			uneCategorie = categorieService.findByIdCategorie(cat.getIdCategorie());
-
-		}
-
-		List<Categorie> listCategorie = categorieService.toutesLesCategories();
-		model.addAttribute("unProjet", unProjet);
-		model.addAttribute("unType", unType);
-		model.addAttribute("listPartenaire", listPartenaire);
-		model.addAttribute("listType", listType);
-		model.addAttribute("listCategorie", listCategorie);
-		model.addAttribute("uneCategorie", uneCategorie);
-
-		return "nouveauProjet";
-	}
-
-	@RequestMapping("type")
-	public String type(@ModelAttribute("unType") Type unType, Model model) {
-		List<Type> listType = typeService.tousLesTypes();
-		model.addAttribute("listType", listType);
-
-		return "type";
-	}
-
-	@RequestMapping("sauvegarderType")
-	public String sauvegarderType(@ModelAttribute("unType") Type unType, Model model, String nomType, String couleur) {
-		typeService.ajoutType(nomType, couleur);
-		return "redirect:/type";
-	}
-
-	@RequestMapping("supprimerType")
-	public String supprimerType(@ModelAttribute("unType") Type unType, Long idType) {
-		typeService.supprimerType(idType);
-		return "redirect:/type";
-	}
-
-	@RequestMapping("liaisonPartenaireProjet")
-	public String projetPartenaireRegionLiaison(
-			@ModelAttribute("projetPartenaireDTO") ProjetPartenaireDTO projetPartenaireDTO, Model model) {
-		List<Projet> listProjet = projetService.tousLesProjets();
-		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = regionService.toutesLesRegions();
-		List<Departement> listDepartement = departementService.tousLesDepartements();
-		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
-		model.addAttribute("listPartenaire", listPartenaire);
-		model.addAttribute("listProjet", listProjet);
-		model.addAttribute("listRegion", listRegion);
-		model.addAttribute("listDepartement", listDepartement);
-		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
-
-		return "liaisonPartenaireProjet";
-	}
-
-	@RequestMapping("lierPartenaire")
-	public String projetPartenaireRegion(@ModelAttribute ProjetPartenaireDTO projetPartenaireDTO, Model model) {
-
-		List<Projet> listProjet = projetService.tousLesProjets();
-		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = regionService.toutesLesRegions();
-		model.addAttribute("listPartenaire", listPartenaire);
-		model.addAttribute("listProjet", listProjet);
-		model.addAttribute("listRegion", listRegion);
-
-		if (projetPartenaireDTO.getNomCommune() == null) {
-			model.addAttribute("messageErreur", "Renseigner la commune");
-			return "liaisonPartenaireProjet";
-		}
-		String nomProjet = projetPartenaireDTO.getNomProjet();
-		String[] nomCommune = projetPartenaireDTO.getNomCommune();
-		String[] nomPartenaire = projetPartenaireDTO.getNomPartenaire();
-		String[] nomRegion = projetPartenaireDTO.getNomRegion();
-		String[] nomDepartement = projetPartenaireDTO.getNomDepartement();
-		String[] nomVillage = projetPartenaireDTO.getNomVillage();
-		String[] latitude = projetPartenaireDTO.getLatitude();
-		String[] longitude = projetPartenaireDTO.getLongitude();
-		String[] nomPartenaireLocal = projetPartenaireDTO.getNomPartenaireLocal();
-
-		if (nomCommune.length >= 1) {
-			if (nomPartenaireLocal.length == 0) {
-				// for(int p=0; p < nomPartenaire.length; p++) {
-				for (int i = 0; i < nomCommune.length; i++) {
-					if (nomVillage.length == 0) {
-						if (communeService.findByNomCommune(nomCommune[i]) != null) {
-							Commune comm = communeService.findByNomCommune(nomCommune[i]);
-							for (int b = 0; b < nomDepartement.length; b++) {
-								if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
-									for (int c = 0; c < nomRegion.length; c++) {
-										if (comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-											projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c], nomRegion[c],
-													nomDepartement[b], nomCommune[i], null, null, null, null);
-
-										}
-									}
-
-								}
-
-							}
-
-						}
-
-					} else {
-						if (latitude.length == 0 || longitude.length == 0) {
-							if (communeService.findByNomCommune(nomCommune[i]) != null) {
-								Commune comm = communeService.findByNomCommune(nomCommune[i]);
-								for (int b = 0; b < nomDepartement.length; b++) {
-									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
-										for (int c = 0; c < nomRegion.length; c++) {
-											if (comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-												projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
-														nomRegion[c], nomDepartement[b], nomCommune[i], nomVillage[i],
-														null, null, null);
-
-											}
-										}
-
-									}
-
-								}
-
-							}
-
-						} else {
-
-							if (communeService.findByNomCommune(nomCommune[i]) != null) {
-								Commune comm = communeService.findByNomCommune(nomCommune[i]);
-								for (int b = 0; b < nomDepartement.length; b++) {
-									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
-										for (int c = 0; c < nomRegion.length; c++) {
-											if (comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-												projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
-														nomRegion[c], nomDepartement[b], nomCommune[i], nomVillage[i],
-														latitude[i], longitude[i], null);
-
-											}
-										}
-
-									}
-
-								}
-
-							}
-
-						}
-					}
-				}
-
-			} else {
-
-				for (int i = 0; i < nomCommune.length; i++) {
-					for (int j = 0; j < nomPartenaireLocal.length; j++) {
-						if (nomVillage.length == 0) {
-							if (communeService.findByNomCommune(nomCommune[i]) != null) {
-								Commune comm = communeService.findByNomCommune(nomCommune[i]);
-								for (int b = 0; b < nomDepartement.length; b++) {
-									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
-										for (int c = 0; c < nomRegion.length; c++) {
-											if (comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
-												projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
-														nomRegion[c], nomDepartement[b], nomCommune[i], null, null,
-														null, nomPartenaireLocal[j]);
-
-											}
-										}
-
-									}
-
-								}
-
-							}
-
-						} else {
-							if (latitude.length == 0 || longitude.length == 0) {
-								if (communeService.findByNomCommune(nomCommune[i]) != null) {
-									Commune comm = communeService.findByNomCommune(nomCommune[i]);
-									for (int b = 0; b < nomDepartement.length; b++) {
-										if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
-											for (int c = 0; c < nomRegion.length; c++) {
-												if (comm.getDepartement().getRegion().getNomRegion()
-														.equals(nomRegion[c])) {
-													projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
-															nomRegion[c], nomDepartement[b], nomCommune[i],
-															nomVillage[i], null, null, nomPartenaireLocal[j]);
-
-												}
-											}
-
-										}
-
-									}
-
-								}
-
-							} else {
-
-								if (communeService.findByNomCommune(nomCommune[i]) != null) {
-									Commune comm = communeService.findByNomCommune(nomCommune[i]);
-									for (int b = 0; b < nomDepartement.length; b++) {
-										if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
-											for (int c = 0; c < nomRegion.length; c++) {
-												if (comm.getDepartement().getRegion().getNomRegion()
-														.equals(nomRegion[c])) {
-													projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
-															nomRegion[c], nomDepartement[b], nomCommune[i],
-															nomVillage[i], latitude[i], longitude[i],
-															nomPartenaireLocal[j]);
-												}
-											}
-
-										}
-
-									}
-
-								}
-
-							}
-						}
-					}
-
-				}
-			}
-		}
-
-		Projet unProjet = projetService.findByNomProjet(projetPartenaireDTO.getNomProjet());
-
-		model.addAttribute("idProjet", projetPartenaireDTO.getNomProjet());
-		model.addAttribute("nomProjet", projetPartenaireDTO.getNomProjet());
-		model.addAttribute("flag", "Succes");
-		model.addAttribute("pageAAfficher", "choixPartenaire");
-		model.addAttribute("unProjet", unProjet);
-		return "choixPartenaire";
-
-	}
-
-	@RequestMapping("categorie")
-	public String categorie(@ModelAttribute("uneCategorie") Categorie uneCategorie, Model model) {
-		List<Categorie> listCategorie = categorieService.toutesLesCategories();
-		model.addAttribute("listCategorie", listCategorie);
-		return "categorie";
-	}
-
-	@RequestMapping("sauvegarderCategorie")
-	public String sauvegarderCategorie(@Valid @ModelAttribute("uneCategorie") Categorie uneCategorie, BindingResult br,
-			Model model, String nomCategorie) {
-		List<Categorie> listCategorie = categorieService.toutesLesCategories();
-
-		if (br.hasErrors()) {
-			model.addAttribute("listCategorie", listCategorie);
-			return "categorie";
-		}
-		if (categorieService.findByNomCategorie(nomCategorie) != null) {
-			model.addAttribute("messageDoublon", "Cette catégorie existe");
-			return "categorie";
-		}
-		categorieService.ajoutCategorie(nomCategorie);
-		return "redirect:/categorie";
-	}
-
-	@RequestMapping("/getDepartement")
-	@ResponseBody
-	public Set<Departement> getDepartement(String nomRegion) {
-
-		if (departementService.findDepartementByNomRegion(nomRegion) == null) {
-			return null;
-		}
-		// Map<String, Object> object = new HashMap<>();
-		List<Departement> listDep = departementService.findDepartementByNomRegion(nomRegion);
-		// for(Departement d:listDep)
-		// object.put(d.getNomDepartement(), d.getRegion().getNomRegion());
-		// System.out.println(listDep);
-		Set<Departement> listDepSet = new HashSet<>(listDep);
-
-		return listDepSet;
-
-	}
-
-	@RequestMapping("/getCommune")
-	@ResponseBody
-	public Object getCommune(String nomDepartement) {
-
-		if (communeService.findCommuneByNomDepartement(nomDepartement) == null) {
-			return null;
-		}
-		List<Commune> listCom = communeService.findCommuneByNomDepartement(nomDepartement);
-
-		return listCom;
-
-	}
-
-	@RequestMapping("/getVillage")
-	@ResponseBody
-	public Object getVillage(String nomCommune) {
-
-		if (villageService.findVillageByNomCommune(nomCommune) == null) {
-			return null;
-		}
-		List<Village> listVil = villageService.findVillageByNomCommune(nomCommune);
-
-		return listVil;
-
-	}
-
-	@RequestMapping("lierPartenaireLocalAPartenaire")
-	public String lierPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire, Model model) {
-
-		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listLocalisation = regionService.toutesLesRegions();
-		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
-		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
-		model.addAttribute("listPartenaire", listPartenaire);
-		model.addAttribute("listLocalisation", listLocalisation);
-
-		if (nomPartenaireLocal.isEmpty()) {
-			model.addAttribute("messageErreur", "Le partenaire communautaire n'est pas renseigné");
-			return "partenaire";
-		}
-
-		if (partenaireService.findPartenaireById(idPartenaire) != null) {
-			Partenaire part = partenaireService.findPartenaireByIdPartenaire(idPartenaire);
-			if (part.getPartenaireLocal() != null) {
-				Set<PartenaireLocal> paLo = part.getPartenaireLocal();
-				for (PartenaireLocal pc : paLo) {
-					if (pc.getNomPartenaireLocal().equals(nomPartenaireLocal)) {
-						model.addAttribute("messageErreur",
-								part.getNomPartenaire() + " est déjà lié à " + nomPartenaireLocal);
-						return "partenaire";
-					}
-				}
-			}
-		}
-
-		parteLocalService.ajoutPartenaireLocalAPartenaire(nomPartenaireLocal, idPartenaire);
-
-		return "redirect:/partenaire";
-
-	}
-
-	@RequestMapping("getDonneesProjetAAjouterAUtilisateur")
-	public String getDonneesProjetAAjouterAUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
-			@ModelAttribute("unProjet") Projet unProjet, Model model, Long idUtilisateur) {
-
-		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
-		model.addAttribute("unUtilisateur", unUtilisateur);
-		List<Projet> listProjet = projetService.tousLesProjets();
-		model.addAttribute("listProjet", listProjet);
-		// model.addAttribute("flagProfil",
-		// iCarto.findUtilisateurById(idUtilisateur).get().getProfil());
-
-		return "projetUtilisateur";
-	}
-
-	@RequestMapping("/sauvegarderProjetUtilisateur")
-	public String sauvegarderProjetUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
-			@ModelAttribute("unProjet") Projet unProjet, Model model, Long idUtilisateur, String nomProjet) {
-		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
-		List<Projet> listProjet = projetService.tousLesProjets();
-
-		projetService.ajoutProjetAUtilisateur(idUtilisateur, nomProjet);
-		model.addAttribute("unUtilisateur", unUtilisateur);
-		model.addAttribute("listProjet", listProjet);
-		return "projetUtilisateur";
-	}
-
-	@RequestMapping("/detailsProjet")
-	public String detailsProjet(@ModelAttribute("unProjet") Projet unProjet, Model model, Long idProjet,
-			String nomProjet) {
-
-		Projet projet = projetService.trouverProjetParIdProjet(idProjet);
-		model.addAttribute("listProjet", projetService.tousLesProjets());
-		model.addAttribute("unProjet", projet);
-		return "detailsProjet";
-	}
+//	@RequestMapping("supprimerProfil")
+//	public String supprimerProfil(Long idProfil) {
+//		profilService.supprimerProfil(idProfil);
+//		return "redirect:/nouveauProfil";
+//	}
+
+//	@RequestMapping("appErreur")
+//	public String appErreur() {
+//		return "appErreur";
+//	}
+
+//	@RequestMapping("listeProjet")
+//	public String listeProjet(Model model) {
+//		List<Projet> listProjet = projetService.tousLesProjets();
+//		model.addAttribute("listProjet", listProjet);
+//		return "listeProjet";
+//	}
+//
+//	@RequestMapping("supprimerProjet")
+//	public String supprimerProjet(Long idProjet) {
+//		projetService.supprimerProjet(idProjet);
+//		return "redirect:/listeProjet";
+//	}
+
+//	@RequestMapping("getDonneesProjetAModifier")
+//	public String getDonneesProjetAModifier(@ModelAttribute("unProjet") Projet unProjet,
+//			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("unType") Type unType,
+//			@ModelAttribute("uneRegion") Region uneRegion, @ModelAttribute("uneCategorie") Categorie uneCategorie,
+//			Model model, Long idProjet) {
+//
+//		unProjet = projetService.projetParId(idProjet).get();
+//		Set<Type> type = unProjet.getType();
+//		for (Type t : type) {
+//			unType = typeService.findByIdType(t.getIdType());
+//		}
+//		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
+//		List<Type> listType = typeService.tousLesTypes();
+//		Set<Categorie> categorie = unProjet.getCategorie();
+//
+//		for (Categorie cat : categorie) {
+//			uneCategorie = categorieService.findByIdCategorie(cat.getIdCategorie());
+//
+//		}
+//
+//		List<Categorie> listCategorie = categorieService.toutesLesCategories();
+//		model.addAttribute("unProjet", unProjet);
+//		model.addAttribute("unType", unType);
+//		model.addAttribute("listPartenaire", listPartenaire);
+//		model.addAttribute("listType", listType);
+//		model.addAttribute("listCategorie", listCategorie);
+//		model.addAttribute("uneCategorie", uneCategorie);
+//
+//		return "nouveauProjet";
+//	}
+
+//	@RequestMapping("type")
+//	public String type(@ModelAttribute("unType") Type unType, Model model) {
+//		List<Type> listType = typeService.tousLesTypes();
+//		model.addAttribute("listType", listType);
+//
+//		return "type";
+//	}
+//
+//	@RequestMapping("sauvegarderType")
+//	public String sauvegarderType(@ModelAttribute("unType") Type unType, Model model, String nomType, String couleur) {
+//		typeService.ajoutType(nomType, couleur);
+//		return "redirect:/type";
+//	}
+//
+//	@RequestMapping("supprimerType")
+//	public String supprimerType(@ModelAttribute("unType") Type unType, Long idType) {
+//		typeService.supprimerType(idType);
+//		return "redirect:/type";
+//	}
+
+//	@RequestMapping("liaisonPartenaireProjet")
+//	public String projetPartenaireRegionLiaison(
+//			@ModelAttribute("projetPartenaireDTO") ProjetPartenaireDTO projetPartenaireDTO, Model model) {
+//		List<Projet> listProjet = projetService.tousLesProjets();
+//		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
+//		List<Region> listRegion = regionService.toutesLesRegions();
+//		List<Departement> listDepartement = departementService.tousLesDepartements();
+//		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
+//		model.addAttribute("listPartenaire", listPartenaire);
+//		model.addAttribute("listProjet", listProjet);
+//		model.addAttribute("listRegion", listRegion);
+//		model.addAttribute("listDepartement", listDepartement);
+//		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
+//
+//		return "liaisonPartenaireProjet";
+//	}
+
+//	@RequestMapping("lierPartenaire")
+//	public String projetPartenaireRegion(@ModelAttribute ProjetPartenaireDTO projetPartenaireDTO, Model model) {
+//
+//		List<Projet> listProjet = projetService.tousLesProjets();
+//		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
+//		List<Region> listRegion = regionService.toutesLesRegions();
+//		model.addAttribute("listPartenaire", listPartenaire);
+//		model.addAttribute("listProjet", listProjet);
+//		model.addAttribute("listRegion", listRegion);
+//
+//		if (projetPartenaireDTO.getNomCommune() == null) {
+//			model.addAttribute("messageErreur", "Renseigner la commune");
+//			return "liaisonPartenaireProjet";
+//		}
+//		String nomProjet = projetPartenaireDTO.getNomProjet();
+//		String[] nomCommune = projetPartenaireDTO.getNomCommune();
+//		String[] nomPartenaire = projetPartenaireDTO.getNomPartenaire();
+//		String[] nomRegion = projetPartenaireDTO.getNomRegion();
+//		String[] nomDepartement = projetPartenaireDTO.getNomDepartement();
+//		String[] nomVillage = projetPartenaireDTO.getNomVillage();
+//		String[] latitude = projetPartenaireDTO.getLatitude();
+//		String[] longitude = projetPartenaireDTO.getLongitude();
+//		String[] nomPartenaireLocal = projetPartenaireDTO.getNomPartenaireLocal();
+//
+//		if (nomCommune.length >= 1) {
+//			if (nomPartenaireLocal.length == 0) {
+//				// for(int p=0; p < nomPartenaire.length; p++) {
+//				for (int i = 0; i < nomCommune.length; i++) {
+//					if (nomVillage.length == 0) {
+//						if (communeService.findByNomCommune(nomCommune[i]) != null) {
+//							Commune comm = communeService.findByNomCommune(nomCommune[i]);
+//							for (int b = 0; b < nomDepartement.length; b++) {
+//								if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
+//									for (int c = 0; c < nomRegion.length; c++) {
+//										if (comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+//											projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c], nomRegion[c],
+//													nomDepartement[b], nomCommune[i], null, null, null, null);
+//
+//										}
+//									}
+//
+//								}
+//
+//							}
+//
+//						}
+//
+//					} else {
+//						if (latitude.length == 0 || longitude.length == 0) {
+//							if (communeService.findByNomCommune(nomCommune[i]) != null) {
+//								Commune comm = communeService.findByNomCommune(nomCommune[i]);
+//								for (int b = 0; b < nomDepartement.length; b++) {
+//									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
+//										for (int c = 0; c < nomRegion.length; c++) {
+//											if (comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+//												projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
+//														nomRegion[c], nomDepartement[b], nomCommune[i], nomVillage[i],
+//														null, null, null);
+//
+//											}
+//										}
+//
+//									}
+//
+//								}
+//
+//							}
+//
+//						} else {
+//
+//							if (communeService.findByNomCommune(nomCommune[i]) != null) {
+//								Commune comm = communeService.findByNomCommune(nomCommune[i]);
+//								for (int b = 0; b < nomDepartement.length; b++) {
+//									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
+//										for (int c = 0; c < nomRegion.length; c++) {
+//											if (comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+//												projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
+//														nomRegion[c], nomDepartement[b], nomCommune[i], nomVillage[i],
+//														latitude[i], longitude[i], null);
+//
+//											}
+//										}
+//
+//									}
+//
+//								}
+//
+//							}
+//
+//						}
+//					}
+//				}
+//
+//			} else {
+//
+//				for (int i = 0; i < nomCommune.length; i++) {
+//					for (int j = 0; j < nomPartenaireLocal.length; j++) {
+//						if (nomVillage.length == 0) {
+//							if (communeService.findByNomCommune(nomCommune[i]) != null) {
+//								Commune comm = communeService.findByNomCommune(nomCommune[i]);
+//								for (int b = 0; b < nomDepartement.length; b++) {
+//									if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
+//										for (int c = 0; c < nomRegion.length; c++) {
+//											if (comm.getDepartement().getRegion().getNomRegion().equals(nomRegion[c])) {
+//												projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
+//														nomRegion[c], nomDepartement[b], nomCommune[i], null, null,
+//														null, nomPartenaireLocal[j]);
+//
+//											}
+//										}
+//
+//									}
+//
+//								}
+//
+//							}
+//
+//						} else {
+//							if (latitude.length == 0 || longitude.length == 0) {
+//								if (communeService.findByNomCommune(nomCommune[i]) != null) {
+//									Commune comm = communeService.findByNomCommune(nomCommune[i]);
+//									for (int b = 0; b < nomDepartement.length; b++) {
+//										if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
+//											for (int c = 0; c < nomRegion.length; c++) {
+//												if (comm.getDepartement().getRegion().getNomRegion()
+//														.equals(nomRegion[c])) {
+//													projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
+//															nomRegion[c], nomDepartement[b], nomCommune[i],
+//															nomVillage[i], null, null, nomPartenaireLocal[j]);
+//
+//												}
+//											}
+//
+//										}
+//
+//									}
+//
+//								}
+//
+//							} else {
+//
+//								if (communeService.findByNomCommune(nomCommune[i]) != null) {
+//									Commune comm = communeService.findByNomCommune(nomCommune[i]);
+//									for (int b = 0; b < nomDepartement.length; b++) {
+//										if (comm.getDepartement().getNomDepartement().equals(nomDepartement[b])) {
+//											for (int c = 0; c < nomRegion.length; c++) {
+//												if (comm.getDepartement().getRegion().getNomRegion()
+//														.equals(nomRegion[c])) {
+//													projetService.ajoutPartenaireAuProjet(nomProjet, nomPartenaire[c],
+//															nomRegion[c], nomDepartement[b], nomCommune[i],
+//															nomVillage[i], latitude[i], longitude[i],
+//															nomPartenaireLocal[j]);
+//												}
+//											}
+//
+//										}
+//
+//									}
+//
+//								}
+//
+//							}
+//						}
+//					}
+//
+//				}
+//			}
+//		}
+//
+//		Projet unProjet = projetService.findByNomProjet(projetPartenaireDTO.getNomProjet());
+//
+//		model.addAttribute("idProjet", projetPartenaireDTO.getNomProjet());
+//		model.addAttribute("nomProjet", projetPartenaireDTO.getNomProjet());
+//		model.addAttribute("flag", "Succes");
+//		model.addAttribute("pageAAfficher", "choixPartenaire");
+//		model.addAttribute("unProjet", unProjet);
+//		return "choixPartenaire";
+//
+//	}
+
+//	@RequestMapping("categorie")
+//	public String categorie(@ModelAttribute("uneCategorie") Categorie uneCategorie, Model model) {
+//		List<Categorie> listCategorie = categorieService.toutesLesCategories();
+//		model.addAttribute("listCategorie", listCategorie);
+//		return "categorie";
+//	}
+
+//	@RequestMapping("sauvegarderCategorie")
+//	public String sauvegarderCategorie(@Valid @ModelAttribute("uneCategorie") Categorie uneCategorie, BindingResult br,
+//			Model model, String nomCategorie) {
+//		List<Categorie> listCategorie = categorieService.toutesLesCategories();
+//
+//		if (br.hasErrors()) {
+//			model.addAttribute("listCategorie", listCategorie);
+//			return "categorie";
+//		}
+//		if (categorieService.findByNomCategorie(nomCategorie) != null) {
+//			model.addAttribute("messageDoublon", "Cette catégorie existe");
+//			return "categorie";
+//		}
+//		categorieService.ajoutCategorie(nomCategorie);
+//		return "redirect:/categorie";
+//	}
+
+//	@RequestMapping("/getDepartement")
+//	@ResponseBody
+//	public Set<Departement> getDepartement(String nomRegion) {
+//
+//		if (departementService.findDepartementByNomRegion(nomRegion) == null) {
+//			return null;
+//		}
+//		// Map<String, Object> object = new HashMap<>();
+//		List<Departement> listDep = departementService.findDepartementByNomRegion(nomRegion);
+//		// for(Departement d:listDep)
+//		// object.put(d.getNomDepartement(), d.getRegion().getNomRegion());
+//		// System.out.println(listDep);
+//		Set<Departement> listDepSet = new HashSet<>(listDep);
+//
+//		return listDepSet;
+//
+//	}
+
+//	@RequestMapping("/getCommune")
+//	@ResponseBody
+//	public Object getCommune(String nomDepartement) {
+//
+//		if (communeService.findCommuneByNomDepartement(nomDepartement) == null) {
+//			return null;
+//		}
+//		List<Commune> listCom = communeService.findCommuneByNomDepartement(nomDepartement);
+//
+//		return listCom;
+//
+//	}
+
+//	@RequestMapping("/getVillage")
+//	@ResponseBody
+//	public Object getVillage(String nomCommune) {
+//
+//		if (villageService.findVillageByNomCommune(nomCommune) == null) {
+//			return null;
+//		}
+//		List<Village> listVil = villageService.findVillageByNomCommune(nomCommune);
+//
+//		return listVil;
+//
+//	}
+
+//	@RequestMapping("lierPartenaireLocalAPartenaire")
+//	public String lierPartenaireLocalAPartenaire(String nomPartenaireLocal, Long idPartenaire, Model model) {
+//
+//		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
+//		List<Region> listLocalisation = regionService.toutesLesRegions();
+//		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
+//		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
+//		model.addAttribute("listPartenaire", listPartenaire);
+//		model.addAttribute("listLocalisation", listLocalisation);
+//
+//		if (nomPartenaireLocal.isEmpty()) {
+//			model.addAttribute("messageErreur", "Le partenaire communautaire n'est pas renseigné");
+//			return "partenaire";
+//		}
+//
+//		if (partenaireService.findPartenaireById(idPartenaire) != null) {
+//			Partenaire part = partenaireService.findPartenaireByIdPartenaire(idPartenaire);
+//			if (part.getPartenaireLocal() != null) {
+//				Set<PartenaireLocal> paLo = part.getPartenaireLocal();
+//				for (PartenaireLocal pc : paLo) {
+//					if (pc.getNomPartenaireLocal().equals(nomPartenaireLocal)) {
+//						model.addAttribute("messageErreur",
+//								part.getNomPartenaire() + " est déjà lié à " + nomPartenaireLocal);
+//						return "partenaire";
+//					}
+//				}
+//			}
+//		}
+//
+//		parteLocalService.ajoutPartenaireLocalAPartenaire(nomPartenaireLocal, idPartenaire);
+//
+//		return "redirect:/partenaire";
+//
+//	}
+
+//	@RequestMapping("getDonneesProjetAAjouterAUtilisateur")
+//	public String getDonneesProjetAAjouterAUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
+//			@ModelAttribute("unProjet") Projet unProjet, Model model, Long idUtilisateur) {
+//
+//		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
+//		model.addAttribute("unUtilisateur", unUtilisateur);
+//		List<Projet> listProjet = projetService.tousLesProjets();
+//		model.addAttribute("listProjet", listProjet);
+//		// model.addAttribute("flagProfil",
+//		// iCarto.findUtilisateurById(idUtilisateur).get().getProfil());
+//
+//		return "projetUtilisateur";
+//	}
+
+//	@RequestMapping("/sauvegarderProjetUtilisateur")
+//	public String sauvegarderProjetUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
+//			@ModelAttribute("unProjet") Projet unProjet, Model model, Long idUtilisateur, String nomProjet) {
+//		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
+//		List<Projet> listProjet = projetService.tousLesProjets();
+//
+//		projetService.ajoutProjetAUtilisateur(idUtilisateur, nomProjet);
+//		model.addAttribute("unUtilisateur", unUtilisateur);
+//		model.addAttribute("listProjet", listProjet);
+//		return "projetUtilisateur";
+//	}
+//
+//	@RequestMapping("/detailsProjet")
+//	public String detailsProjet(@ModelAttribute("unProjet") Projet unProjet, Model model, Long idProjet,
+//			String nomProjet) {
+//
+//		Projet projet = projetService.trouverProjetParIdProjet(idProjet);
+//		model.addAttribute("listProjet", projetService.tousLesProjets());
+//		model.addAttribute("unProjet", projet);
+//		return "detailsProjet";
+//	}
 
 	@RequestMapping("cloturerProjet")
 	public String cloturerProjet(Long idProjet) {
