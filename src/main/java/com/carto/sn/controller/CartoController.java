@@ -1007,17 +1007,17 @@ public class CartoController {
 //		return "nouvelUtilisateur";
 //	}
 
-	@RequestMapping("supprimerRegion")
-	public String supprimerRegion(Long idRegion) {
-		regionService.supprimerRegion(idRegion);
-		return "redirect:/localisation";
-	}
+//	@RequestMapping("supprimerRegion")
+//	public String supprimerRegion(Long idRegion) {
+//		regionService.supprimerRegion(idRegion);
+//		return "redirect:/localisation";
+//	}
 
-	@RequestMapping("supprimerCommune")
-	public String supprimerCommune(Long idCommune) {
-		communeService.supprimerCommune(idCommune);
-		return "redirect:/localisation";
-	}
+//	@RequestMapping("supprimerCommune")
+//	public String supprimerCommune(Long idCommune) {
+//		communeService.supprimerCommune(idCommune);
+//		return "redirect:/localisation";
+//	}
 
 //	@RequestMapping("parametres")
 //	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -1436,11 +1436,11 @@ public class CartoController {
 //		return "detailsProjet";
 //	}
 
-	@RequestMapping("cloturerProjet")
-	public String cloturerProjet(Long idProjet) {
-		projetService.cloturerProjet(idProjet);
-		return "redirect:/detailsProjet?idProjet=" + idProjet;
-	}
+//	@RequestMapping("cloturerProjet")
+//	public String cloturerProjet(Long idProjet) {
+//		projetService.cloturerProjet(idProjet);
+//		return "redirect:/detailsProjet?idProjet=" + idProjet;
+//	}
 
 //	@RequestMapping("operations")
 //	public String UserOperations(Model model, String login) {

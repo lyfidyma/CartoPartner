@@ -28,5 +28,11 @@ public class CommuneController {
 		return listCom;
 
 	}
+	
+	@RequestMapping("supprimerCommune")
+	public String supprimerCommune(Long idCommune) {
+		communeService.supprimerCommune(idCommune);
+		return "redirect:/localisation";
+	}
 
 }
