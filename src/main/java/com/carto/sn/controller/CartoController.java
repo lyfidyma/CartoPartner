@@ -904,18 +904,18 @@ public class CartoController {
 //		return "nouveauProfil";
 //	}
 	
-	@RequestMapping("getPrivilegeByProfil")
-	@ResponseBody
-	public Object getPrivilegeByProfil(Long idProfil) {
-		List<Privilege> listPrivileges = privilegeService.findPrivilegeByProfil(idProfil);
-		List<String> listNomPrivileges = new ArrayList<>();
-		Map<String, Object> object = new HashMap<>();
-		for(Privilege p : listPrivileges) {
-			listNomPrivileges.add(p.getNomPrivilege());
-		}
-		object.put("listNomPrivileges", listNomPrivileges);
-		return object;
-	}
+//	@RequestMapping("getPrivilegeByProfil")
+//	@ResponseBody
+//	public Object getPrivilegeByProfil(Long idProfil) {
+//		List<Privilege> listPrivileges = privilegeService.findPrivilegeByProfil(idProfil);
+//		List<String> listNomPrivileges = new ArrayList<>();
+//		Map<String, Object> object = new HashMap<>();
+//		for(Privilege p : listPrivileges) {
+//			listNomPrivileges.add(p.getNomPrivilege());
+//		}
+//		object.put("listNomPrivileges", listNomPrivileges);
+//		return object;
+//	}
 
 //	@RequestMapping("sauvegarderProfil")
 //	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -1450,13 +1450,13 @@ public class CartoController {
 		return "userOperation";
 	}
 
-	@RequestMapping("sauvegarderPrivilege")
-	public String sauvegarderPrivilege(Model model, Long idProfil, String checkboxPrivilege[]) {
-
-		privilegeService.ajoutPrivilege(idProfil, checkboxPrivilege);
-		return "redirect:nouveauProfil";
-
-	}
+//	@RequestMapping("sauvegarderPrivilege")
+//	public String sauvegarderPrivilege(Model model, Long idProfil, String checkboxPrivilege[]) {
+//
+//		privilegeService.ajoutPrivilege(idProfil, checkboxPrivilege);
+//		return "redirect:nouveauProfil";
+//
+//	}
 	@RequestMapping("enableOrDisableUserAccount")
 	@ResponseBody
 	public String enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled) {
