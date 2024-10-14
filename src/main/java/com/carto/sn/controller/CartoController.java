@@ -334,20 +334,20 @@ public class CartoController {
 //		return "nouveauPartenaire";
 //	}
 
-	@RequestMapping("localisation")
-	public String localisation(@ModelAttribute("uneRegion") Region uneRegion,
-			@ModelAttribute("unDepartement") Departement unDepartement,
-			@ModelAttribute("uneCommune") Commune uneCommune, @ModelAttribute("unVillage") Village unVillage,
-			@ModelAttribute("unPays") Pays unPays, Model model) {
-		List<Commune> listCommune = communeService.toutesLesCommunes();
-		List<Departement> listDepartement = departementService.tousLesDepartements();
-		List<Village> listVillage = villageService.tousLesVillages();
-
-		model.addAttribute("listVillage", listVillage);
-		model.addAttribute("listCommune", listCommune);
-		model.addAttribute("listDepartement", listDepartement);
-		return "localisation";
-	}
+//	@RequestMapping("localisation")
+//	public String localisation(@ModelAttribute("uneRegion") Region uneRegion,
+//			@ModelAttribute("unDepartement") Departement unDepartement,
+//			@ModelAttribute("uneCommune") Commune uneCommune, @ModelAttribute("unVillage") Village unVillage,
+//			@ModelAttribute("unPays") Pays unPays, Model model) {
+//		List<Commune> listCommune = communeService.toutesLesCommunes();
+//		List<Departement> listDepartement = departementService.tousLesDepartements();
+//		List<Village> listVillage = villageService.tousLesVillages();
+//
+//		model.addAttribute("listVillage", listVillage);
+//		model.addAttribute("listCommune", listCommune);
+//		model.addAttribute("listDepartement", listDepartement);
+//		return "localisation";
+//	}
 
 	@RequestMapping("cartographie")
 	public String cartographie(@ModelAttribute("unProjet") Projet unProjet, @ModelAttribute("unType") Type unType,
@@ -746,48 +746,48 @@ public class CartoController {
 		return "cartographie";
 	}
 
-	@RequestMapping("sauvegarderLocalisation")
-	public String sauvegarderLocalisation(@Valid @ModelAttribute("uneRegion") Region uneRegion, BindingResult br,
-			String nomDepartement, String nomRegion, String nomCommune, String nomPays, RedirectAttributes ra) {
-		if (br.hasErrors()) {
-			return "localisation";
-		}
-		/*
-		 * List <Region> listRegion = iCarto.toutesLesRegions(); for(Region loc:listLoc)
-		 * { if(loc.getNomRegion().equals(libelleRegion)) {
-		 * ra.addFlashAttribute("messageDoublon", "Cette localisation existe déjà");
-		 * ra.addFlashAttribute("libelleLocalisation", libelleRegion); return
-		 * "redirect:/localisation"; } }
-		 */
-		List<Departement> listDepartement = departementService.tousLesDepartements();
-		ra.addFlashAttribute("listDepartement", listDepartement);
+//	@RequestMapping("sauvegarderLocalisation")
+//	public String sauvegarderLocalisation(@Valid @ModelAttribute("uneRegion") Region uneRegion, BindingResult br,
+//			String nomDepartement, String nomRegion, String nomCommune, String nomPays, RedirectAttributes ra) {
+//		if (br.hasErrors()) {
+//			return "localisation";
+//		}
+//		/*
+//		 * List <Region> listRegion = iCarto.toutesLesRegions(); for(Region loc:listLoc)
+//		 * { if(loc.getNomRegion().equals(libelleRegion)) {
+//		 * ra.addFlashAttribute("messageDoublon", "Cette localisation existe déjà");
+//		 * ra.addFlashAttribute("libelleLocalisation", libelleRegion); return
+//		 * "redirect:/localisation"; } }
+//		 */
+//		List<Departement> listDepartement = departementService.tousLesDepartements();
+//		ra.addFlashAttribute("listDepartement", listDepartement);
+//
+//		regionService.ajoutRegion(nomDepartement, nomRegion, nomPays, nomCommune);
+//		return "redirect:/localisation";
+//	}
 
-		regionService.ajoutRegion(nomDepartement, nomRegion, nomPays, nomCommune);
-		return "redirect:/localisation";
-	}
-
-	@RequestMapping("sauvegarderPartenaire")
-	public String sauvegarderPartenaire(@Valid @ModelAttribute("unPartenaire") Partenaire unPartenaire,
-			BindingResult br, Long idPartenaire, String nomPartenaire, String adresse, RedirectAttributes ra) {
-
-		if (br.hasErrors()) {
-			return "nouveauPartenaire";
-		}
-		if (idPartenaire == null) {
-			List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-			for (Partenaire part : listPartenaire) {
-				if (part.getNomPartenaire().equals(nomPartenaire)) {
-					ra.addFlashAttribute("messageDoublon", "Ce partenaire existe déjà");
-					ra.addAttribute("nomPartenaire", nomPartenaire);
-					return "redirect:/nouveauPartenaire";
-				}
-			}
-
-		}
-
-		partenaireService.ajoutPartenaire(idPartenaire, nomPartenaire, adresse);
-		return "redirect:/partenaire";
-	}
+//	@RequestMapping("sauvegarderPartenaire")
+//	public String sauvegarderPartenaire(@Valid @ModelAttribute("unPartenaire") Partenaire unPartenaire,
+//			BindingResult br, Long idPartenaire, String nomPartenaire, String adresse, RedirectAttributes ra) {
+//
+//		if (br.hasErrors()) {
+//			return "nouveauPartenaire";
+//		}
+//		if (idPartenaire == null) {
+//			List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
+//			for (Partenaire part : listPartenaire) {
+//				if (part.getNomPartenaire().equals(nomPartenaire)) {
+//					ra.addFlashAttribute("messageDoublon", "Ce partenaire existe déjà");
+//					ra.addAttribute("nomPartenaire", nomPartenaire);
+//					return "redirect:/nouveauPartenaire";
+//				}
+//			}
+//
+//		}
+//
+//		partenaireService.ajoutPartenaire(idPartenaire, nomPartenaire, adresse);
+//		return "redirect:/partenaire";
+//	}
 
 //	@RequestMapping("sauvegarderProjet")
 //	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'AJOUTER_PROJET')")
@@ -869,20 +869,20 @@ public class CartoController {
 	 * return "choixPartenaire"; }
 	 */
 
-	@RequestMapping("supprimerPartenaire")
-	public String supprimerPartenaire(Long idPartenaire) {
-		partenaireService.supprimerPartenaire(idPartenaire);
-		return "redirect:/partenaire";
-	}
-
-	@RequestMapping("getDonneesPartenaireAModifier")
-	public String modifierPartenaire(@ModelAttribute("unPartenaire") Partenaire unPartenaire, Model model,
-			Long idPartenaire) {
-		model.addAttribute("idPartenaire", idPartenaire);
-		unPartenaire = partenaireService.findPartenaireById(idPartenaire).get();
-		model.addAttribute("unPartenaire", unPartenaire);
-		return "nouveauPartenaire";
-	}
+//	@RequestMapping("supprimerPartenaire")
+//	public String supprimerPartenaire(Long idPartenaire) {
+//		partenaireService.supprimerPartenaire(idPartenaire);
+//		return "redirect:/partenaire";
+//	}
+//
+//	@RequestMapping("getDonneesPartenaireAModifier")
+//	public String modifierPartenaire(@ModelAttribute("unPartenaire") Partenaire unPartenaire, Model model,
+//			Long idPartenaire) {
+//		model.addAttribute("idPartenaire", idPartenaire);
+//		unPartenaire = partenaireService.findPartenaireById(idPartenaire).get();
+//		model.addAttribute("unPartenaire", unPartenaire);
+//		return "nouveauPartenaire";
+//	}
 
 //	@RequestMapping("nouveauProfil")
 //	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
