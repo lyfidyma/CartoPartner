@@ -216,123 +216,123 @@ public class CartoController {
 //		return "nouveauProjet";
 //	}
 
-	@RequestMapping("partenaire")
-	public String partenaire(Model model) {
-		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listLocalisation = regionService.toutesLesRegions();
-		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
-		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
-		model.addAttribute("listPartenaire", listPartenaire);
-		model.addAttribute("listLocalisation", listLocalisation);
-		return "partenaire";
-	}
-
-	@RequestMapping("displayChoixPartenaire")
-	public String choixPartenaire(@ModelAttribute("uneRegion") Region uneRegion,
-			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("unType") Type unType,
-			@ModelAttribute("unProjet") Projet unProjet, Model model, @RequestParam(defaultValue = "") String nomProjet,
-			@RequestParam(defaultValue = "") Long idProjet, @RequestParam(defaultValue = "") String nomPartenaire,
-			@RequestParam(defaultValue = "") String pointFocal, @RequestParam(defaultValue = "") String nomType,
-			String pageAAfficher, String flag) {
-		// List <ProjetPartenaireRegion> listPpr =
-		// iCarto.tousLesProjetsPartenairesRegions();
-		List<Projet> listProjet = projetService.tousLesProjets();
-		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
-		List<Region> listRegion = regionService.toutesLesRegions();
-		List<Projet> listProjetPoinFocal = projetService.groupByPointFocal();
-
-		if (nomProjet.isEmpty() == false) {
-			List<ProjetPartenaireRegion> projetName = null;
-			Projet projetName1 = null;
-			projetName1 = projetService.findByNomProjet(nomProjet);
-			projetName = pprService.findByIdProjet(projetName1.getIdProjet());
-			model.addAttribute("projetName1", projetName1);
-			model.addAttribute("projetName", projetName);
-		}
-
-		if (pageAAfficher.equals("pageIndex")) {
-
-			if (nomPartenaire.isEmpty() == false) {
-				Partenaire partenaireName1;
-				Set<Partenaire> partenaireProjet = new HashSet<Partenaire>();
-				Set<Projet> projetsDunPartenaire = new HashSet<Projet>();
-				Set<ProjetPartenaireRegion> partenaireName = new HashSet<ProjetPartenaireRegion>();
-
-				// Set <Projet> projetPourType=new HashSet<Projet>();
-				partenaireName1 = partenaireService.findByNomPartenaire(nomPartenaire);
-				for (int i = 0; i < listProjet.size(); i++) {
-					partenaireProjet = (listProjet.get(i).getPartenaire());
-					for (Partenaire p : partenaireProjet) {
-						if (partenaireName1.getNomPartenaire() == p.getNomPartenaire()) {
-							projetsDunPartenaire.addAll(p.getProjet());
-							for (Projet pr : projetsDunPartenaire) {
-								partenaireName.addAll(pprService.findByIdProjet(pr.getIdProjet()));
-							}
-						}
-
-					}
-				}
-
-				// model.addAttribute("projetPourType", projetPourType);
-				model.addAttribute("partenaireName1", partenaireName1);
-				model.addAttribute("partenaireName", partenaireName);
-			}
-
-			if (pointFocal.isEmpty() == false) {
-				List<Projet> pointFocalName = null;
-				pointFocalName = projetService.findByPointFocal(pointFocal);
-				model.addAttribute("pointFocalName", pointFocalName);
-			}
-
-			if (nomType.isEmpty() == false) {
-				Type typeName1 = null;
-				Set<Type> projetType = null;
-				Set<ProjetPartenaireRegion> typeName = new HashSet<ProjetPartenaireRegion>();
-				typeName1 = typeService.findByNomType(nomType);
-
-				for (int i = 0; i < listProjet.size(); i++) {
-
-					projetType = listProjet.get(i).getType();
-
-					for (Type typ : projetType) {
-						if (typeName1.getNomType() == typ.getNomType()) {
-							typeName.addAll(pprService.findByIdProjet(listProjet.get(i).getIdProjet()));
-
-						}
-					}
-				}
-
-				model.addAttribute("typeName", typeName);
-				model.addAttribute("typeName1", typeName1);
-			}
-		}
-
-		List<Type> listType = typeService.tousLesTypes();
-		model.addAttribute("listProjet", listProjet);
-		model.addAttribute("listType", listType);
-		model.addAttribute("listProjetPoinFocal", listProjetPoinFocal);
-		model.addAttribute("listPartenaire", listPartenaire);
-		model.addAttribute("listRegion", listRegion);
-		if (nomProjet != null) {
-			model.addAttribute("nomProjet", nomProjet);
-			model.addAttribute("flag", flag);
-		}
-		// if(idProjet==null)
-		// idProjet=iCarto.findOneIdByProjetName(nomProjet).get(0).getIdProjet();
-		if (nomPartenaire != null)
-			model.addAttribute("nomPartenaire", nomPartenaire);
-
-		model.addAttribute("idProjet", idProjet);
-		if (pageAAfficher.equals("pageIndex"))
-			return "index";
-		return "choixPartenaire";
-	}
-
-	@RequestMapping("nouveauPartenaire")
-	public String nouveauPartenaire(@ModelAttribute("unPartenaire") Partenaire unPartenaire, Model model) {
-
-		return "nouveauPartenaire";
-	}
+//	@RequestMapping("partenaire")
+//	public String partenaire(Model model) {
+//		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
+//		List<Region> listLocalisation = regionService.toutesLesRegions();
+//		List<PartenaireLocal> listPartenaireLocal = parteLocalService.tousLesPartenairesLocaux();
+//		model.addAttribute("listPartenaireLocal", listPartenaireLocal);
+//		model.addAttribute("listPartenaire", listPartenaire);
+//		model.addAttribute("listLocalisation", listLocalisation);
+//		return "partenaire";
+//	}
+//
+//	@RequestMapping("displayChoixPartenaire")
+//	public String choixPartenaire(@ModelAttribute("uneRegion") Region uneRegion,
+//			@ModelAttribute("unPartenaire") Partenaire unPartenaire, @ModelAttribute("unType") Type unType,
+//			@ModelAttribute("unProjet") Projet unProjet, Model model, @RequestParam(defaultValue = "") String nomProjet,
+//			@RequestParam(defaultValue = "") Long idProjet, @RequestParam(defaultValue = "") String nomPartenaire,
+//			@RequestParam(defaultValue = "") String pointFocal, @RequestParam(defaultValue = "") String nomType,
+//			String pageAAfficher, String flag) {
+//		// List <ProjetPartenaireRegion> listPpr =
+//		// iCarto.tousLesProjetsPartenairesRegions();
+//		List<Projet> listProjet = projetService.tousLesProjets();
+//		List<Partenaire> listPartenaire = partenaireService.tousLesPartenaires();
+//		List<Region> listRegion = regionService.toutesLesRegions();
+//		List<Projet> listProjetPoinFocal = projetService.groupByPointFocal();
+//
+//		if (nomProjet.isEmpty() == false) {
+//			List<ProjetPartenaireRegion> projetName = null;
+//			Projet projetName1 = null;
+//			projetName1 = projetService.findByNomProjet(nomProjet);
+//			projetName = pprService.findByIdProjet(projetName1.getIdProjet());
+//			model.addAttribute("projetName1", projetName1);
+//			model.addAttribute("projetName", projetName);
+//		}
+//
+//		if (pageAAfficher.equals("pageIndex")) {
+//
+//			if (nomPartenaire.isEmpty() == false) {
+//				Partenaire partenaireName1;
+//				Set<Partenaire> partenaireProjet = new HashSet<Partenaire>();
+//				Set<Projet> projetsDunPartenaire = new HashSet<Projet>();
+//				Set<ProjetPartenaireRegion> partenaireName = new HashSet<ProjetPartenaireRegion>();
+//
+//				// Set <Projet> projetPourType=new HashSet<Projet>();
+//				partenaireName1 = partenaireService.findByNomPartenaire(nomPartenaire);
+//				for (int i = 0; i < listProjet.size(); i++) {
+//					partenaireProjet = (listProjet.get(i).getPartenaire());
+//					for (Partenaire p : partenaireProjet) {
+//						if (partenaireName1.getNomPartenaire() == p.getNomPartenaire()) {
+//							projetsDunPartenaire.addAll(p.getProjet());
+//							for (Projet pr : projetsDunPartenaire) {
+//								partenaireName.addAll(pprService.findByIdProjet(pr.getIdProjet()));
+//							}
+//						}
+//
+//					}
+//				}
+//
+//				// model.addAttribute("projetPourType", projetPourType);
+//				model.addAttribute("partenaireName1", partenaireName1);
+//				model.addAttribute("partenaireName", partenaireName);
+//			}
+//
+//			if (pointFocal.isEmpty() == false) {
+//				List<Projet> pointFocalName = null;
+//				pointFocalName = projetService.findByPointFocal(pointFocal);
+//				model.addAttribute("pointFocalName", pointFocalName);
+//			}
+//
+//			if (nomType.isEmpty() == false) {
+//				Type typeName1 = null;
+//				Set<Type> projetType = null;
+//				Set<ProjetPartenaireRegion> typeName = new HashSet<ProjetPartenaireRegion>();
+//				typeName1 = typeService.findByNomType(nomType);
+//
+//				for (int i = 0; i < listProjet.size(); i++) {
+//
+//					projetType = listProjet.get(i).getType();
+//
+//					for (Type typ : projetType) {
+//						if (typeName1.getNomType() == typ.getNomType()) {
+//							typeName.addAll(pprService.findByIdProjet(listProjet.get(i).getIdProjet()));
+//
+//						}
+//					}
+//				}
+//
+//				model.addAttribute("typeName", typeName);
+//				model.addAttribute("typeName1", typeName1);
+//			}
+//		}
+//
+//		List<Type> listType = typeService.tousLesTypes();
+//		model.addAttribute("listProjet", listProjet);
+//		model.addAttribute("listType", listType);
+//		model.addAttribute("listProjetPoinFocal", listProjetPoinFocal);
+//		model.addAttribute("listPartenaire", listPartenaire);
+//		model.addAttribute("listRegion", listRegion);
+//		if (nomProjet != null) {
+//			model.addAttribute("nomProjet", nomProjet);
+//			model.addAttribute("flag", flag);
+//		}
+//		// if(idProjet==null)
+//		// idProjet=iCarto.findOneIdByProjetName(nomProjet).get(0).getIdProjet();
+//		if (nomPartenaire != null)
+//			model.addAttribute("nomPartenaire", nomPartenaire);
+//
+//		model.addAttribute("idProjet", idProjet);
+//		if (pageAAfficher.equals("pageIndex"))
+//			return "index";
+//		return "choixPartenaire";
+//	}
+//
+//	@RequestMapping("nouveauPartenaire")
+//	public String nouveauPartenaire(@ModelAttribute("unPartenaire") Partenaire unPartenaire, Model model) {
+//
+//		return "nouveauPartenaire";
+//	}
 
 	@RequestMapping("localisation")
 	public String localisation(@ModelAttribute("uneRegion") Region uneRegion,
