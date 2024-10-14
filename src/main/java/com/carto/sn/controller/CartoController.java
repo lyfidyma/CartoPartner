@@ -942,70 +942,70 @@ public class CartoController {
 //		return "redirect:/nouveauProfil";
 //	}
 
-	@RequestMapping("utilisateur")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public String utilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, Model model) {
-		List<Utilisateur> listUtilisateur = utilisateurService.tousLesUtilisateurs();
-		model.addAttribute("listUtilisateur", listUtilisateur);
-		return "utilisateur";
-	}
-
-	@RequestMapping("nouvelUtilisateur")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public String nouvelUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
-			@ModelAttribute("unProfil") Profil unProfil, Model model) {
-		List<Profil> listProfil = profilService.tousLesProfils();
-		model.addAttribute("listProfil", listProfil);
-		return "nouvelUtilisateur";
-	}
-
-	@RequestMapping("sauvegarderUtilisateur")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public String sauvegarderUtilisateur(@Valid @ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
-			BindingResult br, @ModelAttribute("unProfil") Profil unProfil, Model model, Long idUtilisateur,
-			String nomUtilisateur, String prenomUtilisateur, String login, String password, String nomProfil,
-			RedirectAttributes ra) {
-
-		if (br.hasErrors()) {
-			List<Profil> listProfil = profilService.tousLesProfils();
-			model.addAttribute("listProfil", listProfil);
-			return "nouvelUtilisateur";
-		}
-		if (idUtilisateur == null) {
-			List<Utilisateur> listUtil = utilisateurService.tousLesUtilisateurs();
-			for (Utilisateur util : listUtil) {
-				if (util.getLogin().equals(login)) {
-					List<Profil> listProfil = profilService.tousLesProfils();
-					model.addAttribute("listProfil", listProfil);
-					model.addAttribute("messageDoublon", "Ce login existe déjà");
-					return "nouvelUtilisateur";
-				}
-			}
-		}
-		utilisateurService.ajoutUtilisateur(idUtilisateur, nomUtilisateur, prenomUtilisateur, login, password, nomProfil);
-		return "redirect:/utilisateur";
-	}
-
-	@RequestMapping("supprimerUtilisateur")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public String supprimerUtilisateur(Long idUtilisateur) {
-		utilisateurService.supprimerUtilisateur(idUtilisateur);
-		return "redirect:/utilisateur";
-	}
-
-	@RequestMapping("getDonneesUtilisateurAModifier")
-	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-	public String getDonneesUtilisateurAModifier(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
-			@ModelAttribute("unProfil") Profil unProfil, Model model, Long idUtilisateur) {
-
-		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
-		model.addAttribute("unUtilisateur", unUtilisateur);
-		List<Profil> listProfil = profilService.tousLesProfils();
-		model.addAttribute("listProfil", listProfil);
-		model.addAttribute("flagProfil", utilisateurService.findUtilisateurById(idUtilisateur).get().getProfil());
-
-		return "nouvelUtilisateur";
-	}
+//	@RequestMapping("utilisateur")
+//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	public String utilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur, Model model) {
+//		List<Utilisateur> listUtilisateur = utilisateurService.tousLesUtilisateurs();
+//		model.addAttribute("listUtilisateur", listUtilisateur);
+//		return "utilisateur";
+//	}
+//
+//	@RequestMapping("nouvelUtilisateur")
+//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	public String nouvelUtilisateur(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
+//			@ModelAttribute("unProfil") Profil unProfil, Model model) {
+//		List<Profil> listProfil = profilService.tousLesProfils();
+//		model.addAttribute("listProfil", listProfil);
+//		return "nouvelUtilisateur";
+//	}
+//
+//	@RequestMapping("sauvegarderUtilisateur")
+//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	public String sauvegarderUtilisateur(@Valid @ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
+//			BindingResult br, @ModelAttribute("unProfil") Profil unProfil, Model model, Long idUtilisateur,
+//			String nomUtilisateur, String prenomUtilisateur, String login, String password, String nomProfil,
+//			RedirectAttributes ra) {
+//
+//		if (br.hasErrors()) {
+//			List<Profil> listProfil = profilService.tousLesProfils();
+//			model.addAttribute("listProfil", listProfil);
+//			return "nouvelUtilisateur";
+//		}
+//		if (idUtilisateur == null) {
+//			List<Utilisateur> listUtil = utilisateurService.tousLesUtilisateurs();
+//			for (Utilisateur util : listUtil) {
+//				if (util.getLogin().equals(login)) {
+//					List<Profil> listProfil = profilService.tousLesProfils();
+//					model.addAttribute("listProfil", listProfil);
+//					model.addAttribute("messageDoublon", "Ce login existe déjà");
+//					return "nouvelUtilisateur";
+//				}
+//			}
+//		}
+//		utilisateurService.ajoutUtilisateur(idUtilisateur, nomUtilisateur, prenomUtilisateur, login, password, nomProfil);
+//		return "redirect:/utilisateur";
+//	}
+//
+//	@RequestMapping("supprimerUtilisateur")
+//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	public String supprimerUtilisateur(Long idUtilisateur) {
+//		utilisateurService.supprimerUtilisateur(idUtilisateur);
+//		return "redirect:/utilisateur";
+//	}
+//
+//	@RequestMapping("getDonneesUtilisateurAModifier")
+//	@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//	public String getDonneesUtilisateurAModifier(@ModelAttribute("unUtilisateur") Utilisateur unUtilisateur,
+//			@ModelAttribute("unProfil") Profil unProfil, Model model, Long idUtilisateur) {
+//
+//		unUtilisateur = utilisateurService.findUtilisateurById(idUtilisateur).get();
+//		model.addAttribute("unUtilisateur", unUtilisateur);
+//		List<Profil> listProfil = profilService.tousLesProfils();
+//		model.addAttribute("listProfil", listProfil);
+//		model.addAttribute("flagProfil", utilisateurService.findUtilisateurById(idUtilisateur).get().getProfil());
+//
+//		return "nouvelUtilisateur";
+//	}
 
 	@RequestMapping("supprimerRegion")
 	public String supprimerRegion(Long idRegion) {
@@ -1442,13 +1442,13 @@ public class CartoController {
 		return "redirect:/detailsProjet?idProjet=" + idProjet;
 	}
 
-	@RequestMapping("operations")
-	public String UserOperations(Model model, String login) {
-
-		List<Utilisateur> userOperations = utilisateurService.getAllOperationsOfUser(login);
-		model.addAttribute("userOperations", userOperations);
-		return "userOperation";
-	}
+//	@RequestMapping("operations")
+//	public String UserOperations(Model model, String login) {
+//
+//		List<Utilisateur> userOperations = utilisateurService.getAllOperationsOfUser(login);
+//		model.addAttribute("userOperations", userOperations);
+//		return "userOperation";
+//	}
 
 //	@RequestMapping("sauvegarderPrivilege")
 //	public String sauvegarderPrivilege(Model model, Long idProfil, String checkboxPrivilege[]) {
@@ -1457,16 +1457,16 @@ public class CartoController {
 //		return "redirect:nouveauProfil";
 //
 //	}
-	@RequestMapping("enableOrDisableUserAccount")
-	@ResponseBody
-	public String enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled) {
-		utilisateurService.enableOrDisableUserAccount(idUtilisateur, isEnabled);
-		return "redirect:utilisateur";
-	}
+//	@RequestMapping("enableOrDisableUserAccount")
+//	@ResponseBody
+//	public String enableOrDisableUserAccount(Long idUtilisateur, boolean isEnabled) {
+//		utilisateurService.enableOrDisableUserAccount(idUtilisateur, isEnabled);
+//		return "redirect:utilisateur";
+//	}
 	
-	@RequestMapping("supprimerCategorie")
-	public String supprimerCategorie(Long idCategorie) {
-		categorieService.supprimerCategorie(idCategorie);
-		return "redirect:/categorie";
-	}
+//	@RequestMapping("supprimerCategorie")
+//	public String supprimerCategorie(Long idCategorie) {
+//		categorieService.supprimerCategorie(idCategorie);
+//		return "redirect:/categorie";
+//	}
 }

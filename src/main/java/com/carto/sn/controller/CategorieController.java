@@ -39,6 +39,12 @@ public class CategorieController {
 		return "redirect:/categorie";
 	}
 	
+	@RequestMapping("supprimerCategorie")
+	public String supprimerCategorie(Long idCategorie) {
+		categorieService.supprimerCategorie(idCategorie);
+		return "redirect:/categorie";
+	}
+	
 	@RequestMapping("categorie")
 	public String categorie(@ModelAttribute("uneCategorie") Categorie uneCategorie, Model model) {
 		List<Categorie> listCategorie = categorieService.toutesLesCategories();
